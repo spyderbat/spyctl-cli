@@ -1,0 +1,270 @@
+[
+    {
+        "apiVersion": "spyderbat/v1",
+        "kind": "SpyderbatFingerprint",
+        "metadata": {
+            "name": "docker.io/guyduchatelet/spyderbat-demo:1",
+            "id": "fprint:k8s-container:tTfnASZWRaY:ZIHFIg:559d01be326f",
+            "type": "container",
+            "checksum": "6faa5df4c3b452c4f13d77bdcb4021c9",
+            "org_uid": "KNUJF8M43WcT2o1qgEts",
+            "muid": "mach:tTfnASZWRaY",
+            "root": "proc:tTfnASZWRaY:ZIHFHw:2179798",
+            "containerID": "559d01be326f93d14f99fee190054a80e0f42f055be70ffd2d9e2f47c717fa4b",
+            "containerName": "docker.io/guyduchatelet/spyderbat-demo:1",
+            "firstTimestamp": 1686226210.5056648,
+            "latestTimestamp": 1686229419.97803,
+            "pod-uid": "pod:mupQ8S67xUo:vQi7hxaGf6",
+            "namespace": "rsvp-svc-prod",
+            "cluster-uid": "clus:mupQ8S67xUo",
+            "version": 1686229197
+        },
+        "spec": {
+            "containerSelector": {
+                "image": "docker.io/guyduchatelet/spyderbat-demo:1",
+                "imageID": "sha256:ce6595c9e9c3ed9faf8b7af095473d1d223c8cc4efa453c771767252d357c4af"
+            },
+            "podSelector": {
+                "matchLabels": {
+                    "app": "rsvp",
+                    "env": "prod",
+                    "name": "rsvp-web",
+                    "pod-template-hash": "5b4d5c9499",
+                    "tier": "frontend"
+                }
+            },
+            "namespaceSelector": {
+                "matchLabels": {
+                    "env": "prod",
+                    "kubernetes.io/metadata.name": "rsvp-svc-prod"
+                }
+            },
+            "processPolicy": [
+                {
+                    "name": "python",
+                    "exe": [
+                        "/usr/local/bin/python3.7"
+                    ],
+                    "id": "python_0",
+                    "euser": [
+                        "root"
+                    ],
+                    "children": [
+                        {
+                            "name": "sh",
+                            "exe": [
+                                "/bin/dash"
+                            ],
+                            "id": "sh_0",
+                            "children": [
+                                {
+                                    "name": "uname",
+                                    "exe": [
+                                        "/bin/uname"
+                                    ],
+                                    "id": "uname_0"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "sh",
+                    "exe": [
+                        "/bin/dash"
+                    ],
+                    "id": "sh_1",
+                    "euser": [
+                        "root"
+                    ],
+                    "children": [
+                        {
+                            "name": "python",
+                            "exe": [
+                                "/usr/local/bin/python3.7"
+                            ],
+                            "id": "python_1",
+                            "children": [
+                                {
+                                    "name": "python",
+                                    "exe": [
+                                        "/usr/local/bin/python3.7"
+                                    ],
+                                    "id": "python_2",
+                                    "children": [
+                                        {
+                                            "name": "sh",
+                                            "exe": [
+                                                "/bin/dash"
+                                            ],
+                                            "id": "sh_2"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "networkPolicy": {
+                "ingress": [],
+                "egress": [
+                    {
+                        "to": [
+                            {
+                                "dnsSelector": [
+                                    "mongodb.rsvp-svc-prod.svc.cluster.local"
+                                ]
+                            }
+                        ],
+                        "processes": [
+                            "python_0",
+                            "python_1",
+                            "python_2"
+                        ],
+                        "ports": [
+                            {
+                                "protocol": "TCP",
+                                "port": 27017
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "apiVersion": "spyderbat/v1",
+        "kind": "SpyderbatFingerprint",
+        "metadata": {
+            "name": "docker.io/guyduchatelet/spyderbat-demo:1",
+            "id": "fprint:k8s-container:tTfnASZWRaY:ZIHJ0g:6aa40d09d566",
+            "type": "container",
+            "checksum": "6faa5df4c3b452c4f13d77bdcb4021c9",
+            "org_uid": "KNUJF8M43WcT2o1qgEts",
+            "muid": "mach:tTfnASZWRaY",
+            "root": "proc:tTfnASZWRaY:ZIHJzg:2199996",
+            "containerID": "6aa40d09d566b64e5c230eb273ad946ee4df3fa147b8c70931333b25593ea64b",
+            "containerName": "docker.io/guyduchatelet/spyderbat-demo:1",
+            "firstTimestamp": 1686227410.6981585,
+            "latestTimestamp": 1686229419.97803,
+            "pod-uid": "pod:mupQ8S67xUo:FCOJMUldGw",
+            "namespace": "rsvp-svc-prod",
+            "cluster-uid": "clus:mupQ8S67xUo",
+            "version": 1686229197
+        },
+        "spec": {
+            "containerSelector": {
+                "image": "docker.io/guyduchatelet/spyderbat-demo:1",
+                "imageID": "sha256:ce6595c9e9c3ed9faf8b7af095473d1d223c8cc4efa453c771767252d357c4af"
+            },
+            "podSelector": {
+                "matchLabels": {
+                    "app": "rsvp",
+                    "env": "prod",
+                    "name": "rsvp-web",
+                    "pod-template-hash": "5b4d5c9499",
+                    "tier": "frontend"
+                }
+            },
+            "namespaceSelector": {
+                "matchLabels": {
+                    "env": "prod",
+                    "kubernetes.io/metadata.name": "rsvp-svc-prod"
+                }
+            },
+            "processPolicy": [
+                {
+                    "name": "python",
+                    "exe": [
+                        "/usr/local/bin/python3.7"
+                    ],
+                    "id": "python_0",
+                    "euser": [
+                        "root"
+                    ],
+                    "children": [
+                        {
+                            "name": "sh",
+                            "exe": [
+                                "/bin/dash"
+                            ],
+                            "id": "sh_0"
+                        }
+                    ]
+                },
+                {
+                    "name": "sh",
+                    "exe": [
+                        "/bin/dash"
+                    ],
+                    "id": "sh_1",
+                    "euser": [
+                        "root"
+                    ],
+                    "children": [
+                        {
+                            "name": "python",
+                            "exe": [
+                                "/usr/local/bin/python3.7"
+                            ],
+                            "id": "python_1",
+                            "children": [
+                                {
+                                    "name": "python",
+                                    "exe": [
+                                        "/usr/local/bin/python3.7"
+                                    ],
+                                    "id": "python_2",
+                                    "children": [
+                                        {
+                                            "name": "sh",
+                                            "exe": [
+                                                "/bin/dash"
+                                            ],
+                                            "id": "sh_2",
+                                            "children": [
+                                                {
+                                                    "name": "uname",
+                                                    "exe": [
+                                                        "/bin/uname"
+                                                    ],
+                                                    "id": "uname_1"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "networkPolicy": {
+                "ingress": [],
+                "egress": [
+                    {
+                        "to": [
+                            {
+                                "dnsSelector": [
+                                    "mongodb.rsvp-svc-prod.svc.cluster.local"
+                                ]
+                            }
+                        ],
+                        "processes": [
+                            "python_0",
+                            "python_1",
+                            "python_2"
+                        ],
+                        "ports": [
+                            {
+                                "protocol": "TCP",
+                                "port": 27017
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+]

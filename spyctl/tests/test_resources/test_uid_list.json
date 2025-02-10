@@ -1,0 +1,16 @@
+[
+    {
+        "apiVersion": "spyderbat/v1",
+        "kind": "UidList",
+        "metadata": {
+            "startTime": 1714686193.0,
+            "endTime": 1714688193.0
+        },
+        "data": {
+            "uniqueIdentifiers": [
+                "dev:KNUJF8M43WcT2o1qgEts:AAYXf7kOzdY:0",
+                "dev:KNUJF8M43WcT2o1qgEts:AAYXf7kOzdY:0"
+            ]
+        }
+    }
+]

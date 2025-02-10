@@ -1,0 +1,229 @@
+{
+  "apiVersion": "spyderbat/v1",
+  "kind": "SpyderbatPolicy",
+  "metadata": {
+    "createdBy": "brent.haub@spyderbat.com",
+    "creationTimestamp": 1707860410,
+    "lastUpdatedBy": "brent.haub@spyderbat.com",
+    "lastUpdatedTimestamp": 1707860410,
+    "latestTimestamp": 1690465073,
+    "name": "spyderbat-demo-dev",
+    "selectorHash": "e5270939175600c67e46a424b5d22937",
+    "type": "container",
+    "uid": "pol:16BUIemA9dbdS3bnVHjQ",
+    "version": 1
+  },
+  "spec": {
+    "containerSelector": {
+      "image": "*spyderbat-demo*"
+    },
+    "enabled": true,
+    "mode": "enforce",
+    "namespaceSelector": {
+      "matchLabels": {
+        "kubernetes.io/metadata.name": "rsvp-svc-dev"
+      }
+    },
+    "networkPolicy": {
+      "egress": [
+        {
+          "ports": [
+            {
+              "port": 27017,
+              "protocol": "TCP"
+            }
+          ],
+          "processes": [
+            "python_1",
+            "python_2"
+          ],
+          "to": [
+            {
+              "dnsSelector": [
+                "mongodb.rsvp-svc-dev.svc.cluster.local"
+              ]
+            },
+            {
+              "ipBlock": {
+                "cidr": "10.100.66.198/32"
+              }
+            },
+            {
+              "ipBlock": {
+                "cidr": "10.100.82.209/32"
+              }
+            }
+          ]
+        },
+        {
+          "ports": [
+            {
+              "port": 443,
+              "protocol": "TCP"
+            }
+          ],
+          "processes": [
+            "python_1"
+          ],
+          "to": [
+            {
+              "ipBlock": {
+                "cidr": "52.216.153.60/32"
+              }
+            }
+          ]
+        }
+      ],
+      "ingress": [
+        {
+          "from": [
+            {
+              "ipBlock": {
+                "cidr": "192.168.4.229/32"
+              }
+            },
+            {
+              "ipBlock": {
+                "cidr": "192.168.26.23/32"
+              }
+            },
+            {
+              "ipBlock": {
+                "cidr": "192.168.35.38/32"
+              }
+            },
+            {
+              "ipBlock": {
+                "cidr": "192.168.73.218/32"
+              }
+            },
+            {
+              "ipBlock": {
+                "cidr": "192.168.78.61/32"
+              }
+            }
+          ],
+          "ports": [
+            {
+              "port": 5000,
+              "protocol": "TCP"
+            }
+          ],
+          "processes": [
+            "python_2"
+          ]
+        }
+      ]
+    },
+    "podSelector": {
+      "matchLabels": {
+        "app": "rsvp",
+        "env": "dev",
+        "name": "rsvp-web",
+        "tier": "frontend"
+      }
+    },
+    "processPolicy": [
+      {
+        "children": [
+          {
+            "exe": [
+              "/bin/dash"
+            ],
+            "id": "sh_3",
+            "name": "sh"
+          }
+        ],
+        "euser": [
+          "root"
+        ],
+        "exe": [
+          "/usr/local/bin/python3.7"
+        ],
+        "id": "python_0",
+        "name": "python"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "exe": [
+                          "/bin/uname"
+                        ],
+                        "id": "uname_1",
+                        "name": "uname"
+                      }
+                    ],
+                    "exe": [
+                      "/bin/dash"
+                    ],
+                    "id": "sh_2",
+                    "name": "sh"
+                  }
+                ],
+                "exe": [
+                  "/usr/local/bin/python3.7"
+                ],
+                "id": "python_2",
+                "name": "python"
+              },
+              {
+                "children": [
+                  {
+                    "exe": [
+                      "/usr/bin/sleep"
+                    ],
+                    "id": "sleep_0",
+                    "name": "sleep"
+                  },
+                  {
+                    "exe": [
+                      "/bin/uname"
+                    ],
+                    "id": "uname_0",
+                    "name": "uname"
+                  }
+                ],
+                "exe": [
+                  "/bin/dash",
+                  "/usr/bin/dash"
+                ],
+                "id": "sh_1",
+                "name": "sh"
+              }
+            ],
+            "exe": [
+              "/usr/local/bin/python3.7"
+            ],
+            "id": "python_1",
+            "name": "python"
+          }
+        ],
+        "euser": [
+          "root"
+        ],
+        "exe": [
+          "/bin/dash",
+          "/usr/bin/dash"
+        ],
+        "id": "sh_0",
+        "name": "sh"
+      }
+    ],
+    "response": {
+      "actions": [],
+      "default": [
+        {
+          "makeRedFlag": {
+            "severity": "high"
+          }
+        }
+      ]
+    }
+  }
+}
