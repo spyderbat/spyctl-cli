@@ -1,0 +1,41 @@
+apiVersion: spyderbat/v1
+kind: GuardianDeviation
+metadata:
+  type: cluster
+  policy_uid: pol:nUH3lG0c0U0SLiGfs4GN
+  checksum: 83fdb8830499c44583885a57997f13b3
+  scopes:
+    podSelector:
+      labels:
+        app: rsvp
+        env: dev
+        name: rsvp-web
+        pod-template-hash: 5c749df745
+        tier: frontend
+    namespaceSelector:
+      labels:
+        env: dev
+        kubernetes.io/metadata.name: rsvp-svc-dev
+    clusterSelector:
+      name: integrationcluster3
+      uid: clus:VyTE0-BPVmo
+    machineSelector:
+      hostname: ip-192-168-29-43.us-west-2.compute.internal
+      uid: mach:8vuJRMgyTEs
+      sourceName: ip-192-168-29-43.us-west-2.compute.internal
+    containerSelector:
+      image: docker.io/guyduchatelet/spyderbat-demo:2
+      imageID: sha256:10818deca69f74bb213755606cd5e106bf1f1ab2ee7aeb6e69edf39fc80aebe5
+      containerName: demo-web
+      containerID: 05573a026b6f1b6f45435c358194d3217aa9f0f9665165abe178fafeb27febcf
+  uid: dev:KNUJF8M43WcT2o1qgEts:AAYV57eyEi0:0
+spec:
+  rules:
+    - target: container::image
+      values:
+      - docker.io/guyduchatelet/spyderbat-demo:2
+      verb: allow
+  matches:
+    container::image:
+      matchedPatterns:
+      - __DEFAULT_DENY__

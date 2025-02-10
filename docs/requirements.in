@@ -1,0 +1,9 @@
+# To update:
+#   pip-compile requirements.in --resolver=backtracking > requirements.txt
+sphinx
+sphinx_rtd_theme
+readthedocs-sphinx-search
+sphinx-copybutton
+sphinx-tabs
+sphinx-click
+spyctl

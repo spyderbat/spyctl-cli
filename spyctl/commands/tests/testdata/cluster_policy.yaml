@@ -1,0 +1,25 @@
+apiVersion: spyderbat/v1
+kind: SpyderbatPolicy
+metadata:
+  createdBy: brent.haub@spyderbat.com
+  creationTimestamp: 1712787973
+  lastUpdatedBy: brent.haub@spyderbat.com
+  lastUpdatedTimestamp: 1712787973
+  name: integrationc3-policy
+  selectorHash: 66e45259eba6ed4365e28e7e673a18cf
+  type: cluster
+  uid: pol:nUH3lG0c0U0SLiGfs4GN
+  version: 1
+spec:
+  clusterSelector:
+    matchFields:
+      name: integrationcluster3
+  enabled: true
+  mode: audit
+  rulesets:
+  - integrationcluster3_ruleset
+  response:
+    default:
+    - makeRedFlag:
+        severity: high
+    actions: []

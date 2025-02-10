@@ -1,0 +1,53 @@
+apiVersion: spyderbat/v1
+kind: SpyderbatRuleset
+metadata:
+  createdBy: brent.haub@spyderbat.com
+  creationTimestamp: 1712787972
+  lastUpdatedBy: brent.haub@spyderbat.com
+  lastUpdatedTimestamp: 1712793880
+  name: integrationcluster3_ruleset
+  type: cluster
+  uid: rs:EiMiVzIe7seioS5gzphz
+  version: 2
+spec:
+  rules:
+  - namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: kube-system
+    target: container::image
+    values:
+    - 602401143452.dkr.ecr.us-west-2.amazonaws.com/amazon-k8s-cni-init:v1.10.1-eksbuild.1
+    - 602401143452.dkr.ecr.us-west-2.amazonaws.com/amazon-k8s-cni:v1.10.1-eksbuild.1
+    - 602401143452.dkr.ecr.us-west-2.amazonaws.com/eks/coredns:v1.8.7-eksbuild.1
+    - 602401143452.dkr.ecr.us-west-2.amazonaws.com/eks/kube-proxy:v1.22.6-eksbuild.1
+    - public.ecr.aws/aws-secrets-manager/secrets-store-csi-driver-provider-aws:1.0.r2-58-g4ddce6a-2024.01.31.21.42
+    - registry.k8s.io/csi-secrets-store/driver:v1.4.2
+    - registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.10.0
+    - registry.k8s.io/sig-storage/livenessprobe:v2.12.0
+    verb: allow
+  - namespaceSelector:
+      matchExpressions:
+      - {key: kubernetes.io/metadata.name, operator: In, values: [rsvp-svc-dev, rsvp-svc-prod]}
+    target: container::image
+    values:
+    - docker.io/guyduchatelet/spyderbat-demo:1
+    - docker.io/guyduchatelet/spyderbat-demo:2
+    - docker.io/library/mongo:latest
+    verb: allow
+  - namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: spyderbat
+    target: container::image
+    values:
+    - public.ecr.aws/a6j2k0g1/aws-agent:latest
+    - public.ecr.aws/a6j2k0g1/nano-agent:latest
+    verb: allow
+  - namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: prometheus
+    target: container::image
+    values:
+    - quay.io/prometheus/node-exporter:v1.7.0
+    - quay.io/prometheus/pushgateway:v1.7.0
+    - registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.10.1
+    verb: allow

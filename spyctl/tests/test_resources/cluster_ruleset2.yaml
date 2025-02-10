@@ -1,0 +1,33 @@
+apiVersion: spyderbat/v1
+kind: SpyderbatRuleset
+metadata:
+  createdBy: brent.haub@spyderbat.com
+  creationTimestamp: 1709897308
+  lastUpdatedBy: brent.haub@spyderbat.com
+  lastUpdatedTimestamp: 1709935626
+  name: integrationc2_ruleset
+  type: cluster
+  uid: rs:N94S4bUu8QXwBdPfpuAT
+  version: 2
+spec:
+  rules:
+  - values:
+    - docker.io/hasselhaub/ubuntu-black-mamba-sshd:latest
+    - docker.io/hasselhaub/ubuntu-sshd:latest
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: black-mamba
+    target: container::image
+    verb: allow
+  - values:
+    - docker.io/library/mongo:latest
+    namespaceSelector:
+      matchExpressions:
+      - key: kubernetes.io/metadata.name
+        operator: In
+        values:
+        - demo
+        - rsvp-svc-prod
+        - scenarios-testing
+    target: container::image
+    verb: allow

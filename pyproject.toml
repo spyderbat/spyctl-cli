@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools-scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["spyctl"]
+
+# [tool.setuptools_scm]
+
+[project]
+name = "spyctl"
+# dynamic = ["version"]
+version = "0.20.0"
+
+description = "A command line tool for viewing and managing Spyderbat Resources"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+keywords = ["spyctl", "spyderbat", "kubectl", "kubernetes"]
+authors = [
+  { name="Brent Haub", email="dev@spyderbat.com" },
+  { name="Kyle Smith Hanna", email="dev@spyderbat.com" },
+  { name="Guy Duchatelet", email="dev@spyderbat.com" }
+]
+maintainers = [
+  {name="Brent Haub", email="dev@spyderbat.com"}
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent",
+]
+dependencies = [
+  "python-dateutil >= 2.8",
+  "requests >= 2.0",
+  "pyyaml >= 6.0",
+  "zulu >= 2.0",
+  "typing_extensions >= 4.0",
+  "click >= 8.1",
+  "tabulate >= 0.9",
+  "tqdm >= 4.0",
+  "schema",
+  "pydantic >= 2.0",
+  "click-aliases >= 1.0.4"
+]
+
+[project.urls]
+"Homepage" = "https://spyctl.readthedocs.io/en/latest/"
+"Documentation" = "https://spyctl.readthedocs.io/en/latest/"
+"Source" = "https://github.com/spyderbat/spyctl"
+"Spyderbat" = "https://www.spyderbat.com/"
+
+[project.scripts]
+spyctl = "spyctl.spyctl:main"
