@@ -15,7 +15,7 @@ install_from_test:
 	pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple spyctl
 
 venv:
-	python3.8 -m venv ./spyctl_venv --clear
+	python3.12 -m venv ./spyctl_venv --clear
 
 clean:
 	rm -rf ./dist
