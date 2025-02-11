@@ -29,5 +29,7 @@ If you need support, you can reach out to us at dev@spyderbat.com or on our [com
 
 ## ✍️ Authors <a name = "authors"></a>
 
-- [@brent-spyder](https://github.com/brent-spyder) - Developer
+- [@brent-spyder](https://github.com/brent-spyder) - Developer/Admin
 - [@spyder-kyle](https://github.com/spyder-kyle) - Developer
+- [@spyder-guy](https://github.com/spyder-guy) - Developer
+- [@spyder-ruhika](https://github.com/spyder-ruhika) - Developer
