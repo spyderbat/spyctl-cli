@@ -31,7 +31,6 @@ jobs:
 
   publish-to-pypi:
     name: Publish Spyctl distribution to PyPI
-    if: false
     needs:
     - build
     runs-on: ubuntu-latest
