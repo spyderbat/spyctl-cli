@@ -1,7 +1,7 @@
 name: Test Package
 on:
   pull_request:
-    branches: [ "master", "develop" ]
+    branches: [ "main", "develop" ]
 jobs:
   build:
     runs-on: ${{ matrix.os }}
