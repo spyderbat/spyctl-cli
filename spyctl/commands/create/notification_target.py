@@ -5,16 +5,14 @@ import click
 import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
 from spyctl import cli
-from spyctl.resources import notification_targets as _nts
+from spyctl.api.notification_targets import get_notification_target
 from spyctl.commands.apply_cmd.notification_target import (
     handle_apply_notification_target,
 )
-from spyctl.api.notification_targets import get_notification_target
+from spyctl.resources import notification_targets as _nts
 
 
-@click.group(
-    name="notification-target", cls=lib.CustomSubGroup, epilog=lib.SUB_EPILOG
-)
+@click.group(name="notification-target", cls=lib.CustomSubGroup, epilog=lib.SUB_EPILOG)
 @click.help_option("-h", "--help", hidden=True)
 def notification_target():
     """Create a notification target."""

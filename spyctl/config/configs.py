@@ -7,11 +7,11 @@ import yaml
 from click.shell_completion import CompletionItem
 from tabulate import tabulate
 
+import spyctl.config.secrets as s
+import spyctl.schemas_v2 as schemas
+import spyctl.spyctl_lib as lib
 from spyctl import cli
 from spyctl.api.orgs import get_orgs
-import spyctl.config.secrets as s
-import spyctl.spyctl_lib as lib
-import spyctl.schemas_v2 as schemas
 
 APP_NAME = "spyctl"
 APP_DIR = f".{APP_NAME}"
@@ -99,9 +99,7 @@ class Context:
         for key in self.required_context_keys:
             if key not in self.context:
                 raise InvalidContextDataError(f"Context missing {key} field.")
-        for key in self.required_context_keys.union(
-            self.optional_context_keys
-        ):
+        for key in self.required_context_keys.union(self.optional_context_keys):
             if key in self.context and not (
                 isinstance(self.context[key], str)
                 or isinstance(self.context[key], list)
@@ -111,14 +109,10 @@ class Context:
                 )
         self.name = context_data[CONTEXT_NAME_FIELD]
         if not isinstance(self.name, str) or not self.name:
-            raise InvalidContextDataError(
-                "Context name is not a valid string."
-            )
+            raise InvalidContextDataError("Context name is not a valid string.")
         self.secret_name = context_data[SECRET_FIELD]
         if not isinstance(self.secret_name, str):
-            raise InvalidContextDataError(
-                "Context secret is not a valid string."
-            )
+            raise InvalidContextDataError("Context secret is not a valid string.")
         self.secret = s.find_secret(self.secret_name)
         self.org_uid = None
         self.filters = {}
@@ -180,9 +174,7 @@ class Config:
     }
     validation_errors = []
 
-    def __init__(
-        self, config_data: Dict, config_path: Path, config_dir: Path
-    ) -> None:
+    def __init__(self, config_data: Dict, config_path: Path, config_dir: Path) -> None:
         self.config_path = config_path
         # config_dir identifies the location of the current workspace
         # is updated when more-local config files are merged in
@@ -195,13 +187,9 @@ class Config:
         if not lib.valid_kind(config_data.get(lib.KIND_FIELD), CONFIG_KIND):
             raise InvalidConfigDataError("Invalid kind")
         if not isinstance(config_data[CURR_CONTEXT_FIELD], str):
-            raise InvalidConfigDataError(
-                "Invalid current context, should be a string"
-            )
+            raise InvalidConfigDataError("Invalid current context, should be a string")
         if not isinstance(config_data[CONTEXTS_FIELD], list):
-            raise InvalidConfigDataError(
-                f"Invalid {CONTEXTS_FIELD}, should be a list"
-            )
+            raise InvalidConfigDataError(f"Invalid {CONTEXTS_FIELD}, should be a list")
         self.current_context = config_data[CURR_CONTEXT_FIELD]
         self.contexts: Dict[str, Context] = {}
         self.context_paths: Dict[str, str] = {}
@@ -221,9 +209,7 @@ class Config:
         """
         for context_name, context in new_config.contexts.items():
             self.contexts[context_name] = context
-            self.context_paths[context_name] = new_config.context_paths[
-                context_name
-            ]
+            self.context_paths[context_name] = new_config.context_paths[context_name]
         self.current_context = new_config.current_context
         self.config_dir = new_config.config_dir
         self.config_path = new_config.config_path
@@ -232,9 +218,7 @@ class Config:
         rv = {
             lib.API_FIELD: lib.API_VERSION,
             lib.KIND_FIELD: CONFIG_KIND,
-            CONTEXTS_FIELD: [
-                context.as_dict() for context in self.contexts.values()
-            ],
+            CONTEXTS_FIELD: [context.as_dict() for context in self.contexts.values()],
             CURR_CONTEXT_FIELD: self.current_context,
         }
         return rv
@@ -277,15 +261,11 @@ def load_config(silent=False):
                 cli.err_exit(f"Config at {str(config_path)} is invalid.")
             try:
                 cfg = Config(config_data, config_path, config_path.parent)
-                cfg_cpy = Config(
-                    deepcopy(config_data), config_path, config_path.parent
-                )
+                cfg_cpy = Config(deepcopy(config_data), config_path, config_path.parent)
                 for context_data in config_data[lib.CONTEXTS_FIELD]:
                     if not schemas.valid_context(context_data):
                         ctx_name = context_data.get(lib.CONTEXT_NAME_FIELD)
-                        prefix = (
-                            f"Context {ctx_name!r}" if ctx_name else "Context"
-                        )
+                        prefix = f"Context {ctx_name!r}" if ctx_name else "Context"
                         cli.try_log(f"{prefix} in {config_path} is invalid")
                         continue
                     cfg.add_context(context_data)
@@ -316,9 +296,7 @@ def load_config(silent=False):
             for config in reversed(configs):
                 base_config.merge(config)
             LOADED_CONFIG = base_config
-            set_current_context(
-                base_config.contexts.get(base_config.current_context)
-            )
+            set_current_context(base_config.contexts.get(base_config.current_context))
 
 
 def get_loaded_config() -> Optional[Config]:
@@ -348,16 +326,11 @@ def get_current_context() -> Context:
         )
     if len(config.contexts) == 0:
         cli.err_exit(
-            "No valid contexts. Try using 'spyctl config set-context' to"
-            " create one."
+            "No valid contexts. Try using 'spyctl config set-context' to" " create one."
         )
-    if (
-        config.current_context == CURR_CONTEXT_NONE
-        or not config.current_context
-    ):
+    if config.current_context == CURR_CONTEXT_NONE or not config.current_context:
         cli.err_exit(
-            "Current context is not set. Try using"
-            " 'spyctl config use-context'"
+            "Current context is not set. Try using" " 'spyctl config use-context'"
         )
     if config.current_context not in config.contexts:
         cli.err_exit(
@@ -374,10 +347,7 @@ def init():
     perform_init = False
     reset = False
     local_workspace_path = Path.joinpath(Path.cwd(), LOCAL_CONFIG_PATH)
-    if (
-        local_workspace_path.exists()
-        and local_workspace_path == GLOBAL_CONFIG_PATH
-    ):
+    if local_workspace_path.exists() and local_workspace_path == GLOBAL_CONFIG_PATH:
         if cli.query_yes_no(
             "Are you sure you want to reset the global spyctl configuration"
             f" file '{str(local_workspace_path)}'",
@@ -417,9 +387,7 @@ def init():
         )
 
 
-def set_context(
-    name, secret, force_global: bool, use_context: bool, **context
-):
+def set_context(name, secret, force_global: bool, use_context: bool, **context):
     global LOADED_CONFIGS
     new_context = {
         CONTEXT_NAME_FIELD: name,
@@ -467,9 +435,7 @@ def set_context(
     target_config.context_paths[name] = config.config_path
     try:
         with context_path.open("w") as f:
-            yaml.dump(
-                target_config.as_dict(), f, sort_keys=False, width=float("inf")
-            )
+            yaml.dump(target_config.as_dict(), f, sort_keys=False, width=float("inf"))
             cli.try_log(
                 f"{'Updated' if updated else 'Set new'} context '{name}' in"
                 f" configuration file '{context_path}'."
@@ -487,10 +453,7 @@ def set_context(
                     sort_keys=False,
                     width=float("inf"),
                 )
-                if (
-                    local_config.config_path != context_path
-                    or not tgt_updated_curr_ctx
-                ):
+                if local_config.config_path != context_path or not tgt_updated_curr_ctx:
                     cli.try_log(
                         f"Updated current context to '{name}' in"
                         f" configuration file '{local_config.config_path}'."
@@ -540,12 +503,9 @@ def delete_context(name, force_global):
             target_config.current_context = CURR_CONTEXT_NONE
     try:
         with context_path.open("w") as f:
-            yaml.dump(
-                target_config.as_dict(), f, sort_keys=False, width=float("inf")
-            )
+            yaml.dump(target_config.as_dict(), f, sort_keys=False, width=float("inf"))
             cli.try_log(
-                f"Deleted context '{name}' in"
-                f" configuration file '{context_path}'."
+                f"Deleted context '{name}' in" f" configuration file '{context_path}'."
             )
             if updated_curr_context:
                 cli.try_log(
@@ -578,14 +538,10 @@ def current_context(force_global):
         config = get_loaded_config()
     if not config:
         cli.err_exit("Unable to load config.")
-    if (
-        config.current_context == CURR_CONTEXT_NONE
-        or not config.current_context
-    ):
+    if config.current_context == CURR_CONTEXT_NONE or not config.current_context:
         if len(config.contexts) > 0:
             cli.try_log(
-                "No current context. Use 'spyctl config use-context' to set"
-                " one."
+                "No current context. Use 'spyctl config use-context' to set" " one."
             )
         elif len(config.contexts) > 0:
             cli.try_log(
@@ -619,9 +575,7 @@ def use_context(name, force_global):
     target_config.current_context = name
     try:
         with context_path.open("w") as f:
-            yaml.dump(
-                target_config.as_dict(), f, sort_keys=False, width=float("inf")
-            )
+            yaml.dump(target_config.as_dict(), f, sort_keys=False, width=float("inf"))
             cli.try_log(
                 f"Set current context to '{name}' in"
                 f" configuration file '{context_path}'."
@@ -651,9 +605,7 @@ def get_contexts(name, force_global, force_workspace, output):
         cli.err_exit("Unable to load config.")
     for context in config.contexts.values():
         ctx_dict = context.as_dict()
-        ctx_dict[lib.LOCATION_FIELD] = config.context_paths.get(
-            context.name, "Unknown"
-        )
+        ctx_dict[lib.LOCATION_FIELD] = config.context_paths.get(context.name, "Unknown")
         contexts.append(ctx_dict)
     if name:
         contexts = filter(lambda x: x[lib.NAME_FIELD] == name, contexts)
@@ -702,9 +654,7 @@ def context_wide_output(contexts_tup: Tuple[List[Dict], str]) -> str:
                 name,
                 org,
                 context[lib.LOCATION_FIELD],
-                "\n".join(
-                    [f"{key}: {value}" for key, value in filters.items()]
-                ),
+                "\n".join([f"{key}: {value}" for key, value in filters.items()]),
             ]
         )
     data.sort(key=lambda x: x[1])
@@ -754,9 +704,7 @@ class ContextsParam(click.ParamType):
         load_config(silent=True)
         config = get_loaded_config()
         if config:
-            context_names = [
-                context.name for context in config.contexts.values()
-            ]
+            context_names = [context.name for context in config.contexts.values()]
             context_names.sort()
             return [
                 CompletionItem(context_name)

@@ -7,9 +7,7 @@ from requests import Response
 from spyctl.api.primitives import delete, get, post, put
 
 
-def get_agent_health_notification_settings(
-    api_url, api_key, org_uid, ahn_uid
-) -> Dict:
+def get_agent_health_notification_settings(api_url, api_key, org_uid, ahn_uid) -> Dict:
     """
     Gets the agent health for the specified organization.
     """

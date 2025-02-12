@@ -17,9 +17,7 @@ from spyctl.api.notification_templates import (
 )
 
 
-def handle_apply_notification_template(
-    resrc_data: Dict, from_edit: bool = False
-):
+def handle_apply_notification_template(resrc_data: Dict, from_edit: bool = False):
     """
     Handles the application of a notification template.
     """
@@ -29,19 +27,13 @@ def handle_apply_notification_template(
     if tmpl_type == lib.TMPL_TYPE_SLACK:
         return handle_apply_slack_notification_template(resrc_data, from_edit)
     if tmpl_type == lib.TMPL_TYPE_PD:
-        return handle_apply_pagerduty_notification_template(
-            resrc_data, from_edit
-        )
+        return handle_apply_pagerduty_notification_template(resrc_data, from_edit)
     if tmpl_type == lib.TMPL_TYPE_WEBHOOK:
-        return handle_apply_webhook_notification_template(
-            resrc_data, from_edit
-        )
+        return handle_apply_webhook_notification_template(resrc_data, from_edit)
     raise ValueError(f"Unsupported template type: {tmpl_type}")
 
 
-def handle_apply_email_notification_template(
-    resrc_data: Dict, from_edit: bool = False
-):
+def handle_apply_email_notification_template(resrc_data: Dict, from_edit: bool = False):
     """
     Handles the application of an email notification template.
     """
@@ -76,19 +68,13 @@ def handle_apply_email_notification_template(
             **kwargs,
         )
         if from_edit:
-            cli.try_log(
-                f"Successfully edited email notification template {uid}"
-            )
+            cli.try_log(f"Successfully edited email notification template {uid}")
         else:
-            cli.try_log(
-                f"Successfully created email notification template {uid}"
-            )
+            cli.try_log(f"Successfully created email notification template {uid}")
     return uid
 
 
-def handle_apply_slack_notification_template(
-    resrc_data: Dict, from_edit: bool = False
-):
+def handle_apply_slack_notification_template(resrc_data: Dict, from_edit: bool = False):
     """
     Handles the application of a Slack notification template.
     """
@@ -122,13 +108,9 @@ def handle_apply_slack_notification_template(
             **kwargs,
         )
         if from_edit:
-            cli.try_log(
-                f"Successfully edited Slack notification template {uid}"
-            )
+            cli.try_log(f"Successfully edited Slack notification template {uid}")
         else:
-            cli.try_log(
-                f"Successfully created Slack notification template {uid}"
-            )
+            cli.try_log(f"Successfully created Slack notification template {uid}")
     return uid
 
 
@@ -171,9 +153,7 @@ def handle_apply_pagerduty_notification_template(
             *ctx.get_api_data(),
             **kwargs,
         )
-        cli.try_log(
-            f"Successfully created PagerDuty notification template {uid}"
-        )
+        cli.try_log(f"Successfully created PagerDuty notification template {uid}")
     else:
         update_pagerduty_notification_template(
             *ctx.get_api_data(),
@@ -181,13 +161,9 @@ def handle_apply_pagerduty_notification_template(
             **kwargs,
         )
         if from_edit:
-            cli.try_log(
-                f"Successfully edited PagerDuty notification template {uid}"
-            )
+            cli.try_log(f"Successfully edited PagerDuty notification template {uid}")
         else:
-            cli.try_log(
-                f"Successfully created PagerDuty notification template {uid}"
-            )
+            cli.try_log(f"Successfully created PagerDuty notification template {uid}")
     return uid
 
 
@@ -219,9 +195,7 @@ def handle_apply_webhook_notification_template(
             *ctx.get_api_data(),
             **kwargs,
         )
-        cli.try_log(
-            f"Successfully created webhook notification template {uid}"
-        )
+        cli.try_log(f"Successfully created webhook notification template {uid}")
     else:
         update_webhook_notification_template(
             *ctx.get_api_data(),
@@ -229,11 +203,7 @@ def handle_apply_webhook_notification_template(
             **kwargs,
         )
         if from_edit:
-            cli.try_log(
-                f"Successfully edited webhook notification template {uid}"
-            )
+            cli.try_log(f"Successfully edited webhook notification template {uid}")
         else:
-            cli.try_log(
-                f"Successfully created webhook notification template {uid}"
-            )
+            cli.try_log(f"Successfully created webhook notification template {uid}")
     return uid

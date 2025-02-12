@@ -106,9 +106,7 @@ def handle_get_custom_flags(name_or_id, output, **kwargs):
     ctx = cfg.get_current_context()
     if name_or_id:
         kwargs["name_or_uid_contains"] = name_or_id
-    custom_flags, total_pages = cf_api.get_custom_flags(
-        *ctx.get_api_data(), **kwargs
-    )
+    custom_flags, total_pages = cf_api.get_custom_flags(*ctx.get_api_data(), **kwargs)
     if kwargs.get("raw_data"):
         data_parser = None
     else:
@@ -116,11 +114,7 @@ def handle_get_custom_flags(name_or_id, output, **kwargs):
     get_lib.show_get_data(
         custom_flags,
         output,
-        lambda data: _r.custom_flags.summary_output(
-            data, total_pages, kwargs["page"]
-        ),
-        lambda data: _r.custom_flags.wide_output(
-            data, total_pages, kwargs["page"]
-        ),
+        lambda data: _r.custom_flags.summary_output(data, total_pages, kwargs["page"]),
+        lambda data: _r.custom_flags.wide_output(data, total_pages, kwargs["page"]),
         data_parser=data_parser,
     )

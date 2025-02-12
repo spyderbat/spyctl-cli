@@ -5,7 +5,6 @@ import time
 import click
 
 import spyctl.config.configs as cfg
-
 import spyctl.resources as _r
 import spyctl.spyctl_lib as lib
 from spyctl import cli

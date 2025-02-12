@@ -6,7 +6,6 @@ from tabulate import tabulate
 
 import spyctl.spyctl_lib as lib
 
-
 SUMMARY_HEADERS = [
     "UID",
     "CMD",

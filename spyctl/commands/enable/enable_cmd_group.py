@@ -1,6 +1,7 @@
 """Handle the enable subcommand group for spyctl."""
 
 import click
+
 import spyctl.spyctl_lib as lib
 from spyctl.commands.enable import custom_flag
 

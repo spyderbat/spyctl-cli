@@ -7,14 +7,12 @@ import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
 from spyctl import cli
 from spyctl.api.notification_targets import (
-    get_notification_targets,
     delete_notification_target,
+    get_notification_targets,
 )
 
 
-@click.command(
-    "notification-target", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG
-)
+@click.command("notification-target", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)
 @_so.delete_options
 def delete_notif_tgt_cmd(name_or_id, yes=False):
     """Delete a notification target by name or uid"""
@@ -40,8 +38,6 @@ def handle_delete_notif_tgt(name_or_id):
         )
         if perform_delete:
             delete_notification_target(*ctx.get_api_data(), uid)
-            cli.try_log(
-                f"Successfully deleted notification target '{name} - {uid}'"
-            )
+            cli.try_log(f"Successfully deleted notification target '{name} - {uid}'")
         else:
             cli.try_log(f"Skipping delete of '{name} - {uid}'")

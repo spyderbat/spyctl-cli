@@ -1,6 +1,6 @@
 """Handles the API calls for notification targets."""
 
-from spyctl.api.primitives import get, post, put, delete
+from spyctl.api.primitives import delete, get, post, put
 
 
 def get_notification_target(
@@ -12,9 +12,7 @@ def get_notification_target(
 ):
     """Gets a notification target from the specified organization."""
     url = f"{api_url}/api/v1/org/{org_uid}/notificationtarget/{notification_target_uid}"
-    resp = get(
-        url, api_key, params={"include_target_data": not exclude_target_data}
-    )
+    resp = get(url, api_key, params={"include_target_data": not exclude_target_data})
     return resp.json()["notification_target"]
 
 
@@ -223,7 +221,9 @@ def delete_notification_target(
     Returns:
         None
     """
-    endpoint = f"{api_url}/api/v1/org/{org_uid}/notificationtarget/{notification_target_uid}"
+    endpoint = (
+        f"{api_url}/api/v1/org/{org_uid}/notificationtarget/{notification_target_uid}"
+    )
     delete(endpoint, api_key)
 
 

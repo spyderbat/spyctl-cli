@@ -98,9 +98,7 @@ def filter_sources(
             data, MACHINES_TGT_FIELDS, filt
         ),
     }
-    sources_data = use_filters(
-        sources_data, filter_set, filters, use_context_filters
-    )
+    sources_data = use_filters(sources_data, filter_set, filters, use_context_filters)
     return sources_data
 
 
@@ -114,9 +112,7 @@ def filter_nodes(
     **filters,
 ):
     filter_set = {
-        cfgs.MACHINES_FIELD: lambda data, filt: filter_obj(
-            data, ["muid"], filt
-        ),
+        cfgs.MACHINES_FIELD: lambda data, filt: filter_obj(data, ["muid"], filt),
     }
     nodes_data = use_filters(nodes_data, filter_set, filters)
     return nodes_data
@@ -153,9 +149,7 @@ def filter_redflags(
         return [flag for flag in data if not flag["false_positive"]]
 
     filter_set = {
-        cfgs.MACHINES_FIELD: lambda data, filt: filter_obj(
-            data, ["muid"], filt
-        ),
+        cfgs.MACHINES_FIELD: lambda data, filt: filter_obj(data, ["muid"], filt),
         lib.FLAG_SEVERITY: severity_filter,
         "exceptions": exceptions_filter,
     }
@@ -189,9 +183,7 @@ def filter_opsflags(
         return rv
 
     filter_set = {
-        cfgs.MACHINES_FIELD: lambda data, filt: filter_obj(
-            data, ["muid"], filt
-        ),
+        cfgs.MACHINES_FIELD: lambda data, filt: filter_obj(data, ["muid"], filt),
         lib.FLAG_SEVERITY: severity_filter,
     }
     flag_grp_data = use_filters(flag_grp_data, filter_set, filters)
@@ -242,16 +234,12 @@ def filter_fingerprints(
         return data
 
     filter_set = {
-        cfgs.CGROUP_FIELD: lambda data, filt: filter_obj(
-            data, CGROUP_TGT_FIELDS, filt
-        ),
+        cfgs.CGROUP_FIELD: lambda data, filt: filter_obj(data, CGROUP_TGT_FIELDS, filt),
         lib.CONT_NAME_FIELD: lambda data, filt: filter_obj(
             data, CONT_NAME_TGT_FIELDS, filt
         ),
         lib.CONT_ID_FIELD: cont_id_filter,
-        lib.IMAGE_FIELD: lambda data, filt: filter_obj(
-            data, IMAGE_TGT_FIELDS, filt
-        ),
+        lib.IMAGE_FIELD: lambda data, filt: filter_obj(data, IMAGE_TGT_FIELDS, filt),
         lib.IMAGEID_FIELD: image_id_filter,
         lib.NAMESPACE_FIELD: lambda data, filt: filter_obj(
             data,
@@ -393,9 +381,7 @@ def filter_obj(
     return rv
 
 
-def match_filters(
-    record: Dict, target_fields: List[str], filters: List[str]
-) -> bool:
+def match_filters(record: Dict, target_fields: List[str], filters: List[str]) -> bool:
     for fil in filters:
         for field in target_fields:
             value = get_field_value(field, record)
@@ -415,9 +401,9 @@ def match_filters(
                 if value == fil:
                     return True
                 try:
-                    if fil in get_field_value(
-                        field, record
-                    ) and not isinstance(value, str):
+                    if fil in get_field_value(field, record) and not isinstance(
+                        value, str
+                    ):
                         return True
                 except Exception:
                     pass

@@ -17,17 +17,14 @@ from spyctl.merge_lib.ruleset_merge_object import RulesetPolicyMergeObject
 from spyctl.tests.backups import backup_context, restore_context
 
 
-def test_merge_ruleset_policy(
-    cluster_policy, rulesets, deviation, updated_ruleset
-):
+def test_merge_ruleset_policy(cluster_policy, rulesets, deviation, updated_ruleset):
     def get_rulesets(*_args, **_kwargs):
         return rulesets
 
     policy_name = cluster_policy[lib.METADATA_FIELD][lib.METADATA_NAME_FIELD]
-    with mock.patch(
-        "spyctl.commands.merge.get_rulesets", get_rulesets
-    ), mock.patch(
-        "spyctl.merge_lib.ruleset_merge_object.get_rulesets", get_rulesets
+    with (
+        mock.patch("spyctl.commands.merge.get_rulesets", get_rulesets),
+        mock.patch("spyctl.merge_lib.ruleset_merge_object.get_rulesets", get_rulesets),
     ):
         mo: RulesetPolicyMergeObject = _merge.merge_resource(
             cluster_policy, policy_name, deviation, src_cmd="diff"
@@ -42,14 +39,14 @@ def test_merge_ruleset_policy_full_command(rulesets, updated_ruleset_string):
         return rulesets
 
     runner = CliRunner(mix_stderr=False)
-    with mock.patch(
-        "spyctl.commands.merge.get_rulesets", get_rulesets
-    ), mock.patch(
-        "spyctl.merge_lib.ruleset_merge_object.get_rulesets", get_rulesets
-    ), mock.patch.object(
-        Context,
-        "get_api_data",
-        lambda _x: ("test_org", "test_key", "test_url"),
+    with (
+        mock.patch("spyctl.commands.merge.get_rulesets", get_rulesets),
+        mock.patch("spyctl.merge_lib.ruleset_merge_object.get_rulesets", get_rulesets),
+        mock.patch.object(
+            Context,
+            "get_api_data",
+            lambda _x: ("test_org", "test_key", "test_url"),
+        ),
     ):
         response = runner.invoke(
             spyctl.main,

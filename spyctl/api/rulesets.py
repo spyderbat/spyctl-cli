@@ -1,7 +1,7 @@
 """Handles the API calls for the rulesets endpoint."""
 
-from typing import Dict, Optional
 import json
+from typing import Dict, Optional
 
 from spyctl.api.primitives import delete, get, post, put
 

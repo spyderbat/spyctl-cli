@@ -6,14 +6,14 @@ import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
 from spyctl import cli
 from spyctl import schemas_v2 as schemas
-from spyctl.resources.agent_health import data_to_yaml
+from spyctl.api.agent_health import get_agent_health_notification_settings
 from spyctl.commands.apply_cmd.agent_health import (
     handle_apply_agent_health_notification,
 )
-from spyctl.api.agent_health import get_agent_health_notification_settings
 from spyctl.commands.notifications.configure.shared_options import (
     get_target_map,
 )
+from spyctl.resources.agent_health import data_to_yaml
 
 
 @click.command(
@@ -116,8 +116,8 @@ def handle_create_agent_health_notification_settings(output, **kwargs):
         uid = handle_apply_agent_health_notification(
             agent_health_notification_settings_rec
         )
-        agent_health_notification_settings = (
-            get_agent_health_notification_settings(*ctx.get_api_data(), uid)
+        agent_health_notification_settings = get_agent_health_notification_settings(
+            *ctx.get_api_data(), uid
         )
         model = data_to_yaml(agent_health_notification_settings)
     else:

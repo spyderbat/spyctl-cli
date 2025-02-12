@@ -36,12 +36,8 @@ class PolicyMatchTracker:
     # The first allow rule we find that matches the scope
     # of the deviation
     first_in_scope_allow: Tuple[_r.BaseRule, List[int]] = None
-    scoped_denies: Dict[str, Dict[_r.BaseRule, List[int]]] = field(
-        default_factory=dict
-    )
-    global_denies: Dict[str, Dict[_r.BaseRule, List[int]]] = field(
-        default_factory=dict
-    )
+    scoped_denies: Dict[str, Dict[_r.BaseRule, List[int]]] = field(default_factory=dict)
+    global_denies: Dict[str, Dict[_r.BaseRule, List[int]]] = field(default_factory=dict)
 
     def add_in_scope_allow(self, rule: _r.BaseRule, indexes: List[int]):
         """In this case there is already an allow rule that
@@ -100,9 +96,7 @@ def merge_rulesets(mo: RulesetPolicyMergeObject, new: Dict):
     lib.err_exit(f"Ruleset merge not implemented yet for {new_kind}")
 
 
-def merge_deviation_rules(
-    mo: RulesetPolicyMergeObject, deviation: Dict
-) -> bool:
+def merge_deviation_rules(mo: RulesetPolicyMergeObject, deviation: Dict) -> bool:
     changed = False
     scopes = deviation[lib.METADATA_FIELD][lib.METADATA_SCOPES_FIELD]
     built_scopes = _scp.build_scopes(scopes)
@@ -168,9 +162,7 @@ def merge_deviation_rule(
                 rs_scope_denies = next(iter(pmt.scoped_denies.values()))
                 rs_scope_deny = next(iter(rs_scope_denies))
                 selectors = rs_scope_deny.selectors_data
-                new_rule = _r.new_rule(
-                    target, _r.VERB_ALLOW, [value], selectors
-                )
+                new_rule = _r.new_rule(target, _r.VERB_ALLOW, [value], selectors)
                 new_built_rule = _r.build_rule(new_rule, fa_rule.rs_name)
                 rt.rules_map[new_built_rule] = new_rule
             else:
@@ -188,9 +180,7 @@ def merge_deviation_rule(
                 rs_scope_denies = next(iter(pmt.scoped_denies.values()))
                 rs_scope_deny = next(iter(rs_scope_denies))
                 selectors = rs_scope_deny.selectors_data
-                new_rule = _r.new_rule(
-                    target, _r.VERB_ALLOW, [value], selectors
-                )
+                new_rule = _r.new_rule(target, _r.VERB_ALLOW, [value], selectors)
                 new_built_rule = _r.build_rule(new_rule, fa_rule.rs_name)
                 rt.rules_map[new_built_rule] = new_rule
             else:
@@ -321,9 +311,7 @@ def evaluate_in_rs_rule(
 
 def build_rules_by_rs(mo: RulesetPolicyMergeObject):
     for rs_mo in mo.rulesets.values():
-        rs_name = rs_mo.original_obj[lib.METADATA_FIELD][
-            lib.METADATA_NAME_FIELD
-        ]
+        rs_name = rs_mo.original_obj[lib.METADATA_FIELD][lib.METADATA_NAME_FIELD]
         rules = rs_mo.original_obj[lib.SPEC_FIELD].get(lib.RULES_FIELD, [])
         rules_map = {}
         for rule in rules:
@@ -333,9 +321,7 @@ def build_rules_by_rs(mo: RulesetPolicyMergeObject):
         mo.ruleset_trackers[rs_name] = RulesTracker(rs_name, rules_map)
 
 
-def merge_rules(
-    mo: MergeObject, base_value: List[Dict], new_value: List[Dict], _
-):
+def merge_rules(mo: MergeObject, base_value: List[Dict], new_value: List[Dict], _):
     is_ruleset_merge = mo.current_other[lib.KIND_FIELD] == lib.RULESET_KIND
     if not is_ruleset_merge:
         return __merge_deviation_rules(mo, base_value, new_value, _)

@@ -16,9 +16,7 @@ from spyctl.api.notifications import post_test_notification
 # ----------------------------------------------------------------- #
 
 
-@click.command(
-    "test-notification", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG
-)
+@click.command("test-notification", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)
 @click.help_option("-h", "--help", hidden=True)
 @click.option(
     "-T",
@@ -58,9 +56,7 @@ def test_notification(target, template, record_file):
 # ----------------------------------------------------------------- #
 
 
-def handle_test_notification(
-    target_name_or_uid, template_name_or_uid, record_file: IO
-):
+def handle_test_notification(target_name_or_uid, template_name_or_uid, record_file: IO):
     """
     Sends a test notification to the specified targets.
 
@@ -92,9 +88,7 @@ def handle_test_notification(
     tmpl_params = {
         "name_or_uid_contains": template_name_or_uid,
     }
-    templates, _ = get_notification_templates(
-        *ctx.get_api_data(), **tmpl_params
-    )
+    templates, _ = get_notification_templates(*ctx.get_api_data(), **tmpl_params)
     if not templates:
         lib.err_exit(f"No templates found for {template_name_or_uid}")
     if len(templates) > 1:

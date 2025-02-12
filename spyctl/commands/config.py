@@ -2,10 +2,9 @@
 
 import click
 
+import spyctl.config as _c
 import spyctl.spyctl_lib as lib
 from spyctl import cli
-
-import spyctl.config as _c
 
 # ----------------------------------------------------------------- #
 #                         Config Subcommand                         #
@@ -49,9 +48,7 @@ def delete_context(name, force_global, yes=False):
     _c.configs.delete_context(name, force_global)
 
 
-@config.command(
-    "delete-apisecret", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG
-)
+@config.command("delete-apisecret", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)
 @click.help_option("-h", "--help", hidden=True)
 @click.option(
     "-y",
@@ -71,9 +68,7 @@ def delete_apisecret(name, yes=False):
     _c.secrets.delete_secret(name)
 
 
-@config.command(
-    "current-context", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG
-)
+@config.command("current-context", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)
 @click.help_option("-h", "--help", hidden=True)
 @click.option(
     "-g",
@@ -95,9 +90,7 @@ def current_context(force_global):
     "-o",
     "--output",
     default=lib.OUTPUT_DEFAULT,
-    type=click.Choice(
-        [lib.OUTPUT_DEFAULT, lib.OUTPUT_WIDE], case_sensitive=False
-    ),
+    type=click.Choice([lib.OUTPUT_DEFAULT, lib.OUTPUT_WIDE], case_sensitive=False),
 )
 @click.option(
     "-g",
@@ -126,9 +119,7 @@ def get_contexts(force_global, force_workspace, output, name=None):
     config init\" for more details.
     """
     if force_global and force_workspace:
-        cli.try_log(
-            "Both global and workspace flags set; defaulting to global"
-        )
+        cli.try_log("Both global and workspace flags set; defaulting to global")
     _c.configs.get_contexts(name, force_global, force_workspace, output)
 
 
@@ -139,9 +130,7 @@ def get_contexts(force_global, force_workspace, output, name=None):
     "-o",
     "--output",
     default=lib.OUTPUT_DEFAULT,
-    type=click.Choice(
-        lib.OUTPUT_CHOICES + [lib.OUTPUT_WIDE], case_sensitive=False
-    ),
+    type=click.Choice(lib.OUTPUT_CHOICES + [lib.OUTPUT_WIDE], case_sensitive=False),
 )
 def get_api_secrets(output, name=None):
     """Describe one or many apisecrets."""
@@ -297,9 +286,7 @@ def set_context(name, secret, force_global, use_ctx, **context):
     """Set a context entry in a spyctl configuration file, or update an
     existing one.
     """
-    context = {
-        key: value for key, value in context.items() if value is not None
-    }
+    context = {key: value for key, value in context.items() if value is not None}
     _c.configs.set_context(name, secret, force_global, use_ctx, **context)
 
 
@@ -376,7 +363,5 @@ def view(force_global, force_workspace, output):
     other workspace configuration files from cwd to root.
     """
     if force_global and force_workspace:
-        cli.try_log(
-            "Both global and workspace flags set; defaulting to global"
-        )
+        cli.try_log("Both global and workspace flags set; defaulting to global")
     _c.configs.view_config(force_global, force_workspace, output)

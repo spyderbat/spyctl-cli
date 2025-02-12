@@ -40,9 +40,7 @@ def data_to_yaml(data: Dict) -> Dict:
         metadata=metadata,
         spec=spec,
     )
-    return model.model_dump(
-        exclude_unset=True, exclude_none=True, by_alias=True
-    )
+    return model.model_dump(exclude_unset=True, exclude_none=True, by_alias=True)
 
 
 SUMMARY_HEADERS = [
@@ -54,9 +52,7 @@ SUMMARY_HEADERS = [
 ]
 
 
-def summary_output(
-    queries: List[Dict], total_pages: int, current_page: int = 0
-):
+def summary_output(queries: List[Dict], total_pages: int, current_page: int = 0):
     """
     Print a summary of saved queries.
 

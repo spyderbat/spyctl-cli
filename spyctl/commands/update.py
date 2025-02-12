@@ -22,9 +22,7 @@ from spyctl.commands.apply_cmd import apply
 # ----------------------------------------------------------------- #
 
 
-@click.group(
-    "update", cls=lib.CustomSubGroup, hidden=True, epilog=lib.SUB_EPILOG
-)
+@click.group("update", cls=lib.CustomSubGroup, hidden=True, epilog=lib.SUB_EPILOG)
 @click.help_option("-h", "--help", hidden=True)
 def update():
     pass
@@ -111,9 +109,7 @@ def handle_update_policy_modes(backup_dir: Optional[str]):
                 s = traceback.format_exc()
                 print(s)
                 lib.err_exit("Error saving policy backups.. canceling")
-        mode = pol_data[lib.SPEC_FIELD].get(
-            lib.POL_MODE_FIELD, lib.POL_MODE_ENFORCE
-        )
+        mode = pol_data[lib.SPEC_FIELD].get(lib.POL_MODE_FIELD, lib.POL_MODE_ENFORCE)
         if mode not in lib.POL_MODES:
             mode = lib.POL_MODE_ENFORCE
         lib.try_log(
@@ -135,18 +131,14 @@ def handle_update_policy_modes(backup_dir: Optional[str]):
                 uid = policy[lib.METADATA_FIELD][lib.METADATA_UID_FIELD]
                 outfile = Path.joinpath(backup_path, uid)
                 print(f"Backing up {uid} tp {str(outfile)}")
-                outfile.write_text(
-                    yaml.dump(policy, sort_keys=False), encoding="utf-8"
-                )
+                outfile.write_text(yaml.dump(policy, sort_keys=False), encoding="utf-8")
             except Exception:
                 import traceback
 
                 s = traceback.format_exc()
                 print(s)
                 lib.err_exit("Error saving policy backups.. canceling")
-        mode = policy[lib.SPEC_FIELD].get(
-            lib.POL_MODE_FIELD, lib.POL_MODE_ENFORCE
-        )
+        mode = policy[lib.SPEC_FIELD].get(lib.POL_MODE_FIELD, lib.POL_MODE_ENFORCE)
         if mode not in lib.POL_MODES:
             mode = lib.POL_MODE_ENFORCE
         lib.try_log(
