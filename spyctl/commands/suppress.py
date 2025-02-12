@@ -4,10 +4,10 @@ from typing import Dict
 
 import click
 
-from spyctl.commands.apply_cmd import apply
 import spyctl.resources as _r
 import spyctl.spyctl_lib as lib
 from spyctl import cli
+from spyctl.commands.apply_cmd import apply
 
 # ----------------------------------------------------------------- #
 #                       Suppress Subcommand                         #
@@ -58,9 +58,7 @@ def suppress_spydertrace(include_users, yes, trace_uid, name):
 # ----------------------------------------------------------------- #
 
 
-def handle_suppress_trace_by_id(
-    trace_uid: str, include_users: bool, name: str
-):
+def handle_suppress_trace_by_id(trace_uid: str, include_users: bool, name: str):
     """
     Handles the suppression of a trace by its ID.
 

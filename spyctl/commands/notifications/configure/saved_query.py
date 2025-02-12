@@ -3,11 +3,11 @@
 import click
 
 from spyctl import spyctl_lib as lib
-from spyctl.api.saved_queries import get_saved_queries
 from spyctl.api.notifications import put_set_notification_settings
+from spyctl.api.saved_queries import get_saved_queries
 from spyctl.commands.notifications.configure.shared_options import (
-    notification_settings_options,
     get_target_map,
+    notification_settings_options,
 )
 from spyctl.config import configs as cfg
 
@@ -32,9 +32,7 @@ def configure_saved_query(name_or_uid, **kwargs):
     if not saved_queries:
         lib.err_exit(f"Saved query '{name_or_uid}' not found")
     if len(saved_queries) > 1:
-        lib.err_exit(
-            f"Saved query '{name_or_uid}' is ambiguous, use full name or UID"
-        )
+        lib.err_exit(f"Saved query '{name_or_uid}' is ambiguous, use full name or UID")
     saved_query = saved_queries[0]
     put_set_notification_settings(
         *ctx.get_api_data(), saved_query["uid"], notification_settings
@@ -43,12 +41,6 @@ def configure_saved_query(name_or_uid, **kwargs):
         lib.try_log(
             f"No notification targets configured for saved query '{name_or_uid}'"
         )
-        lib.try_log(
-            f"Use 'spyctl edit saved-query \"{name_or_uid}\"' to configure"
-        )
-        lib.try_log(
-            "Or re-run this command with --targets and/or --target-map options"
-        )
-    lib.try_log(
-        f"Notification settings for saved query '{name_or_uid}' updated"
-    )
+        lib.try_log(f"Use 'spyctl edit saved-query \"{name_or_uid}\"' to configure")
+        lib.try_log("Or re-run this command with --targets and/or --target-map options")
+    lib.try_log(f"Notification settings for saved query '{name_or_uid}' updated")

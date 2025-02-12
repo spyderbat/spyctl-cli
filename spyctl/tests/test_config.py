@@ -166,10 +166,7 @@ def test_contexts():
             TEST_CONTEXT,
         ],
     )
-    assert (
-        f"Set new context '{TEST_CONTEXT}' in configuration file"
-        in result.output
-    )
+    assert f"Set new context '{TEST_CONTEXT}' in configuration file" in result.output
     result = runner.invoke(
         spyctl.main,
         [
@@ -259,9 +256,7 @@ def test_workspace():
             "init-workspace",
         ],
     )
-    test_str = (
-        f"Created configuration file at */{WORKSPACE_DIR_NAME}/.spyctl/config*"
-    )
+    test_str = f"Created configuration file at */{WORKSPACE_DIR_NAME}/.spyctl/config*"
     assert fnmatch(result.output, test_str)
     result = runner.invoke(
         spyctl.main,
@@ -372,9 +367,7 @@ def test_workspace():
             TEST_CONTEXT2,
         ],
     )
-    test_str = (
-        f"Set current context to '{TEST_CONTEXT2}' in configuration file"
-    )
+    test_str = f"Set current context to '{TEST_CONTEXT2}' in configuration file"
     assert test_str in result.output
     assert WORKSPACE_DIR_NAME not in result.output
     result = runner.invoke(

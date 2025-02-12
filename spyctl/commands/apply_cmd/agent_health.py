@@ -2,18 +2,16 @@
 
 from typing import Dict
 
-import spyctl.spyctl_lib as lib
 import spyctl.config.configs as cfg
+import spyctl.spyctl_lib as lib
+from spyctl import cli
 from spyctl.api.agent_health import (
     post_new_agent_health_notification_settings,
     put_update_agent_health_notification_settings,
 )
-from spyctl import cli
 
 
-def handle_apply_agent_health_notification(
-    data: Dict, from_edit: bool = False
-):
+def handle_apply_agent_health_notification(data: Dict, from_edit: bool = False):
     """
     Handles the application of an agent health notification.
     """
@@ -42,7 +40,5 @@ def handle_apply_agent_health_notification(
         if from_edit:
             cli.try_log(f"Successfully edited agent health notification {uid}")
         else:
-            cli.try_log(
-                f"Successfully created agent health notification {uid}"
-            )
+            cli.try_log(f"Successfully created agent health notification {uid}")
     return uid

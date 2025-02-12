@@ -17,9 +17,7 @@ from spyctl.api.primitives import response_err_msg
 # ----------------------------------------------------------------- #
 
 
-@click.group(
-    "report", cls=lib.CustomSubGroup, epilog=lib.SUB_EPILOG, hidden=True
-)
+@click.group("report", cls=lib.CustomSubGroup, epilog=lib.SUB_EPILOG, hidden=True)
 @click.help_option("-h", "--help", hidden=True)
 def report():
     """Generate and manage reports"""
@@ -57,9 +55,7 @@ def generate(from_file: IO[str], save_input: str):
     "-o",
     "--output",
     default=lib.OUTPUT_DEFAULT,
-    type=click.Choice(
-        lib.OUTPUT_CHOICES + [lib.OUTPUT_WIDE], case_sensitive=False
-    ),
+    type=click.Choice(lib.OUTPUT_CHOICES + [lib.OUTPUT_WIDE], case_sensitive=False),
 )
 @click.argument("report_id", required=True)
 def status(report_id: str, output: str):
@@ -100,9 +96,7 @@ def delete(report_id: str):
     "-o",
     "--output",
     default=lib.OUTPUT_DEFAULT,
-    type=click.Choice(
-        lib.OUTPUT_CHOICES + [lib.OUTPUT_WIDE], case_sensitive=False
-    ),
+    type=click.Choice(lib.OUTPUT_CHOICES + [lib.OUTPUT_WIDE], case_sensitive=False),
 )
 def report_list(output: str):
     """Get the list of generated reports with status and metadata"""
@@ -149,9 +143,7 @@ def handle_generate_report(from_file: Optional[IO[str]], save_input: str):
             except ValueError:
                 report_nr = -1
         report_type = inventory[report_nr]
-        click.secho(
-            f"\nCollecting arguments for {report_type['short']}...", fg="green"
-        )
+        click.secho(f"\nCollecting arguments for {report_type['short']}...", fg="green")
 
         report_args = {}
         for nr, arg in enumerate(report_type["args"]):
@@ -185,9 +177,7 @@ def handle_get_report_status(rid: str, output: str):
         cli.show(report, output)
 
 
-def handle_get_report_download(
-    rid: str, output_format: str, file: Optional[IO]
-):
+def handle_get_report_download(rid: str, output_format: str, file: Optional[IO]):
     if output_format == "pdf" and not file:
         cli.err_exit("PDF is a binary format, use -f/--file to save to file")
 
@@ -229,9 +219,7 @@ def handle_delete_report(rid: str):
 
 def __collect_report_arg(nr: int, arg: Dict) -> Any:
     required = arg.get("required", False)
-    arg_descr = (
-        f"\n{nr+1}. {arg['name']}: {arg['description']}, type: {arg['type']}"
-    )
+    arg_descr = f"\n{nr+1}. {arg['name']}: {arg['description']}, type: {arg['type']}"
     if required:
         arg_descr += " (required)"
     click.echo(arg_descr)
@@ -288,9 +276,7 @@ def __reports_summary_output(reports: List[Dict], wide=False) -> str:
     return tabulate(data, header, tablefmt="plain")
 
 
-def __report_summary_data(
-    report: Dict, wide=False, tag_headers: List = None
-) -> List:
+def __report_summary_data(report: Dict, wide=False, tag_headers: List = None) -> List:
     if tag_headers is None:
         tag_headers = []
     rv = [

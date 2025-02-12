@@ -45,9 +45,7 @@ def create_container_policies(
     return policies
 
 
-def assemble_policies(
-    cont_map: "ContainerMappings", mode: str, **kwargs
-) -> List[Dict]:
+def assemble_policies(cont_map: "ContainerMappings", mode: str, **kwargs) -> List[Dict]:
     """
     Assemble the container policies from the given container mappings.
 
@@ -67,19 +65,13 @@ def assemble_policies(
                 pol_inp.procs[puid].base_model for puid in pol_inp.roots
             ],
             lib.NET_POLICY_FIELD: {
-                lib.INGRESS_FIELD: [
-                    i.base_model for i in pol_inp.ingress.values()
-                ],
-                lib.EGRESS_FIELD: [
-                    e.base_model for e in pol_inp.egress.values()
-                ],
+                lib.INGRESS_FIELD: [i.base_model for i in pol_inp.ingress.values()],
+                lib.EGRESS_FIELD: [e.base_model for e in pol_inp.egress.values()],
             },
             lib.RESPONSE_FIELD: lib.RESPONSE_ACTION_TEMPLATE,
         }
         name = f"Pol for {image_pat}"[:127]
-        metadata = schemas.GuardianMetadataModel(
-            name=name, type=lib.POL_TYPE_CONT
-        )
+        metadata = schemas.GuardianMetadataModel(name=name, type=lib.POL_TYPE_CONT)
         spec = schemas.GuardianPolicySpecModel(**spec_dict)
         pol = schemas.GuardianPolicyModel(
             apiVersion=lib.API_VERSION,
@@ -109,13 +101,9 @@ def build_selectors(image_pat: str, **kwargs) -> Dict:
             "image": image_pat,
         }
     )
-    rv[lib.CONT_SELECTOR_FIELD] = cs.model_dump(
-        by_alias=True, exclude_none=True
-    )
+    rv[lib.CONT_SELECTOR_FIELD] = cs.model_dump(by_alias=True, exclude_none=True)
     if "image_id" in kwargs:
-        rv[lib.CONT_SELECTOR_FIELD]["matchFields"]["imageID"] = kwargs[
-            "image_id"
-        ]
+        rv[lib.CONT_SELECTOR_FIELD]["matchFields"]["imageID"] = kwargs["image_id"]
     if "container_id" in kwargs:
         rv[lib.CONT_SELECTOR_FIELD]["matchFields"]["containerID"] = kwargs[
             "container_id"
@@ -130,9 +118,7 @@ def build_selectors(image_pat: str, **kwargs) -> Dict:
                 "name": kwargs["clustername"],
             }
         )
-        rv[lib.CLUS_SELECTOR_FIELD] = cls.model_dump(
-            by_alias=True, exclude_none=True
-        )
+        rv[lib.CLUS_SELECTOR_FIELD] = cls.model_dump(by_alias=True, exclude_none=True)
     if "pod_namespace" in kwargs or "pod_namespace_labels" in kwargs:
         ns_labels = kwargs.get("pod_namespace_labels", {})
         sel_labels = {}
@@ -146,9 +132,7 @@ def build_selectors(image_pat: str, **kwargs) -> Dict:
     if "pod_labels" in kwargs:
         pod_labels = kwargs["pod_labels"]
         pod = schemas.PodSelectorModel(matchLabels=pod_labels)
-        rv[lib.POD_SELECTOR_FIELD] = pod.model_dump(
-            by_alias=True, exclude_none=True
-        )
+        rv[lib.POD_SELECTOR_FIELD] = pod.model_dump(by_alias=True, exclude_none=True)
     if "hostname" in kwargs or "muid" in kwargs:
         if "hostname" in kwargs and "muid" in kwargs:
             ms = schemas.MachineSelectorModel(
@@ -169,9 +153,7 @@ def build_selectors(image_pat: str, **kwargs) -> Dict:
                     "muid": kwargs["muid"],
                 }
             )
-        rv[lib.MACHINE_SELECTOR_FIELD] = ms.model_dump(
-            by_alias=True, exclude_none=True
-        )
+        rv[lib.MACHINE_SELECTOR_FIELD] = ms.model_dump(by_alias=True, exclude_none=True)
     return rv
 
 
@@ -254,9 +236,7 @@ class ContainerMappings:
     """
 
     cont_id_to_image_pat: Dict[str, str] = field(default_factory=dict)
-    image_pat_to_pol_inputs: Dict[str, PolicyInputs] = field(
-        default_factory=dict
-    )
+    image_pat_to_pol_inputs: Dict[str, PolicyInputs] = field(default_factory=dict)
 
 
 def build_container_mappings(conts: List[Dict]) -> ContainerMappings:
@@ -395,9 +375,7 @@ def build_ingress_model(
                     ],
                     lib.PROCESSES_FIELD: [proc_model.base_model.id],
                     lib.PORTS_FIELD: [
-                        ports_model.model_dump(
-                            by_alias=True, exclude_none=True
-                        )
+                        ports_model.model_dump(by_alias=True, exclude_none=True)
                     ],
                 }
             ),
@@ -407,9 +385,7 @@ def build_ingress_model(
         add_from(from_obj, conn_model)
         add_port(ports_model, conn_model)
         conn_model.base_model.processes = list(
-            set(conn_model.base_model.processes).union(
-                [proc_model.base_model.id]
-            )
+            set(conn_model.base_model.processes).union([proc_model.base_model.id])
         )
     return conn_model
 
@@ -460,9 +436,7 @@ def build_egress_model(
         protocol=conn["proto"],
     )
     if "remote_hostname" in conn:
-        to_obj = schemas.DnsBlockModel(
-            dnsSelector=conn["remote_hostname"].split(",")
-        )
+        to_obj = schemas.DnsBlockModel(dnsSelector=conn["remote_hostname"].split(","))
     else:
         to_obj = schemas.IpBlockModel(
             ipBlock=schemas.CIDRModel(cidr=f'{conn["remote_ip"]}/32')
@@ -473,9 +447,7 @@ def build_egress_model(
             schemas.EgressNodeModel(
                 to=[to_obj.model_dump(by_alias=True, exclude_none=True)],
                 processes=[proc_model.base_model.id],
-                ports=[
-                    ports_model.model_dump(by_alias=True, exclude_none=True)
-                ],
+                ports=[ports_model.model_dump(by_alias=True, exclude_none=True)],
             ),
             conn,
         )
@@ -483,9 +455,7 @@ def build_egress_model(
         add_to(to_obj, conn_model)
         add_port(ports_model, conn_model)
         conn_model.base_model.processes = list(
-            set(conn_model.base_model.processes).union(
-                [proc_model.base_model.id]
-            )
+            set(conn_model.base_model.processes).union([proc_model.base_model.id])
         )
     return conn_model
 
@@ -513,9 +483,7 @@ def build_proc_models(cont_map: ContainerMappings, procs: List[Dict]):
         if ppuid not in proc_recs:
             missing_ppuids.add(ppuid)
     if missing_ppuids:
-        proc_recs.update(
-            find_missing_parents_in_container(list(missing_ppuids))
-        )
+        proc_recs.update(find_missing_parents_in_container(list(missing_ppuids)))
     # Third pass to build the process models
     for proc in proc_recs.values():
         image_pat = cont_map.cont_id_to_image_pat[proc["container_uid"]]
@@ -531,9 +499,7 @@ def build_proc_models(cont_map: ContainerMappings, procs: List[Dict]):
                 if not pproc_model.base_model.children:
                     pproc_model.base_model.children = [proc_model.base_model]
                 else:
-                    pproc_model.base_model.children.append(
-                        proc_model.base_model
-                    )
+                    pproc_model.base_model.children.append(proc_model.base_model)
             else:
                 # We found a root
                 pol_inp.roots.add(proc_model.rec["id"])

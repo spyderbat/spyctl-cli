@@ -3,8 +3,8 @@
 import json
 from typing import Dict
 
-from spyctl.api.primitives import delete, get, post, put
 import spyctl.spyctl_lib as lib
+from spyctl.api.primitives import delete, get, post, put
 
 
 def delete_policy(api_url, api_key, org_uid, pol_uid):

@@ -141,9 +141,7 @@ output_option = click.option(
     "-o",
     "--output",
     default=lib.OUTPUT_DEFAULT,
-    type=click.Choice(
-        lib.OUTPUT_CHOICES + [lib.OUTPUT_WIDE], case_sensitive=False
-    ),
+    type=click.Choice(lib.OUTPUT_CHOICES + [lib.OUTPUT_WIDE], case_sensitive=False),
 )
 
 page_option = click.option(

@@ -15,16 +15,16 @@ from . import (
     get_object,
     logs,
     merge,
+    notifications,
     print_file,
+    report,
     search,
     show_schema,
     spy_import,
     suppress,
-    notifications,
     test_notification,
     update,
     validate,
-    report,
 )
 
 __all__ = [

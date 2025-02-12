@@ -2,17 +2,16 @@
 
 import time
 
-# from typing import List
-
 import click
 
 import spyctl.config.configs as cfg
-
 import spyctl.resources as _r
+import spyctl.schemas_v2 as schemas
 import spyctl.spyctl_lib as lib
 from spyctl import cli
 from spyctl.api.athena_search import search_athena
-import spyctl.schemas_v2 as schemas
+
+# from typing import List
 
 
 @click.command(
@@ -134,9 +133,7 @@ def create_container_ruleset(output: str, st: float, et: float, **kwargs):
     handle_create_container_ruleset(output, st, et, **kwargs)
 
 
-def handle_create_container_ruleset(
-    output: str, st: float, et: float, **kwargs
-):
+def handle_create_container_ruleset(output: str, st: float, et: float, **kwargs):
     """
     Handle the creation of a container policy.
 

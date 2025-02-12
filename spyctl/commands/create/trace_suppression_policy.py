@@ -83,9 +83,7 @@ def create_trace_suppression_policy(
     """Create a Suppression Policy object from a file, outputted to stdout"""
     if not colorize:
         lib.disable_colorization()
-    selectors = {
-        key: value for key, value in selectors.items() if value is not None
-    }
+    selectors = {key: value for key, value in selectors.items() if value is not None}
     org_uid = selectors.pop(lib.CMD_ORG_FIELD, None)
     api_key = selectors.pop(lib.API_KEY_FIELD, None)
     api_url = selectors.pop(lib.API_URL_FIELD, "https://api.spyderbat.com")

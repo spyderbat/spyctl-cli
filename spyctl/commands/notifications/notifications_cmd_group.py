@@ -1,8 +1,8 @@
 """Handles the 'notifications' command group for spyctl."""
 
 import click
-import spyctl.spyctl_lib as lib
 
+import spyctl.spyctl_lib as lib
 from spyctl.commands.notifications import list as list_notifications
 from spyctl.commands.notifications.configure.custom_flag import (
     configure_custom_flag,
@@ -10,14 +10,14 @@ from spyctl.commands.notifications.configure.custom_flag import (
 from spyctl.commands.notifications.configure.saved_query import (
     configure_saved_query,
 )
-from spyctl.commands.notifications.enable.custom_flag import enable_custom_flag
-from spyctl.commands.notifications.enable.saved_query import enable_saved_query
 from spyctl.commands.notifications.disable.custom_flag import (
     disable_custom_flag,
 )
 from spyctl.commands.notifications.disable.saved_query import (
     disable_saved_query,
 )
+from spyctl.commands.notifications.enable.custom_flag import enable_custom_flag
+from spyctl.commands.notifications.enable.saved_query import enable_saved_query
 
 # ----------------------------------------------------------------- #
 #                      Notifications Subcommand                     #
@@ -30,9 +30,7 @@ def notifications():
     """Configure notifications for a Spyderbat resource."""
 
 
-@notifications.group(
-    "configure", cls=lib.CustomSubGroup, epilog=lib.SUB_EPILOG
-)
+@notifications.group("configure", cls=lib.CustomSubGroup, epilog=lib.SUB_EPILOG)
 @click.help_option("-h", "--help", hidden=True)
 def configure():
     """Configure notifications for a Spyderbat resource."""

@@ -47,9 +47,7 @@ def get_deviations_cmd(name_or_id, output, st, et, **filters):
     exact = filters.pop("exact")
     get_lib.output_time_log(lib.DEVIATIONS_RESOURCE.name_plural, st, et)
     name_or_id = get_lib.wildcard_name_or_id(name_or_id, exact)
-    filters = {
-        key: value for key, value in filters.items() if value is not None
-    }
+    filters = {key: value for key, value in filters.items() if value is not None}
     handle_get_deviations(name_or_id, output, st, et, **filters)
 
 
@@ -67,9 +65,7 @@ def handle_get_deviations(name_or_id, output, st, et, **filters):
         policies = pol_api.get_policies(*ctx.get_api_data())
     sources_set = set(sources)
     if name_or_id:
-        dev_uid = (
-            name_or_id if name_or_id.strip("*").startswith("audit:") else None
-        )
+        dev_uid = name_or_id if name_or_id.strip("*").startswith("audit:") else None
         if not dev_uid:
             policies = filt.filter_obj(
                 policies,
@@ -87,16 +83,14 @@ def handle_get_deviations(name_or_id, output, st, et, **filters):
             policies = [
                 policy
                 for policy in policies
-                if policy[lib.METADATA_FIELD][lib.METADATA_UID_FIELD]
-                in sources_set
+                if policy[lib.METADATA_FIELD][lib.METADATA_UID_FIELD] in sources_set
             ]
     else:
         dev_uid = None
         policies = [
             policy
             for policy in policies
-            if policy[lib.METADATA_FIELD][lib.METADATA_UID_FIELD]
-            in sources_set
+            if policy[lib.METADATA_FIELD][lib.METADATA_UID_FIELD] in sources_set
         ]
     pipeline = _af.Deviations.generate_pipeline(dev_uid, filters=filters)
     if output in [lib.OUTPUT_DEFAULT, lib.OUTPUT_WIDE]:

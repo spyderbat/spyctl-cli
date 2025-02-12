@@ -12,7 +12,7 @@ from __future__ import annotations
 import ipaddress
 from contextlib import contextmanager
 from contextvars import ContextVar
-from typing import Any, Dict, List, Optional, Union, Iterator, Set
+from typing import Any, Dict, Iterator, List, Optional, Set, Union
 
 from pydantic import (
     BaseModel,
@@ -107,9 +107,7 @@ def handle_show_schema(kind: str) -> str:
 # Selectors -------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
-EXPR_SYNTAX = (
-    "{key: <key>, operator: <operator>, values: [<value1>, <value2>, ...]}"
-)
+EXPR_SYNTAX = "{key: <key>, operator: <operator>, values: [<value1>, <value2>, ...]}"
 
 
 class SelectorExpression(BaseModel):
@@ -129,9 +127,7 @@ class SelectorExpression(BaseModel):
                 )
         else:
             if not self.values:
-                raise ValueError(
-                    f"'{self.operator}' operator requires values."
-                )
+                raise ValueError(f"'{self.operator}' operator requires values.")
         return self
 
 
@@ -145,16 +141,12 @@ def encode_expr(key, operator, values=None) -> str:
         if not values:
             raise ValueError(f"'{operator}' operator requires values.")
     values_ = "[" + ", ".join(f"{ns}" for ns in values) + "]"
-    expr = (
-        "{ " + f"key: {key}, operator: {operator}, values: {values_}" + " }"
-    )  # noqa
+    expr = "{ " + f"key: {key}, operator: {operator}, values: {values_}" + " }"  # noqa
     return expr
 
 
 class MatchLabelsModel(BaseModel):
-    match_labels: Optional[Dict[str, str]] = Field(
-        None, alias=lib.MATCH_LABELS_FIELD
-    )
+    match_labels: Optional[Dict[str, str]] = Field(None, alias=lib.MATCH_LABELS_FIELD)
     model_config = ConfigDict(extra="forbid")
 
 
@@ -177,9 +169,7 @@ class LabelsMatchModel(MatchLabelsModel, MatchExpressionModel):
 
 
 class MatchFieldsModel(BaseModel):
-    match_fields: Optional[Dict[str, str]] = Field(
-        None, alias=lib.MATCH_FIELDS_FIELD
-    )
+    match_fields: Optional[Dict[str, str]] = Field(None, alias=lib.MATCH_FIELDS_FIELD)
 
     @classmethod
     def get_valid_fields(cls):
@@ -352,9 +342,7 @@ class ServiceSelectorModel(ServiceMatchModel):
 
 
 class MachineSelectorModel(MachineMatchModel):
-    hostname: Optional[Union[str, List[str]]] = Field(
-        None, alias=lib.HOSTNAME_FIELD
-    )
+    hostname: Optional[Union[str, List[str]]] = Field(None, alias=lib.HOSTNAME_FIELD)
     machine_uid: Optional[Union[str, List[str]]] = Field(
         None, alias=lib.MACHINE_UID_FIELD
     )
@@ -371,9 +359,7 @@ class PodSelectorModel(LabelsMatchModel):
 
 
 class TraceSelectorModel(TraceMatchModel):
-    trigger_class: Optional[List[str]] = Field(
-        None, alias=lib.TRIGGER_CLASS_FIELD
-    )
+    trigger_class: Optional[List[str]] = Field(None, alias=lib.TRIGGER_CLASS_FIELD)
     trigger_ancestor: Optional[List[str]] = Field(
         None, alias=lib.TRIGGER_ANCESTORS_FIELD
     )
@@ -394,9 +380,7 @@ class UserSelectorModel(UserMatchModel):
 class ProcessSelectorModel(ProcessMatchModel):
     name: Optional[List[str]] = Field(None, alias=lib.NAME_FIELD, min_length=1)
     exe: Optional[List[str]] = Field(None, alias=lib.EXE_FIELD, min_length=1)
-    euser: Optional[List[str]] = Field(
-        None, alias=lib.EUSER_FIELD, min_length=1
-    )
+    euser: Optional[List[str]] = Field(None, alias=lib.EUSER_FIELD, min_length=1)
 
     @model_validator(mode="after")
     def ensure_one_field(
@@ -434,9 +418,7 @@ class ContainerRule(RuleModel):
     namespace_selector: Optional[NamespaceSelectorModel] = Field(
         None, alias=lib.NAMESPACE_SELECTOR_FIELD
     )
-    pod_selector: Optional[PodSelectorModel] = Field(
-        None, alias=lib.POD_SELECTOR_FIELD
-    )
+    pod_selector: Optional[PodSelectorModel] = Field(None, alias=lib.POD_SELECTOR_FIELD)
     container_selector: Optional[ContainerSelectorModel] = Field(
         None, alias=lib.CONT_SELECTOR_FIELD
     )
@@ -452,9 +434,7 @@ class ProcessRule(RuleModel):
     namespace_selector: Optional[NamespaceSelectorModel] = Field(
         None, alias=lib.NAMESPACE_SELECTOR_FIELD
     )
-    pod_selector: Optional[PodSelectorModel] = Field(
-        None, alias=lib.POD_SELECTOR_FIELD
-    )
+    pod_selector: Optional[PodSelectorModel] = Field(None, alias=lib.POD_SELECTOR_FIELD)
     container_selector: Optional[ContainerSelectorModel] = Field(
         None, alias=lib.CONT_SELECTOR_FIELD
     )
@@ -478,9 +458,7 @@ class RulesetMetadataModel(BaseModel):
     last_updated: Optional[Union[int, float]] = Field(
         None, alias=lib.METADATA_LAST_UPDATE_TIME
     )
-    last_updated_by: Optional[str] = Field(
-        None, alias=lib.METADATA_LAST_UPDATED_BY
-    )
+    last_updated_by: Optional[str] = Field(None, alias=lib.METADATA_LAST_UPDATED_BY)
     version: Optional[int] = Field(None, alias=lib.METADATA_VERSION_FIELD)
     uid: Optional[str] = Field(None, alias=lib.METADATA_UID_FIELD)
 
@@ -562,16 +540,12 @@ class GuardianSelectorsModel(BaseModel):
     namespace_selector: Optional[NamespaceSelectorModel] = Field(
         None, alias=lib.NAMESPACE_SELECTOR_FIELD
     )
-    pod_selector: Optional[PodSelectorModel] = Field(
-        None, alias=lib.POD_SELECTOR_FIELD
-    )
+    pod_selector: Optional[PodSelectorModel] = Field(None, alias=lib.POD_SELECTOR_FIELD)
     model_config = ConfigDict(extra="forbid")
 
 
 class ClusterPolicySelectorsModel(BaseModel):
-    cluster_selector: ClusterSelectorModel = Field(
-        alias=lib.CLUS_SELECTOR_FIELD
-    )
+    cluster_selector: ClusterSelectorModel = Field(alias=lib.CLUS_SELECTOR_FIELD)
     model_config = ConfigDict(extra="forbid")
 
 
@@ -588,9 +562,7 @@ class ActionSelectorsModel(BaseModel):
     namespace_selector: Optional[NamespaceSelectorModel] = Field(
         None, alias=lib.NAMESPACE_SELECTOR_FIELD
     )
-    pod_selector: Optional[PodSelectorModel] = Field(
-        None, alias=lib.POD_SELECTOR_FIELD
-    )
+    pod_selector: Optional[PodSelectorModel] = Field(None, alias=lib.POD_SELECTOR_FIELD)
     process_selector: Optional[ProcessSelectorModel] = Field(
         None, alias=lib.PROCESS_SELECTOR_FIELD
     )
@@ -644,9 +616,7 @@ class CIDRModel(BaseModel):
                 if net_type != type(e_net):
                     raise ValueError("Network types are not the same")
                 if not cidr_net.supernet_of(e_net):
-                    raise ValueError(
-                        f"'{e_net}' is not a subnet of '{cidr_net}'"
-                    )
+                    raise ValueError(f"'{e_net}' is not a subnet of '{cidr_net}'")
         return self
 
     model_config = ConfigDict(extra="forbid")
@@ -660,9 +630,7 @@ class IpBlockModel(BaseModel):
 class PortsModel(BaseModel):
     port: int = Field(alias=lib.PORT_FIELD, ge=0, le=65535)
     proto: Literal["UDP", "TCP"] = Field(alias=lib.PROTO_FIELD)
-    endport: Optional[int] = Field(
-        None, alias=lib.ENDPORT_FIELD, ge=0, le=66535
-    )
+    endport: Optional[int] = Field(None, alias=lib.ENDPORT_FIELD, ge=0, le=66535)
 
     @model_validator(mode="after")
     def endport_ge_port(self):
@@ -746,12 +714,8 @@ class NetworkPolicyModel(BaseModel):
 
 
 class DeviationNetworkPolicyModel(BaseModel):
-    ingress: Optional[List[IngressNodeModel]] = Field(
-        None, alias=lib.INGRESS_FIELD
-    )
-    egress: Optional[List[EgressNodeModel]] = Field(
-        None, alias=lib.EGRESS_FIELD
-    )
+    ingress: Optional[List[IngressNodeModel]] = Field(None, alias=lib.INGRESS_FIELD)
+    egress: Optional[List[EgressNodeModel]] = Field(None, alias=lib.EGRESS_FIELD)
 
 
 # Process Models --------------------------------------------------------------
@@ -768,9 +732,7 @@ class ProcessNodeModel(SimpleProcessNodeModel):
     listening_sockets: Optional[List[PortsModel]] = Field(
         None, alias=lib.LISTENING_SOCKETS
     )
-    children: Optional[List[ProcessNodeModel]] = Field(
-        None, alias=lib.CHILDREN_FIELD
-    )
+    children: Optional[List[ProcessNodeModel]] = Field(None, alias=lib.CHILDREN_FIELD)
 
     def __init__(self, /, **data):
         self.__pydantic_validator__.validate_python(
@@ -792,9 +754,7 @@ class ProcessNodeModel(SimpleProcessNodeModel):
 
 class GuardDeviationProcessNodeModel(BaseModel):
     id: str = Field(alias=lib.ID_FIELD)
-    children: Optional[List[ProcessNodeModel]] = Field(
-        None, alias=lib.CHILDREN_FIELD
-    )
+    children: Optional[List[ProcessNodeModel]] = Field(None, alias=lib.CHILDREN_FIELD)
     model_config = ConfigDict(extra="forbid")
 
     def __init__(self, /, **data):
@@ -840,9 +800,7 @@ class SharedActionFieldsModel(ActionSelectorsModel):
             if isinstance(value, dict) and any(v for v in value.values()):
                 values_count += 1
         if count == 0:
-            raise ValueError(
-                "At least one selector required for non-default actions."
-            )
+            raise ValueError("At least one selector required for non-default actions.")
         if values_count != count:
             raise ValueError("All selectors must have values.")
         return self
@@ -851,9 +809,7 @@ class SharedActionFieldsModel(ActionSelectorsModel):
 
 
 class DefaultMakeRedflagModel(SharedDefaultActionFieldsModel):
-    content: Optional[str] = Field(
-        None, alias=lib.FLAG_CONTENT, max_length=350
-    )
+    content: Optional[str] = Field(None, alias=lib.FLAG_CONTENT, max_length=350)
     impact: Optional[str] = Field(None, alias=lib.FLAG_IMPACT, max_length=100)
     severity: Literal[tuple(lib.ALLOWED_SEVERITIES)] = Field(  # type: ignore
         alias=lib.FLAG_SEVERITY
@@ -870,19 +826,13 @@ class DefaultAgentReniceProcessModel(SharedDefaultActionFieldsModel):
     model_config = ConfigDict(extra="forbid")
 
 
-class AgentReniceProcessModel(
-    SharedActionFieldsModel, DefaultAgentReniceProcessModel
-):
+class AgentReniceProcessModel(SharedActionFieldsModel, DefaultAgentReniceProcessModel):
     pass
 
 
 class DefaultMakeOpsflagModel(BaseModel):
-    content: Optional[str] = Field(
-        None, alias=lib.FLAG_CONTENT, max_length=350
-    )
-    description: Optional[str] = Field(
-        None, alias=lib.FLAG_DESCRIPTION, max_length=350
-    )
+    content: Optional[str] = Field(None, alias=lib.FLAG_CONTENT, max_length=350)
+    description: Optional[str] = Field(None, alias=lib.FLAG_DESCRIPTION, max_length=350)
     severity: Literal[tuple(lib.ALLOWED_SEVERITIES)] = Field(  # type: ignore
         alias=lib.FLAG_SEVERITY
     )
@@ -976,12 +926,8 @@ class ResponseActionsModel(BaseModel):
 
 
 class GuardianResponseModel(BaseModel):
-    default_field: List[DefaultActionsModel] = Field(
-        alias=lib.RESP_DEFAULT_FIELD
-    )
-    response_field: List[ResponseActionsModel] = Field(
-        alias=lib.RESP_ACTIONS_FIELD
-    )
+    default_field: List[DefaultActionsModel] = Field(alias=lib.RESP_DEFAULT_FIELD)
+    response_field: List[ResponseActionsModel] = Field(alias=lib.RESP_ACTIONS_FIELD)
 
 
 # Metadata Models -------------------------------------------------------------
@@ -1049,9 +995,7 @@ class GuardianPolicySpecModel(
             super().__init__(**data)
 
 
-class GuardianBaselineSpecModel(
-    GuardianSelectorsModel, GuardianSpecOptionsModel
-):
+class GuardianBaselineSpecModel(GuardianSelectorsModel, GuardianSpecOptionsModel):
     process_policy: List[ProcessNodeModel] = Field(alias=lib.PROC_POLICY_FIELD)
     network_policy: NetworkPolicyModel = Field(alias=lib.NET_POLICY_FIELD)
     model_config = ConfigDict(extra="forbid")
@@ -1061,12 +1005,10 @@ class GuardianBaselineSpecModel(
             super().__init__(**data)
 
 
-class GuardianDeviationSpecModel(
-    GuardianSelectorsModel, GuardianSpecOptionsModel
-):
-    process_policy: Optional[
-        List[Union[ProcessNodeModel, GuardDeviationNodeModel]]
-    ] = Field(None, alias=lib.PROC_POLICY_FIELD)
+class GuardianDeviationSpecModel(GuardianSelectorsModel, GuardianSpecOptionsModel):
+    process_policy: Optional[List[Union[ProcessNodeModel, GuardDeviationNodeModel]]] = (
+        Field(None, alias=lib.PROC_POLICY_FIELD)
+    )
     network_policy: Optional[DeviationNetworkPolicyModel] = Field(
         None, alias=lib.NET_POLICY_FIELD
     )
@@ -1118,24 +1060,16 @@ class FingerprintGroupDataModel(BaseModel):
     fingerprints: List[GuardianFingerprintModel] = Field(
         alias=lib.FPRINT_GRP_FINGERPRINTS_FIELD
     )
-    cont_names: Optional[List[str]] = Field(
-        None, alias=lib.FPRINT_GRP_CONT_NAMES_FIELD
-    )
-    cont_ids: Optional[List[str]] = Field(
-        None, alias=lib.FPRINT_GRP_CONT_IDS_FIELD
-    )
-    machines: Optional[List[str]] = Field(
-        None, alias=lib.FPRINT_GRP_MACHINES_FIELD
-    )
+    cont_names: Optional[List[str]] = Field(None, alias=lib.FPRINT_GRP_CONT_NAMES_FIELD)
+    cont_ids: Optional[List[str]] = Field(None, alias=lib.FPRINT_GRP_CONT_IDS_FIELD)
+    machines: Optional[List[str]] = Field(None, alias=lib.FPRINT_GRP_MACHINES_FIELD)
     model_config = ConfigDict(extra="forbid")
 
 
 class GuardianFingerprintGroupModel(BaseModel):
     api_version: str = Field(alias=lib.API_FIELD)
     kind: Literal[lib.FPRINT_GROUP_KIND] = Field(alias=lib.KIND_FIELD)  # type: ignore
-    metadata: GuardianFingerprintGroupMetadataModel = Field(
-        alias=lib.METADATA_FIELD
-    )
+    metadata: GuardianFingerprintGroupMetadataModel = Field(alias=lib.METADATA_FIELD)
     data: FingerprintGroupDataModel
     model_config = ConfigDict(extra="ignore")
 
@@ -1186,8 +1120,8 @@ class GuardianObjectModel(BaseModel):
 
 class GuardianObjectListModel(BaseModel):
     api_version: str = Field(alias=lib.API_FIELD)
-    items: List[Union[GuardianObjectModel, GuardianFingerprintGroupModel]] = (
-        Field(alias=lib.ITEMS_FIELD)
+    items: List[Union[GuardianObjectModel, GuardianFingerprintGroupModel]] = Field(
+        alias=lib.ITEMS_FIELD
     )
 
 
@@ -1198,9 +1132,7 @@ class GuardianObjectListModel(BaseModel):
 
 class NotificationSettingsModel(BaseModel):
     uid: Union[str, None] = Field(None, alias=lib.METADATA_UID_FIELD)
-    aggregate: Union[bool, None] = Field(
-        False, alias=lib.NOTIF_AGGREGATE_FIELD
-    )
+    aggregate: Union[bool, None] = Field(False, alias=lib.NOTIF_AGGREGATE_FIELD)
     aggregate_by: Union[List[str], None] = Field(
         None, alias=lib.NOTIF_AGGREGATE_BY_FIELD
     )
@@ -1209,9 +1141,7 @@ class NotificationSettingsModel(BaseModel):
     )
     is_enabled: bool = Field(alias=lib.NOTIF_IS_ENABLED_FIELD)
     cooldown: Union[int, None] = Field(None, alias=lib.NOTIF_COOLDOWN_FIELD)
-    cooldown_by: Union[List[str], None] = Field(
-        None, alias=lib.NOTIF_COOLDOWN_BY_FIELD
-    )
+    cooldown_by: Union[List[str], None] = Field(None, alias=lib.NOTIF_COOLDOWN_BY_FIELD)
     target_map: Union[Dict[str, str], None] = Field(
         None, alias=lib.NOTIF_TARGET_MAP_FIELD
     )
@@ -1263,12 +1193,8 @@ class NotifTgtMetadataModel(BaseModel):
     create_time: Optional[Union[float, int]] = Field(
         None, alias=lib.METADATA_CREATE_TIME
     )
-    update_time: Optional[Union[float, int]] = Field(
-        None, alias=lib.NOTIF_LAST_UPDATED
-    )
-    last_updated_by: Optional[str] = Field(
-        None, alias=lib.METADATA_LAST_UPDATED_BY
-    )
+    update_time: Optional[Union[float, int]] = Field(None, alias=lib.NOTIF_LAST_UPDATED)
+    last_updated_by: Optional[str] = Field(None, alias=lib.METADATA_LAST_UPDATED_BY)
     created_by: Optional[str] = Field(None, alias=lib.METADATA_CREATED_BY)
     version: Optional[int] = Field(None, alias=lib.VERSION_FIELD)
     tags: Optional[List[str]] = Field(None, alias=lib.METADATA_TAGS_FIELD)
@@ -1285,37 +1211,25 @@ class NotificationTgtResourceModel(BaseModel):
 
 class EmailTemplateSpecModel(BaseModel):
     subject: str = Field(alias=lib.TMPL_EMAIL_SUBJECT_FIELD)
-    body_text: Optional[str] = Field(
-        default=None, alias=lib.TMPL_EMAIL_BODY_TEXT_FIELD
-    )
-    body_html: Optional[str] = Field(
-        default=None, alias=lib.TMPL_EMAIL_BODY_HTML_FIELD
-    )
+    body_text: Optional[str] = Field(default=None, alias=lib.TMPL_EMAIL_BODY_TEXT_FIELD)
+    body_html: Optional[str] = Field(default=None, alias=lib.TMPL_EMAIL_BODY_HTML_FIELD)
 
 
 class PagerDutyTemplateSpecModel(BaseModel):
     summary: str = Field(alias=lib.TMPL_PD_SUMMARY_FIELD)
     severity: str = Field(alias=lib.TMPL_PD_SEVERITY_FIELD)
     source: str = Field(alias=lib.TMPL_PD_SOURCE_FIELD)
-    component: Optional[str] = Field(
-        default=None, alias=lib.TMPL_PD_COMPONENT_FIELD
-    )
+    component: Optional[str] = Field(default=None, alias=lib.TMPL_PD_COMPONENT_FIELD)
     group: Optional[str] = Field(default=None, alias=lib.TMPL_PD_GROUP_FIELD)
-    class_field: Optional[str] = Field(
-        default=None, alias=lib.TMPL_PD_CLASS_FIELD
-    )
+    class_field: Optional[str] = Field(default=None, alias=lib.TMPL_PD_CLASS_FIELD)
     custom_details: Optional[Dict] = Field(
         default=None, alias=lib.TMPL_PD_CUSTOM_DETAILS_FIELD
     )
-    dedup_key: Optional[str] = Field(
-        default=None, alias=lib.TMPL_PD_DEDUP_KEY_FIELD
-    )
+    dedup_key: Optional[str] = Field(default=None, alias=lib.TMPL_PD_DEDUP_KEY_FIELD)
 
 
 class WebhookTemplateSpecModel(BaseModel):
-    payload: Optional[Dict] = Field(
-        default=None, alias=lib.TMPL_WEBHOOK_PAYLOAD_FIELD
-    )
+    payload: Optional[Dict] = Field(default=None, alias=lib.TMPL_WEBHOOK_PAYLOAD_FIELD)
     entire_object: Optional[bool] = Field(
         default=False, alias=lib.TMPL_WEBHOOK_ENTIRE_OBJECT_FIELD
     )
@@ -1356,12 +1270,8 @@ class NotificationTemplateMetadataModel(BaseModel):
     create_time: Optional[Union[float, int]] = Field(
         None, alias=lib.METADATA_CREATE_TIME
     )
-    update_time: Optional[Union[float, int]] = Field(
-        None, alias=lib.NOTIF_LAST_UPDATED
-    )
-    last_updated_by: Optional[str] = Field(
-        None, alias=lib.METADATA_LAST_UPDATED_BY
-    )
+    update_time: Optional[Union[float, int]] = Field(None, alias=lib.NOTIF_LAST_UPDATED)
+    last_updated_by: Optional[str] = Field(None, alias=lib.METADATA_LAST_UPDATED_BY)
     created_by: Optional[str] = Field(None, alias=lib.METADATA_CREATED_BY)
     version: Optional[int] = Field(None, alias=lib.VERSION_FIELD)
     tags: Optional[List[str]] = Field(None, alias=lib.METADATA_TAGS_FIELD)
@@ -1369,12 +1279,8 @@ class NotificationTemplateMetadataModel(BaseModel):
 
 class NotificationTemplateModel(BaseModel):
     api_version: str = Field(alias=lib.API_FIELD)
-    kind: Literal[lib.TEMPLATE_KIND] = (  # type: ignore
-        Field(alias=lib.KIND_FIELD)
-    )
-    metadata: NotificationTemplateMetadataModel = Field(
-        alias=lib.METADATA_FIELD
-    )
+    kind: Literal[lib.TEMPLATE_KIND] = Field(alias=lib.KIND_FIELD)  # type: ignore
+    metadata: NotificationTemplateMetadataModel = Field(alias=lib.METADATA_FIELD)
     spec: Dict = Field(alias=lib.SPEC_FIELD)
     _spec_validator = model_validator(mode="after")(validate_tmpl_spec)
     model_config = ConfigDict(extra="forbid")
@@ -1388,9 +1294,7 @@ class AgentHealthNotificationMetadataModel(BaseModel):
         None, alias=lib.METADATA_CREATE_TIME
     )
     created_by: Optional[str] = Field(None, alias=lib.METADATA_CREATED_BY)
-    last_updated_by: Optional[str] = Field(
-        None, alias=lib.METADATA_LAST_UPDATED_BY
-    )
+    last_updated_by: Optional[str] = Field(None, alias=lib.METADATA_LAST_UPDATED_BY)
     last_updated: Optional[Union[float, int]] = Field(
         None, alias=lib.METADATA_LAST_UPDATE_TIME
     )
@@ -1414,11 +1318,9 @@ class AgentHealthNotificationsSettingsModel(BaseModel):
 
 
 class AgentHealthNotificationSpecModel(BaseModel):
-    scope_query: Optional[str] = Field(
-        None, alias=lib.AH_NOTIF_SCOPE_QUERY_FIELD
-    )
-    notification_settings: Optional[AgentHealthNotificationsSettingsModel] = (
-        Field(None, alias=lib.NOTIFICATION_SETTINGS_FIELD)
+    scope_query: Optional[str] = Field(None, alias=lib.AH_NOTIF_SCOPE_QUERY_FIELD)
+    notification_settings: Optional[AgentHealthNotificationsSettingsModel] = Field(
+        None, alias=lib.NOTIFICATION_SETTINGS_FIELD
     )
 
 
@@ -1427,9 +1329,7 @@ class AgentHealthNotificationModel(BaseModel):
     kind: Literal[lib.AGENT_HEALTH_NOTIFICATION_KIND] = (  # type: ignore
         Field(alias=lib.KIND_FIELD)
     )
-    metadata: AgentHealthNotificationMetadataModel = Field(
-        alias=lib.METADATA_FIELD
-    )
+    metadata: AgentHealthNotificationMetadataModel = Field(alias=lib.METADATA_FIELD)
     spec: AgentHealthNotificationSpecModel = Field(alias=lib.SPEC_FIELD)
 
 
@@ -1454,9 +1354,7 @@ class SuppressionPolicySelectorsModel(BaseModel):
     namespace_selector: Optional[NamespaceSelectorModel] = Field(
         None, alias=lib.NAMESPACE_SELECTOR_FIELD
     )
-    pod_selector: Optional[PodSelectorModel] = Field(
-        None, alias=lib.POD_SELECTOR_FIELD
-    )
+    pod_selector: Optional[PodSelectorModel] = Field(None, alias=lib.POD_SELECTOR_FIELD)
     container_selector: Optional[ContainerSelectorModel] = Field(
         None, alias=lib.CONT_SELECTOR_FIELD
     )
@@ -1468,9 +1366,7 @@ class SuppressionPolicySelectorsModel(BaseModel):
     def ensure_one_field(self):
         values = self.model_dump(by_alias=True, exclude_unset=True)
         if not any(
-            value
-            for field, value in values.items()
-            if field.endswith("Selector")
+            value for field, value in values.items() if field.endswith("Selector")
         ):
             raise ValueError("Selectors must have values.")
         return self
@@ -1511,9 +1407,7 @@ class SuppressionPolicySpecModel(SuppressionPolicySelectorsModel):
     mode: Literal[tuple(lib.POL_MODES)] = Field(  # type: ignore
         alias=lib.POL_MODE_FIELD
     )
-    allowed_flags: List[AllowedFlagsModel] = Field(
-        alias=lib.ALLOWED_FLAGS_FIELD
-    )
+    allowed_flags: List[AllowedFlagsModel] = Field(alias=lib.ALLOWED_FLAGS_FIELD)
     model_config = ConfigDict(extra="forbid")
 
 
@@ -1540,9 +1434,7 @@ class SavedQueryMetadataModel(BaseModel):
     )
     created_by: Optional[str] = Field(None, alias=lib.METADATA_CREATED_BY)
     uid: Optional[str] = Field(None, alias=lib.METADATA_UID_FIELD)
-    last_used: Optional[Union[float, int]] = Field(
-        None, alias=lib.METADATA_LAST_USED
-    )
+    last_used: Optional[Union[float, int]] = Field(None, alias=lib.METADATA_LAST_USED)
 
 
 class SavedQuerySpecModel(BaseModel):
@@ -1580,9 +1472,7 @@ class CustomFlagMetadataModel(BaseModel):
     last_updated: Optional[Union[float, int]] = Field(
         None, alias=lib.METADATA_LAST_UPDATE_TIME
     )
-    last_updated_by: Optional[str] = Field(
-        None, alias=lib.METADATA_LAST_UPDATED_BY
-    )
+    last_updated_by: Optional[str] = Field(None, alias=lib.METADATA_LAST_UPDATED_BY)
     version: Optional[int] = Field(None, alias=lib.VERSION_FIELD)
     tags: Optional[List[str]] = Field(None, alias=lib.METADATA_TAGS_FIELD)
     action_taken: Optional[str] = Field(None, alias=lib.METADATA_ACTION_TAKEN)
@@ -1631,30 +1521,18 @@ class CustomFlagModel(BaseModel):
 
 class ContextModel(BaseModel):
     org: str = Field(alias=lib.ORG_FIELD)
-    cgroups: Optional[Union[str, List[str]]] = Field(
-        None, alias=lib.CGROUP_FIELD
-    )
-    cluster: Optional[Union[str, List[str]]] = Field(
-        None, alias=lib.CLUSTER_FIELD
-    )
+    cgroups: Optional[Union[str, List[str]]] = Field(None, alias=lib.CGROUP_FIELD)
+    cluster: Optional[Union[str, List[str]]] = Field(None, alias=lib.CLUSTER_FIELD)
     container_ids: Optional[Union[str, List[str]]] = Field(
         None, alias=lib.CONTAINER_ID_FIELD
     )
     container_names: Optional[Union[str, List[str]]] = Field(
         None, alias=lib.CONTAINER_NAME_FIELD
     )
-    image_ids: Optional[Union[str, List[str]]] = Field(
-        None, alias=lib.IMAGEID_FIELD
-    )
-    images: Optional[Union[str, List[str]]] = Field(
-        None, alias=lib.IMAGE_FIELD
-    )
-    machines: Optional[Union[str, List[str]]] = Field(
-        None, alias=lib.MACHINES_FIELD
-    )
-    namespace: Optional[Union[str, List[str]]] = Field(
-        None, alias=lib.NAMESPACE_FIELD
-    )
+    image_ids: Optional[Union[str, List[str]]] = Field(None, alias=lib.IMAGEID_FIELD)
+    images: Optional[Union[str, List[str]]] = Field(None, alias=lib.IMAGE_FIELD)
+    machines: Optional[Union[str, List[str]]] = Field(None, alias=lib.MACHINES_FIELD)
+    namespace: Optional[Union[str, List[str]]] = Field(None, alias=lib.NAMESPACE_FIELD)
     pods: Optional[Union[str, List[str]]] = Field(None, alias=lib.POD_FIELD)
     model_config = ConfigDict(extra="forbid")
 
@@ -1677,9 +1555,7 @@ class SecretModel(BaseModel):
     kind: Literal[lib.SECRET_KIND] = Field(alias=lib.KIND_FIELD)  # type: ignore
     metadata: SecretMetadataModel = Field(alias=lib.METADATA_FIELD)
     data: Optional[Dict[str, str]] = Field(None, alias=lib.DATA_FIELD)
-    string_data: Optional[Dict[str, str]] = Field(
-        None, alias=lib.STRING_DATA_FIELD
-    )
+    string_data: Optional[Dict[str, str]] = Field(None, alias=lib.STRING_DATA_FIELD)
     model_config = ConfigDict(extra="forbid")
 
 

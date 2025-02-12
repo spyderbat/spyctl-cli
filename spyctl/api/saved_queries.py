@@ -3,6 +3,7 @@
 # spellchecker: ignore savedquery updatelastused
 
 from typing import Dict, List, Tuple
+
 from requests import Response
 
 from spyctl.api.primitives import delete, get, post, put
@@ -141,9 +142,7 @@ def put_saved_query_update(
     return sq
 
 
-def put_update_last_used(
-    api_url, api_key, org_uid, saved_query_uid
-) -> Response:
+def put_update_last_used(api_url, api_key, org_uid, saved_query_uid) -> Response:
     """
     Sends a PUT request to update the last used time of a saved query.
 

@@ -9,7 +9,7 @@ from __future__ import annotations
 import fnmatch
 import itertools
 from difflib import SequenceMatcher
-from typing import Any, Dict, List, Union, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, List, Union
 
 import spyctl.spyctl_lib as lib
 from spyctl import cli
@@ -58,9 +58,7 @@ def common_keys_merge(
     return None
 
 
-def wildcard_merge(
-    _mo: MergeObject, base_str: str, other_str: str, symmetric: bool
-):
+def wildcard_merge(_mo: MergeObject, base_str: str, other_str: str, symmetric: bool):
     "Result of the merge can be wildcarded"
     if symmetric:
         if base_str and other_str:
@@ -95,9 +93,7 @@ def keep_base_value_merge(_mo: MergeObject, base_val: Any, _other_val: Any, _):
     return base_val
 
 
-def greatest_value_merge(
-    _mo: MergeObject, base_val, other_val, _symmetric: bool
-):
+def greatest_value_merge(_mo: MergeObject, base_val, other_val, _symmetric: bool):
     if base_val is not None and other_val is None:
         result = base_val
     elif base_val is None and other_val is not None:
@@ -201,9 +197,7 @@ def make_wildcard(strs: List[str]):
         ret = "*" + sub_str + "*"
     elif not (match.b == 0 and original_str.startswith(sub_str)):
         ret = "*" + sub_str
-    elif not (
-        match.b + match.size == len(name) and original_str.endswith(sub_str)
-    ):
+    elif not (match.b + match.size == len(name) and original_str.endswith(sub_str)):
         ret = sub_str + "*"
     else:
         cli.err_exit(f"Bug detected in wildcard logic. Input:" f" '{strs}'.")

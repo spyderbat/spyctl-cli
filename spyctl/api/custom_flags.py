@@ -1,6 +1,7 @@
 """Handles custom flags API requests."""
 
 from typing import Dict, List, Tuple
+
 from requests import Response
 
 from spyctl.api.primitives import delete, get, post, put
@@ -119,9 +120,7 @@ def put_custom_flag_update(
     return resp.json()
 
 
-def put_enable_custom_flag(
-    api_url, api_key, org_uid, custom_flag_uid
-) -> Response:
+def put_enable_custom_flag(api_url, api_key, org_uid, custom_flag_uid) -> Response:
     """
     Enables a custom flag in the specified organization.
 
@@ -139,9 +138,7 @@ def put_enable_custom_flag(
     return put(url, {}, api_key)
 
 
-def put_disable_custom_flag(
-    api_url, api_key, org_uid, custom_flag_uid
-) -> Response:
+def put_disable_custom_flag(api_url, api_key, org_uid, custom_flag_uid) -> Response:
     """
     Disables a custom flag in the specified organization.
 
@@ -155,9 +152,7 @@ def put_disable_custom_flag(
     Returns:
         Dict: The response from the API.
     """
-    url = (
-        f"{api_url}/api/v1/org/{org_uid}/customflag/{custom_flag_uid}/disable"
-    )
+    url = f"{api_url}/api/v1/org/{org_uid}/customflag/{custom_flag_uid}/disable"
     return put(url, {}, api_key)
 
 

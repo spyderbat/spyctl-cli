@@ -1,6 +1,7 @@
 """Handles the API calls for the organizations endpoint."""
 
 from typing import List, Tuple
+
 from spyctl.api.primitives import get
 
 
