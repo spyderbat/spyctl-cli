@@ -24,9 +24,7 @@ def enable_custom_flag(name_or_uid):
     if not custom_flags:
         lib.err_exit(f"Custom flag '{name_or_uid}' not found")
     if len(custom_flags) > 1:
-        lib.err_exit(
-            f"Custom flag '{name_or_uid}' is ambiguous, use full name or UID"
-        )
+        lib.err_exit(f"Custom flag '{name_or_uid}' is ambiguous, use full name or UID")
     custom_flag = custom_flags[0]
     put_enable_notification_settings(*ctx.get_api_data(), custom_flag["uid"])
     lib.try_log(f"Notifications for custom flag '{name_or_uid}' enabled")

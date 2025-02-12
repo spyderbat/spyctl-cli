@@ -71,9 +71,7 @@ def create_cluster_policy(
     return rv
 
 
-def __add_cluster_selector(
-    clusters: List[str], spec: schemas.ClusterPolicySpecModel
-):
+def __add_cluster_selector(clusters: List[str], spec: schemas.ClusterPolicySpecModel):
     if len(clusters) == 1:
         key = "uid" if clusters[0].startswith("clus:") else "name"
         spec.cluster_selector.match_fields = {

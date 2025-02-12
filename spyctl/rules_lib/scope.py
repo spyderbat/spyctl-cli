@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass, fields
 from typing import Dict
+
 import spyctl.spyctl_lib as lib
 
 CLUSTER_SCOPE = "cluster"
@@ -367,9 +368,7 @@ def get_yaml_fields(scope_type: type) -> dict:
         dict: The YAML fields for the scope type.
     """
     if scope_type not in SCOPE_TYPE_TO_YAML_TO_ATTR:
-        raise KeyError(
-            f"Unknown scope type: {scope_type}. Add it to scope.py?"
-        )
+        raise KeyError(f"Unknown scope type: {scope_type}. Add it to scope.py?")
     return SCOPE_TYPE_TO_YAML_TO_ATTR[scope_type]
 
 
@@ -400,9 +399,7 @@ def get_attr_fields(scope_type: type) -> dict:
         dict: The attribute fields for the scope type.
     """
     if scope_type not in SCOPE_TYPE_TO_ATTR_TO_YAML:
-        raise KeyError(
-            f"Unknown scope type: {scope_type}. Add it to scope.py?"
-        )
+        raise KeyError(f"Unknown scope type: {scope_type}. Add it to scope.py?")
     return SCOPE_TYPE_TO_ATTR_TO_YAML[scope_type]
 
 

@@ -89,9 +89,7 @@ from spyctl import cli
     " ruleset with namespace context. If one or more namespaces are supplied,"
     " the ruleset will generate for only the namespace(s) provided.",
 )
-def create_cluster_policy(
-    name, output, mode, st, et, no_rs_gen, cluster, namespace
-):
+def create_cluster_policy(name, output, mode, st, et, no_rs_gen, cluster, namespace):
     """
     Create a Cluster Policy yaml document and accompanying rulesets, outputted to stdout  # noqa
     """

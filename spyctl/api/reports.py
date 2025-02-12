@@ -28,9 +28,7 @@ def get_report_inventory(api_url: str, api_key: str, org_uid: str):
     return None
 
 
-def generate_report(
-    api_url: str, api_key: str, org_uid: str, report_data: Dict
-):
+def generate_report(api_url: str, api_key: str, org_uid: str, report_data: Dict):
     """
     Generate a report using the provided API URL, API key, organization UID,
     and report data.
@@ -78,9 +76,7 @@ def get_report_status(api_url: str, api_key: str, org_uid: str, rid: str):
     return None
 
 
-def get_report_download(
-    api_url: str, api_key: str, org_uid: str, rid: str, fmt: str
-):
+def get_report_download(api_url: str, api_key: str, org_uid: str, rid: str, fmt: str):
     """
     Downloads a report from the specified API URL using the provided API key.
 

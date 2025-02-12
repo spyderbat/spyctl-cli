@@ -221,9 +221,7 @@ def get_audit_events_follow(
         sleep(2.5)
 
 
-def show_policy_logs(
-    policy_audit_events: List[Dict], timestamps: bool, full: bool
-):
+def show_policy_logs(policy_audit_events: List[Dict], timestamps: bool, full: bool):
     for event in policy_audit_events:
         if timestamps:
             ts = lib.epoch_to_zulu(event["time"]) + " -- "

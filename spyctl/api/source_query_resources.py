@@ -1,7 +1,7 @@
 """Handles queries for each of the resources retrieved via source query."""
 
 import sys
-from typing import Dict, Generator, Optional, Callable
+from typing import Callable, Dict, Generator, Optional
 
 import spyctl.spyctl_lib as lib
 from spyctl import cli

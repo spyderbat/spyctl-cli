@@ -35,9 +35,7 @@ def data_to_yaml(data: Dict) -> Dict:
         metadata=metadata,
         spec=spec,
     )
-    return model.model_dump(
-        by_alias=True, exclude_unset=True, exclude_none=True
-    )
+    return model.model_dump(by_alias=True, exclude_unset=True, exclude_none=True)
 
 
 SUMMARY_HEADERS = [
@@ -49,9 +47,7 @@ SUMMARY_HEADERS = [
 ]
 
 
-def summary_output(
-    templates: List[Dict], total_pages: int, current_page: int = 0
-):
+def summary_output(templates: List[Dict], total_pages: int, current_page: int = 0):
     """
     Print a summary of notification templates.
 
@@ -85,9 +81,7 @@ WIDE_HEADERS = [
 ]
 
 
-def wide_output(
-    templates: List[Dict], total_pages: int, current_page: int = 0
-):
+def wide_output(templates: List[Dict], total_pages: int, current_page: int = 0):
     """
     Print a wide summary of notification templates.
     """

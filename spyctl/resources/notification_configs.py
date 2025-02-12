@@ -133,9 +133,7 @@ class NotificationConfig:
             },
         }
         if self.for_duration is not None:
-            rv[lib.SPEC_FIELD][
-                lib.NOTIF_FOR_DURATION_FIELD
-            ] = self.for_duration
+            rv[lib.SPEC_FIELD][lib.NOTIF_FOR_DURATION_FIELD] = self.for_duration
         if self.cooldown is not None:
             rv[lib.SPEC_FIELD][lib.NOTIF_COOLDOWN_FIELD] = self.cooldown
         if self.sub_schema is not None:
@@ -207,9 +205,7 @@ def __load_notif_configs() -> List[NotificationConfigTemplate]:
     return rv
 
 
-NOTIF_CONFIG_TEMPLATES: List[NotificationConfigTemplate] = (
-    __load_notif_configs()
-)
+NOTIF_CONFIG_TEMPLATES: List[NotificationConfigTemplate] = __load_notif_configs()
 
 
 def notif_config_tmpl_summary_output(
@@ -256,18 +252,13 @@ def __wrap_text(text, max_line_length=30) -> str:
 
 def notifications_summary_output(routes: Dict, notif_type: str):
     data = []
-    if (
-        notif_type == lib.NOTIF_TYPE_ALL
-        or notif_type == lib.NOTIF_TYPE_DASHBOARD
-    ):
+    if notif_type == lib.NOTIF_TYPE_ALL or notif_type == lib.NOTIF_TYPE_DASHBOARD:
         dashboard_search_notifications = __parse_legacy_notifications(routes)
         if dashboard_search_notifications:
             data.extend(__get_dashboard_data(dashboard_search_notifications))
     notif_configs = __parse_notification_configs(routes)
     if notif_type != lib.NOTIF_TYPE_ALL:
-        notif_configs = list(
-            filter(lambda cfg: cfg.type == notif_type, notif_configs)
-        )
+        notif_configs = list(filter(lambda cfg: cfg.type == notif_type, notif_configs))
     data.extend(__get_config_data(notif_configs))
     data.sort(key=lambda row: (row[2], row[0]))
     return tabulate(data, NOTIFICATIONS_HEADERS, "plain")
@@ -275,20 +266,13 @@ def notifications_summary_output(routes: Dict, notif_type: str):
 
 def notifications_wide_output(routes: Dict, notif_type: str):
     data = []
-    if (
-        notif_type == lib.NOTIF_TYPE_ALL
-        or notif_type == lib.NOTIF_TYPE_DASHBOARD
-    ):
+    if notif_type == lib.NOTIF_TYPE_ALL or notif_type == lib.NOTIF_TYPE_DASHBOARD:
         dashboard_search_notifications = __parse_legacy_notifications(routes)
         if dashboard_search_notifications:
-            data.extend(
-                __get_dashboard_data_wide(dashboard_search_notifications)
-            )
+            data.extend(__get_dashboard_data_wide(dashboard_search_notifications))
     notif_configs = __parse_notification_configs(routes)
     if notif_type != lib.NOTIF_TYPE_ALL:
-        notif_configs = list(
-            filter(lambda cfg: cfg.type == notif_type, notif_configs)
-        )
+        notif_configs = list(filter(lambda cfg: cfg.type == notif_type, notif_configs))
     data.extend(__get_config_data_wide(notif_configs))
     data.sort(key=lambda row: (row[2], row[0]))
     return tabulate(data, NOTIFICATIONS_HEADERS, "plain")
@@ -298,9 +282,7 @@ def __parse_notification_configs(routes: Dict) -> List[NotificationConfig]:
     rv = []
     for route in routes:
         if __is_notification_config(route):
-            config = NotificationConfig(
-                route[lib.DATA_FIELD][lib.NOTIF_SETTINGS_FIELD]
-            )
+            config = NotificationConfig(route[lib.DATA_FIELD][lib.NOTIF_SETTINGS_FIELD])
             rv.append(config)
     return rv
 
@@ -504,9 +486,7 @@ def get_template(name_or_id) -> Optional[NotificationConfigTemplate]:
             return tmpl
 
 
-def put_and_get_notif_pol(
-    nr: NotificationConfig = None, delete_id: str = None
-):
+def put_and_get_notif_pol(nr: NotificationConfig = None, delete_id: str = None):
     ctx = cfg.get_current_context()
     n_pol = api.get_notification_policy(*ctx.get_api_data())
     routes: List = n_pol.get(lib.ROUTES_FIELD, [])

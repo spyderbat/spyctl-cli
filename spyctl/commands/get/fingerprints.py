@@ -54,9 +54,7 @@ def get_fingerprints_cmd(name_or_id, output, st, et, **filters):
     exact = filters.pop("exact")
     get_lib.output_time_log(lib.FINGERPRINTS_RESOURCE.name_plural, st, et)
     name_or_id = get_lib.wildcard_name_or_id(name_or_id, exact)
-    filters = {
-        key: value for key, value in filters.items() if value is not None
-    }
+    filters = {key: value for key, value in filters.items() if value is not None}
     handle_get_fingerprints(name_or_id, output, st, et, **filters)
 
 
@@ -77,9 +75,7 @@ def handle_get_fingerprints(name_or_id, output, st, et, **filters):
         filters["image_name"] = value
     name_or_id_expr = None
     if name_or_id:
-        name_or_id_expr = _af.Fingerprints.generate_name_or_uid_expr(
-            name_or_id
-        )
+        name_or_id_expr = _af.Fingerprints.generate_name_or_uid_expr(name_or_id)
     # Output in desired format
     if output == lib.OUTPUT_DEFAULT:
         summary = _r.fingerprints.fprint_output_summary(

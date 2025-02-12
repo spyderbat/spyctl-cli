@@ -5,15 +5,14 @@ Contains the logic for creating container rulesets from athena results
 import json
 from typing import Dict, List, Optional
 
-
 import spyctl.schemas_v2 as schemas
 import spyctl.spyctl_lib as lib
 from spyctl.resources.container_policies import (
+    ContainerMappings,
+    ProcModel,
     build_container_mappings,
     build_proc_models,
-    ContainerMappings,
     build_selectors,
-    ProcModel,
 )
 
 
@@ -82,9 +81,7 @@ def assemble_rulesets(cont_map: ContainerMappings, settings: Dict, **kwargs):
                     values=[proc_model.base_model.name],
                     processSelector=schemas.ProcessSelectorModel(
                         matchFields=__process_fields(proc_model),
-                        matchFieldsExpressions=__process_fields_expressions(
-                            proc_model
-                        ),
+                        matchFieldsExpressions=__process_fields_expressions(proc_model),
                     ),
                 )
             )

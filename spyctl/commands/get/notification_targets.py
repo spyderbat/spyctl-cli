@@ -10,9 +10,7 @@ import spyctl.spyctl_lib as lib
 from spyctl.commands.get import get_lib
 
 
-@click.command(
-    "notification-targets", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG
-)
+@click.command("notification-targets", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)
 @_so.help_option
 @_so.name_or_id_arg
 @_so.output_option
@@ -62,9 +60,7 @@ from spyctl.commands.get import get_lib
 )
 def get_notification_targets(name_or_id, output, **kwargs):
     """Get notification_targets by name or id."""
-    get_lib.output_time_log(
-        lib.NOTIFICATION_TARGETS_RESOURCE.name_plural, None, None
-    )
+    get_lib.output_time_log(lib.NOTIFICATION_TARGETS_RESOURCE.name_plural, None, None)
     kwargs = {key: value for key, value in kwargs.items() if value is not None}
     handle_get_notification_targets(name_or_id, output, **kwargs)
 
@@ -76,9 +72,7 @@ def handle_get_notification_targets(name_or_id, output, **kwargs):
     ctx = cfg.get_current_context()
     if name_or_id:
         kwargs["name_or_uid_contains"] = name_or_id
-    kwargs["include_target_data"] = not kwargs.pop(
-        "exclude_target_data", False
-    )
+    kwargs["include_target_data"] = not kwargs.pop("exclude_target_data", False)
     notification_targets, total_pages = nt_api.get_notification_targets(
         *ctx.get_api_data(), **kwargs
     )

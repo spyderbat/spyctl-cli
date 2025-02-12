@@ -31,9 +31,7 @@ def data_to_yaml(data: Dict) -> Dict:
         metadata=metadata,
         spec=spec,
     )
-    return model.model_dump(
-        exclude_unset=True, exclude_none=True, by_alias=True
-    )
+    return model.model_dump(exclude_unset=True, exclude_none=True, by_alias=True)
 
 
 SUMMARY_HEADERS = [

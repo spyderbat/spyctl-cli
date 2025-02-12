@@ -1,7 +1,7 @@
 import time
 from base64 import b64decode
-from typing import Dict, List, Optional
 from numbers import Real
+from typing import Dict, List, Optional
 
 import click
 import yaml
@@ -11,9 +11,9 @@ from tabulate import tabulate
 
 import spyctl.cli as cli
 import spyctl.config.configs as cfgs
-import spyctl.spyctl_lib as lib
 import spyctl.filter_resource as filt
 import spyctl.schemas_v2 as schemas
+import spyctl.spyctl_lib as lib
 
 SECRET_KIND = lib.SECRET_KIND
 
@@ -49,9 +49,7 @@ class Secret:
         if not self.name:
             raise InvalidSecretError("Invalid name")
         self.creation_time = self.metadata.get(lib.METADATA_CREATE_TIME)
-        if self.creation_time is not None and not isinstance(
-            self.creation_time, Real
-        ):
+        if self.creation_time is not None and not isinstance(self.creation_time, Real):
             raise InvalidSecretError("Invalid creation time")
         if self.creation_time is None:
             self.creation_time = time.time()
@@ -59,16 +57,12 @@ class Secret:
         self.data = {}
         if lib.DATA_FIELD in secret_data:
             if not isinstance(secret_data[lib.DATA_FIELD], dict):
-                raise InvalidSecretError(
-                    f"{lib.DATA_FIELD} is not a dictionary"
-                )
+                raise InvalidSecretError(f"{lib.DATA_FIELD} is not a dictionary")
             self.data = secret_data[lib.DATA_FIELD]
         self.string_data = {}
         if lib.STRING_DATA_FIELD in secret_data:
             if not isinstance(secret_data[lib.STRING_DATA_FIELD], dict):
-                raise InvalidSecretError(
-                    f"{lib.STRING_DATA_FIELD} is not a dictionary"
-                )
+                raise InvalidSecretError(f"{lib.STRING_DATA_FIELD} is not a dictionary")
             self.string_data = secret_data[lib.STRING_DATA_FIELD]
         self.__validate_apisecret_data()
 
@@ -111,16 +105,12 @@ class Secret:
             in_data = False
             if key in self.data:
                 if not isinstance(self.data[key], str):
-                    raise InvalidSecretError(
-                        f"Value for {key} must be a string"
-                    )
+                    raise InvalidSecretError(f"Value for {key} must be a string")
                 in_data = True
             in_string_data = False
             if key in self.string_data:
                 if not isinstance(self.string_data[key], str):
-                    raise InvalidSecretError(
-                        f"Value for {key} must be a string"
-                    )
+                    raise InvalidSecretError(f"Value for {key} must be a string")
                 in_string_data = True
             if not in_data and not in_string_data:
                 raise InvalidSecretError(f"{key} missing in data fields")
@@ -151,9 +141,7 @@ def load_secrets(silent=False):
                     secret_name = secret_data.get(lib.METADATA_FIELD, {}).get(
                         lib.METADATA_NAME_FIELD
                     )
-                    prefix = (
-                        f"Secret {secret_name!r}" if secret_name else "Secret"
-                    )
+                    prefix = f"Secret {secret_name!r}" if secret_name else "Secret"
                     cli.try_log(f"{prefix} in {secrets_path} has is invalid.")
                     continue
                 try:
@@ -243,9 +231,7 @@ def set_secret(name: str, apiurl: str = None, apikey: str = None):
 def delete_secret(secret_name: Dict):
     global SECRETS
     if secret_name not in SECRETS:
-        cli.try_log(
-            f"Unable to delete secret '{secret_name}'. Does not exist."
-        )
+        cli.try_log(f"Unable to delete secret '{secret_name}'. Does not exist.")
         return
     if not cli.query_yes_no(
         f'Are you sure you want to delete the secret "{secret_name}"?'
@@ -305,9 +291,7 @@ def secrets_summary_output(secrets: List[Dict]):
 
 
 def secret_summary_data(secret: Dict):
-    creation_timestamp = secret[lib.METADATA_FIELD].get(
-        lib.METADATA_CREATE_TIME
-    )
+    creation_timestamp = secret[lib.METADATA_FIELD].get(lib.METADATA_CREATE_TIME)
     if creation_timestamp:
         creation_zulu = zulu.Zulu.fromtimestamp(creation_timestamp)
         age = f"{(zulu.now() - creation_zulu).days}d"
@@ -324,9 +308,7 @@ def secrets_wide_output(secrets: List[Dict]) -> str:
     headers = ["NAME", "AGE", "KEY", "URL"]
     data = []
     for secret in secrets:
-        creation_timestamp = secret[lib.METADATA_FIELD].get(
-            lib.METADATA_CREATE_TIME
-        )
+        creation_timestamp = secret[lib.METADATA_FIELD].get(lib.METADATA_CREATE_TIME)
         if creation_timestamp:
             creation_zulu = zulu.Zulu.fromtimestamp(creation_timestamp)
             age = f"{(zulu.now() - creation_zulu).days}d"
@@ -372,8 +354,7 @@ class SecretsParam(click.ParamType):
         load_secrets(silent=True)
         secrets = get_secrets()
         secret_names = [
-            secret[lib.METADATA_FIELD][lib.METADATA_NAME_FIELD]
-            for secret in secrets
+            secret[lib.METADATA_FIELD][lib.METADATA_NAME_FIELD] for secret in secrets
         ]
         secret_names.sort()
         return [

@@ -33,9 +33,7 @@ def reportid():
         return 0
     if not DO_INTEGRATED_TESTS:
         return 0
-    response = api.generate_report(
-        API_URL, API_KEY, ORG, report_data=report_input
-    )
+    response = api.generate_report(API_URL, API_KEY, ORG, report_data=report_input)
     report = response.json()
     return report["id"]
 
@@ -58,9 +56,7 @@ def test_generate_report():
     if not API_URL or not API_KEY or not ORG:
         pytest.skip("No api_url/api_key/org set env set, skipping")
 
-    response = api.generate_report(
-        API_URL, API_KEY, ORG, report_data=report_input
-    )
+    response = api.generate_report(API_URL, API_KEY, ORG, report_data=report_input)
 
     assert response.status_code == 200
     report = response.json()
@@ -68,8 +64,7 @@ def test_generate_report():
     assert report["id"] != ""
     assert report["input"]["report_args"] == report_input["report_args"]
     assert all(
-        item in report["input"]["report_tags"]
-        for item in report_input["report_tags"]
+        item in report["input"]["report_tags"] for item in report_input["report_tags"]
     )
 
 
@@ -86,8 +81,7 @@ def test_get_report_status(reportid):
     assert report["id"] == reportid
     assert report["input"]["report_args"] == report_input["report_args"]
     assert all(
-        item in report["input"]["report_tags"]
-        for item in report_input["report_tags"]
+        item in report["input"]["report_tags"] for item in report_input["report_tags"]
     )
 
 

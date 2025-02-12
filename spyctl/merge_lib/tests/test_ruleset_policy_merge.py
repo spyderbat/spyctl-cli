@@ -2,8 +2,8 @@
 
 # pylint: disable=redefined-outer-name, missing-function-docstring
 
-from unittest import mock
 from typing import Dict
+from unittest import mock
 
 import pytest
 
@@ -66,10 +66,7 @@ def test_explicit_deny_global_scope(
         lib.RULE_VERB_FIELD: lib.RULE_VERB_DENY,
         lib.RULE_VALUES_FIELD: ["docker.io/bad-image"],
     }
-    assert (
-        del_rule
-        not in mo.ruleset_trackers["test_ruleset_1"].rules_map.values()
-    )
+    assert del_rule not in mo.ruleset_trackers["test_ruleset_1"].rules_map.values()
     assert any(
         d[lib.RULE_TARGET_FIELD] == "container::image"
         and d[lib.RULE_VERB_FIELD] == lib.RULE_VERB_ALLOW
@@ -108,13 +105,8 @@ def test_explicit_deny_scoped(
         lib.RULE_VERB_FIELD: lib.RULE_VERB_ALLOW,
         lib.RULE_VALUES_FIELD: ["docker.io/bad-image"],
     }
-    assert (
-        keep_rule in mo.ruleset_trackers["test_ruleset_1"].rules_map.values()
-    )
-    assert (
-        del_rule
-        not in mo.ruleset_trackers["test_ruleset_1"].rules_map.values()
-    )
+    assert keep_rule in mo.ruleset_trackers["test_ruleset_1"].rules_map.values()
+    assert del_rule not in mo.ruleset_trackers["test_ruleset_1"].rules_map.values()
     assert add_rule in mo.ruleset_trackers["test_ruleset_1"].rules_map.values()
 
 
@@ -133,10 +125,7 @@ def test_explicit_deny_with_explicit_allow(
         lib.RULE_VERB_FIELD: lib.RULE_VERB_ALLOW,
         lib.RULE_VALUES_FIELD: ["docker.io/nginx"],
     }
-    assert (
-        del_rule
-        not in mo.ruleset_trackers["test_ruleset_3"].rules_map.values()
-    )
+    assert del_rule not in mo.ruleset_trackers["test_ruleset_3"].rules_map.values()
     assert add_rule in mo.ruleset_trackers["test_ruleset_1"].rules_map.values()
 
 
@@ -165,10 +154,7 @@ def test_explicit_deny_with_explicit_allow_2(
         lib.RULE_VERB_FIELD: lib.RULE_VERB_ALLOW,
         lib.RULE_VALUES_FIELD: ["docker.io/mysql"],
     }
-    assert (
-        del_rule
-        not in mo.ruleset_trackers["test_ruleset_3"].rules_map.values()
-    )
+    assert del_rule not in mo.ruleset_trackers["test_ruleset_3"].rules_map.values()
     assert add_rule in mo.ruleset_trackers["test_ruleset_3"].rules_map.values()
 
 
@@ -207,14 +193,9 @@ def test_explicit_deny_with_explicit_allow_3(
         lib.RULE_VERB_FIELD: lib.RULE_VERB_DENY,
         lib.RULE_VALUES_FIELD: ["docker.io/keep-me", "docker.io/pyth*n"],
     }
-    assert (
-        del_rule
-        not in mo.ruleset_trackers["test_ruleset_3"].rules_map.values()
-    )
+    assert del_rule not in mo.ruleset_trackers["test_ruleset_3"].rules_map.values()
     assert add_rule in mo.ruleset_trackers["test_ruleset_3"].rules_map.values()
-    assert (
-        keep_rule in mo.ruleset_trackers["test_ruleset_3"].rules_map.values()
-    )
+    assert keep_rule in mo.ruleset_trackers["test_ruleset_3"].rules_map.values()
 
 
 @pytest.fixture
@@ -222,9 +203,7 @@ def ruleset_policy_merge_object(cluster_pol_1: Dict):
     def get_rulesets(*_args, **_kwargs):
         return [CLUSTER_RULESET_1, CLUSTER_RULESET_2, CLUSTER_RULESET_3]
 
-    with mock.patch(
-        "spyctl.merge_lib.ruleset_merge_object.get_rulesets", get_rulesets
-    ):
+    with mock.patch("spyctl.merge_lib.ruleset_merge_object.get_rulesets", get_rulesets):
         mo = _moh.get_merge_object(lib.POL_KIND, cluster_pol_1, True, "merge")
         assert isinstance(mo, _rmo.RulesetPolicyMergeObject)
     return mo

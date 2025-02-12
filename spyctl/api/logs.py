@@ -43,9 +43,7 @@ def get_audit_events(
     """
     audit_events = []
     if msg_type:
-        schema = (
-            f"{lib.EVENT_LOG_PREFIX}:" f"{lib.EVENT_LOG_SUBTYPE_MAP[msg_type]}"
-        )
+        schema = f"{lib.EVENT_LOG_PREFIX}:" f"{lib.EVENT_LOG_SUBTYPE_MAP[msg_type]}"
     else:
         schema = lib.EVENT_LOG_PREFIX
     url = f"api/v1/org/{org_uid}/analyticspolicy/logs"

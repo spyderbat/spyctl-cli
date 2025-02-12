@@ -4,8 +4,8 @@ import click
 
 import spyctl.spyctl_lib as lib
 from spyctl.commands.get import (
-    agents,
     agent_health,
+    agents,
     bash_cmds,
     clusterrolebindings,
     clusterroles,

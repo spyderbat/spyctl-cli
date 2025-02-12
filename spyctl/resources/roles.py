@@ -24,9 +24,7 @@ def role_output_summary(
     limit_mem=False,
 ) -> str:
     data = []
-    for role in get_role(
-        *ctx.get_api_data(), clusters, time, pipeline, limit_mem
-    ):
+    for role in get_role(*ctx.get_api_data(), clusters, time, pipeline, limit_mem):
         data.append(role_summary_data(role))
     rv = tabulate(
         sorted(data, key=lambda x: [x[0], x[3], x[4]]),

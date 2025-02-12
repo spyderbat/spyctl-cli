@@ -178,9 +178,7 @@ def output_argument_helper(input: str) -> str:
 
 def add_time_arg(parser):
     times = parser.add_mutually_exclusive_group()
-    times.add_argument(
-        "-t", "--time", help="collect data at this time", type=time_inp
-    )
+    times.add_argument("-t", "--time", help="collect data at this time", type=time_inp)
     times.add_argument(
         "-r",
         "--time-range",
@@ -201,9 +199,7 @@ def add_time_arg(parser):
 def parse_args():
     desc = "a tool to help manage Spyderbat fingerprints and policies"
     epilog = "see TUTORIAL.md for an explanation of usage"
-    parser = ArgumentParser(
-        description=desc, epilog=epilog, formatter_class=fmt
-    )
+    parser = ArgumentParser(description=desc, epilog=epilog, formatter_class=fmt)
     parser.add_argument(
         "--deployment",
         help="name of deployment to use from user configuration file",
@@ -216,9 +212,7 @@ def parse_args():
         " and run non-interactively.",
         action="store_true",
     )
-    subs = parser.add_subparsers(
-        title="subcommands", dest="subcommand", required=True
-    )
+    subs = parser.add_subparsers(title="subcommands", dest="subcommand", required=True)
     make_compare(subs)
     make_configure(subs)
     make_create(subs)
@@ -262,9 +256,7 @@ def make_configure_add(configure_subs: _SubParsersAction[ArgumentParser]):
         default=DEFAULT_API_URL,
         metavar="URL",
     )
-    configure_add.add_argument(
-        "-o", "--org", metavar="NAME_OR_UID", required=True
-    )
+    configure_add.add_argument("-o", "--org", metavar="NAME_OR_UID", required=True)
     configure_add.add_argument(
         "-D",
         "--set-default",
@@ -274,10 +266,7 @@ def make_configure_add(configure_subs: _SubParsersAction[ArgumentParser]):
 
 
 def make_configure_update(configure_subs: _SubParsersAction[ArgumentParser]):
-    desc = (
-        "update a specific Spyderbat API deployment in spyctl user"
-        " configuration"
-    )
+    desc = "update a specific Spyderbat API deployment in spyctl user" " configuration"
     configure_update = configure_subs.add_parser(
         "update", description=desc, formatter_class=fmt
     )
@@ -335,9 +324,7 @@ def make_delete(subs: _SubParsersAction[ArgumentParser]):
         description=desc,
         formatter_class=fmt,
     )
-    delete_subs = delete.add_subparsers(
-        title="delete commands", dest="delete_cmd"
-    )
+    delete_subs = delete.add_subparsers(title="delete commands", dest="delete_cmd")
     make_delete_policy(SP_POL_NAMES_AND_ALIASES, delete_subs)
 
 
@@ -347,9 +334,7 @@ def make_delete_policy(names, delete_subs: _SubParsersAction[ArgumentParser]):
         **name_and_aliases(names), description=desc, formatter_class=fmt
     )
     del_pol_grp = delete_policy.add_mutually_exclusive_group(required=True)
-    del_pol_grp.add_argument(
-        "-u", "--uid", help="UID of Spyderbat Policy object"
-    )
+    del_pol_grp.add_argument("-u", "--uid", help="UID of Spyderbat Policy object")
     del_pol_grp.add_argument(
         "-P",
         "--policy",
@@ -361,9 +346,7 @@ def make_delete_policy(names, delete_subs: _SubParsersAction[ArgumentParser]):
 def make_manage(subs: _SubParsersAction[ArgumentParser]):
     desc = "Edit Spyderbat objects"
     manage = subs.add_parser("manage", description=desc, formatter_class=fmt)
-    manage_subs = manage.add_subparsers(
-        title="manage commands", dest="manage_cmd"
-    )
+    manage_subs = manage.add_subparsers(title="manage commands", dest="manage_cmd")
     make_manage_policy(manage_subs)
 
 
@@ -444,8 +427,7 @@ def make_manage_policy_enable(
     man_pol_subs: _SubParsersAction[ArgumentParser],
 ):
     desc = (
-        "Enable a Spyderbat policy object\n  note: policies are enabled by"
-        " default"
+        "Enable a Spyderbat policy object\n  note: policies are enabled by" " default"
     )
     man_pol_enable = man_pol_subs.add_parser(
         "enable", description=desc, formatter_class=fmt
@@ -472,9 +454,7 @@ def make_manage_policy_disable(
 def make_create(subs: _SubParsersAction[ArgumentParser]):
     desc = "create YAML objects for use in Spyderbat"
     create = subs.add_parser("create", description=desc, formatter_class=fmt)
-    create_subs = create.add_subparsers(
-        title="output objects", dest="create_target"
-    )
+    create_subs = create.add_subparsers(title="output objects", dest="create_target")
     make_create_spyderbat_policy(create_subs)
 
 
@@ -517,30 +497,22 @@ def make_get(subs: _SubParsersAction[ArgumentParser]):
 
 def make_get_cluster(get_subs: _SubParsersAction[ArgumentParser]):
     names = ["clusters", "clust", "clusts", "cluster"]
-    get_cluster = get_subs.add_parser(
-        **name_and_aliases(names), formatter_class=fmt
-    )
+    get_cluster = get_subs.add_parser(**name_and_aliases(names), formatter_class=fmt)
     add_time_arg(get_cluster)
     add_output_arg(get_cluster)
 
 
 def make_get_namespace(get_subs: _SubParsersAction[ArgumentParser]):
     names = ["namespaces", "name", "names", "namesp", "namesps", "namespace"]
-    get_namespace = get_subs.add_parser(
-        **name_and_aliases(names), formatter_class=fmt
-    )
-    get_namespace.add_argument(
-        "-c", "--clusters", nargs="?", const="-", required=True
-    )
+    get_namespace = get_subs.add_parser(**name_and_aliases(names), formatter_class=fmt)
+    get_namespace.add_argument("-c", "--clusters", nargs="?", const="-", required=True)
     add_time_arg(get_namespace)
     add_output_arg(get_namespace)
 
 
 def make_get_machine(get_subs: _SubParsersAction[ArgumentParser]):
     names = ["machines", "mach", "machs", "machine"]
-    get_machine = get_subs.add_parser(
-        **name_and_aliases(names), formatter_class=fmt
-    )
+    get_machine = get_subs.add_parser(**name_and_aliases(names), formatter_class=fmt)
     get_machine.add_argument("-c", "--clusters", nargs="?", const="-")
     add_time_arg(get_machine)
     add_output_arg(get_machine)
@@ -548,9 +520,7 @@ def make_get_machine(get_subs: _SubParsersAction[ArgumentParser]):
 
 def make_get_pod(get_subs: _SubParsersAction[ArgumentParser]):
     names = ["pods", "pod"]
-    get_pod = get_subs.add_parser(
-        **name_and_aliases(names), formatter_class=fmt
-    )
+    get_pod = get_subs.add_parser(**name_and_aliases(names), formatter_class=fmt)
     get_pod.add_argument("-c", "--clusters", nargs="?", const="-")
     get_pod.add_argument("-m", "--machines", nargs="?", const="-")
     get_pod.add_argument("-n", "--namespaces", nargs="?", const="-")
@@ -579,18 +549,14 @@ def make_get_fingerprint(get_subs: _SubParsersAction[ArgumentParser]):
 
 def make_get_policy(get_subs: _SubParsersAction[ArgumentParser]):
     names = SP_POL_NAMES_AND_ALIASES
-    get_policy = get_subs.add_parser(
-        **name_and_aliases(names), formatter_class=fmt
-    )
+    get_policy = get_subs.add_parser(**name_and_aliases(names), formatter_class=fmt)
     get_policy.add_argument(
         "type",
         choices=[POL_TYPE_CONT, POL_TYPE_SVC],
         help="the type of policy to get",
     )
     pol_uid_grp = get_policy.add_mutually_exclusive_group()
-    pol_uid_grp.add_argument(
-        "-u", "--uid", help="UID of Spyderbat Policy object"
-    )
+    pol_uid_grp.add_argument("-u", "--uid", help="UID of Spyderbat Policy object")
     pol_uid_grp.add_argument(
         "-P",
         "--policy",

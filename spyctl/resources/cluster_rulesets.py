@@ -66,9 +66,7 @@ class ContainerRules(RulesObject):
     def add_container(self, container: Dict):
         image = container["image"]
         namespaces_labels: Dict = container.get("pod_namespace_labels", {})
-        namespace = namespaces_labels.get(
-            NS_LABEL, container.get("pod_namespace")
-        )
+        namespace = namespaces_labels.get(NS_LABEL, container.get("pod_namespace"))
         if not namespace:
             lib.try_log(
                 f"Container {container['container_name']} with from {image} has no namespace.. skipping",  # noqa: E501
@@ -131,9 +129,7 @@ class ContainerRules(RulesObject):
             )
 
         def sort_key(item: Dict):
-            labels = item[lib.NAMESPACE_SELECTOR_FIELD].get(
-                lib.MATCH_LABELS_FIELD
-            )
+            labels = item[lib.NAMESPACE_SELECTOR_FIELD].get(lib.MATCH_LABELS_FIELD)
             if labels:
                 namespace = labels.get(NS_LABEL)
                 return namespace
@@ -205,9 +201,7 @@ def create_blank_ruleset(_name: str):
     pass
 
 
-def create_ruleset(
-    name: str, generate_rules: bool, time, **filters
-) -> ClusterRuleset:
+def create_ruleset(name: str, generate_rules: bool, time, **filters) -> ClusterRuleset:
     ruleset = ClusterRuleset(name, filters.get(lib.CLUSTER_OPTION))
     if generate_rules:
         generate_cluster_ruleset(
@@ -216,9 +210,7 @@ def create_ruleset(
     return ruleset
 
 
-def generate_cluster_ruleset(
-    ruleset: ClusterRuleset, rule_types, time, **filters
-):
+def generate_cluster_ruleset(ruleset: ClusterRuleset, rule_types, time, **filters):
     cluster = filters.get(lib.CLUSTER_OPTION)
     if not cluster:
         lib.err_exit("Cluster name or UID is required for cluster ruleset")
