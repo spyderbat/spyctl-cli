@@ -6,23 +6,23 @@
 Spyctl
 ==========================
 
-Release v\ |version|. (`Installation <https://docs.spyderbat.com/spyctl-and-spyderbat-guardian/spyctl-getting-started>`_)
+Release v\ |version|. (`Installation <https://docs.spyderbat.com/installation/spyctl>`_)
 
-.. image:: https://img.shields.io/github/downloads/spyderbat/spyctl/total
+.. image:: https://img.shields.io/github/downloads/spyderbat/spyctl-cli/total
    :alt: GitHub all releases
 
-.. image:: https://img.shields.io/github/issues/spyderbat/spyctl
-   :target: https://github.com/spyderbat/spyctl/issues
+.. image:: https://img.shields.io/github/issues/spyderbat/spyctl-cli
+   :target: https://github.com/spyderbat/spyctl-cli/issues
    :alt: GitHub issues
 
-.. image:: https://img.shields.io/github/issues-closed/spyderbat/spyctl
-   :target: https://github.com/spyderbat/spyctl/issues?q=is%3Aissue+is%3Aclosed
+.. image:: https://img.shields.io/github/issues-closed/spyderbat/spyctl-cli
+   :target: https://github.com/spyderbat/spyctl-cli/issues?q=is%3Aissue+is%3Aclosed
    :alt: GitHub closed issues
 
-.. image:: https://img.shields.io/github/license/spyderbat/spyctl
+.. image:: https://img.shields.io/github/license/spyderbat/spyctl-cli
    :alt: GitHub
 
-.. image:: https://img.shields.io/github/stars/spyderbat/spyctl?style=social
+.. image:: https://img.shields.io/github/stars/spyderbat/spyctl-cli?style=social
    :alt: GitHub Repo stars
 
 
@@ -31,9 +31,9 @@ Release v\ |version|. (`Installation <https://docs.spyderbat.com/spyctl-and-spyd
 Getting Started
 ---------------
 
-Installation: `Spyctl Getting Started <https://docs.spyderbat.com/spyctl-and-spyderbat-guardian/spyctl-getting-started>`_
+Installation: `Spyctl Getting Started <https://docs.spyderbat.com/installation/spyctl>`_
 
-Configuration: `Spyctl Initial Configuration <https://docs.spyderbat.com/spyctl-and-spyderbat-guardian/spyctl-getting-started/initial-configuration>`_
+Configuration: `Spyctl Initial Configuration <https://docs.spyderbat.com/installation/spyctl/spyctl-initial-configuration>`_
 
 Understanding Spyctl
 --------------------
@@ -47,7 +47,7 @@ Learn about Spyctl and its fundamental concepts.
 
 Tutorials:
 
-* `Basics Tutorial <https://docs.spyderbat.com/spyctl-and-spyderbat-guardian/tutorials/basics-tutorial>`_
+* `Explore tutorials for Spyctl CLI and Spyderbat <https://docs.spyderbat.com/tutorials>`_
 
 Reference
 ---------
