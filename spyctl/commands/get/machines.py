@@ -20,9 +20,7 @@ def get_machines_cmd(name_or_id, output, st, et, **filters):
     exact = filters.pop("exact")
     get_lib.output_time_log(lib.MACHINES_RESOURCE.name_plural, st, et)
     name_or_id = get_lib.wildcard_name_or_id(name_or_id, exact)
-    filters = {
-        key: value for key, value in filters.items() if value is not None
-    }
+    filters = {key: value for key, value in filters.items() if value is not None}
     handle_get_machines(name_or_id, output, st, et, **filters)
 
 
@@ -32,9 +30,7 @@ def handle_get_machines(name_or_id, output, st, et, **filters):
     sources, filters = _af.Machines.build_sources_and_filters(**filters)
     pipeline = _af.Machines.generate_pipeline(name_or_id, filters=filters)
     if output in [lib.OUTPUT_DEFAULT, lib.OUTPUT_WIDE]:
-        summary = _r.machines.machines_summary_output(
-            ctx, sources, (st, et), pipeline
-        )
+        summary = _r.machines.machines_summary_output(ctx, sources, (st, et), pipeline)
         cli.show(summary, lib.OUTPUT_RAW)
     else:
         for machine in sq_api.get_machines(

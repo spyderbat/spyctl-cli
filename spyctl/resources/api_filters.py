@@ -3,14 +3,14 @@ filtering.
 """
 
 from copy import deepcopy
-from typing import Dict, List, Tuple, Union, Iterable
+from typing import Dict, Iterable, List, Tuple, Union
 
-from spyctl.api.sources import get_sources
-from spyctl.api.policies import get_policies
-from spyctl.api.clusters import get_clusters
 import spyctl.config.configs as cfg
 import spyctl.filter_resource as filt
 import spyctl.spyctl_lib as lib
+from spyctl.api.clusters import get_clusters
+from spyctl.api.policies import get_policies
+from spyctl.api.sources import get_sources
 
 # Source types
 SOURCE_TYPE_CLUID = "cluid"
@@ -69,9 +69,7 @@ def get_filtered_pol_uids(**filters) -> List[str]:
                 policy_filters,
             )
         ]
-    policy_uids = [
-        p[lib.METADATA_FIELD][lib.METADATA_UID_FIELD] for p in policies
-    ]
+    policy_uids = [p[lib.METADATA_FIELD][lib.METADATA_UID_FIELD] for p in policies]
     return policy_uids
 
 
@@ -151,11 +149,7 @@ class API_Filter:
         )
         if count:
             pipeline_items.append(
-                {
-                    "aggregation": {
-                        "aggregations": [{"count": {}, "as": "count"}]
-                    }
-                }
+                {"aggregation": {"aggregations": [{"count": {}, "as": "count"}]}}
             )
         return pipeline_items
 
@@ -195,9 +189,7 @@ class API_Filter:
                 if isinstance(values, str):
                     value = [values]
                 for value in values:
-                    and_items.append(
-                        {"not": generate_filter_value(property, value)}
-                    )
+                    and_items.append({"not": generate_filter_value(property, value)})
             else:
                 continue
         rv = {"filter": {"and": and_items}}
@@ -268,8 +260,7 @@ class API_Filter:
         if cls.source_type == SOURCE_TYPE_GLOBAL:
             sources.append(ctx.global_source)
             if cls.alternate_source_type == SOURCE_TYPE_MUID and (
-                lib.MACHINES_FIELD in ctx_filters
-                or lib.MACHINES_FIELD in filters
+                lib.MACHINES_FIELD in ctx_filters or lib.MACHINES_FIELD in filters
             ):
                 muids = get_filtered_muids(**filters)
                 cls.__pop_muid_filters(ctx_filters, filters)
@@ -293,8 +284,7 @@ class API_Filter:
             sources = pol_uids
         else:  # muids is the default
             if cls.alternate_source_type in CLUSTER_SOURCES and (
-                lib.CLUSTER_FIELD in ctx_filters
-                or lib.CLUSTER_FIELD in filters
+                lib.CLUSTER_FIELD in ctx_filters or lib.CLUSTER_FIELD in filters
             ):
                 cluids = get_filtered_cluids(**filters)
                 cls.__pop_cluid_filters(ctx_filters, filters)
@@ -379,8 +369,7 @@ class AgentMetrics(API_Filter):
         cls, name_or_uid=None, type=None, latest_model=True, filters={}
     ) -> List:
         schema = (
-            f"{lib.EVENT_METRICS_PREFIX}:"
-            f"{lib.EVENT_METRIC_SUBTYPE_MAP['agent']}"
+            f"{lib.EVENT_METRICS_PREFIX}:" f"{lib.EVENT_METRIC_SUBTYPE_MAP['agent']}"
         )
         return super(AgentMetrics, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -405,9 +394,7 @@ class Connections(API_Filter):
     source_type = SOURCE_TYPE_MUID
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = lib.MODEL_CONNECTION_PREFIX
         return super(Connections, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -428,9 +415,7 @@ class ConnectionBundles(API_Filter):
     alternate_source_type = SOURCE_TYPE_CLUID_CBUN
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = lib.MODEL_CONN_BUN_PREFIX
         return super(ConnectionBundles, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -458,9 +443,7 @@ class Containers(API_Filter):
     alternate_source_type = SOURCE_TYPE_CLUID_POCO
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = lib.MODEL_CONTAINER_PREFIX
         return super(Containers, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -472,17 +455,13 @@ class Deployments(API_Filter):
         lib.ID_FIELD: lib.ID_FIELD,
         lib.BE_KUID_FIELD: lib.BE_KUID_FIELD,
         lib.NAME_FIELD: f"{lib.METADATA_FIELD}.{lib.METADATA_NAME_FIELD}",
-        lib.NAMESPACE_FIELD: (
-            f"{lib.METADATA_FIELD}.{lib.METADATA_NAMESPACE_FIELD}",
-        ),
+        lib.NAMESPACE_FIELD: (f"{lib.METADATA_FIELD}.{lib.METADATA_NAMESPACE_FIELD}",),
     }
     name_or_uid_props = [lib.ID_FIELD, lib.NAME_FIELD, lib.BE_KUID_FIELD]
     source_type = SOURCE_TYPE_CLUID_BASE
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = lib.MODEL_DEPLOYMENT_PREFIX
         return super(Deployments, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -501,9 +480,7 @@ class Deviations(API_Filter):
     source_type = SOURCE_TYPE_POL
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = lib.EVENT_DEVIATION_PREFIX
         return super(Deviations, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -591,9 +568,7 @@ class Machines(API_Filter):
     source_type = SOURCE_TYPE_MUID
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = lib.MODEL_MACHINE_PREFIX
         return super(Machines, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -605,17 +580,13 @@ class Namespaces(API_Filter):
         lib.ID_FIELD: lib.ID_FIELD,
         lib.BE_KUID_FIELD: f"{lib.METADATA_FIELD}.{lib.METADATA_UID_FIELD}",
         lib.NAME_FIELD: f"{lib.METADATA_FIELD}.{lib.METADATA_NAME_FIELD}",
-        lib.NAMESPACE_FIELD: (
-            f"{lib.METADATA_FIELD}.{lib.METADATA_NAMESPACE_FIELD}"
-        ),
+        lib.NAMESPACE_FIELD: (f"{lib.METADATA_FIELD}.{lib.METADATA_NAMESPACE_FIELD}"),
     }
     name_or_uid_props = [lib.ID_FIELD, lib.NAME_FIELD, lib.BE_KUID_FIELD]
     source_type = SOURCE_TYPE_CLUID_BASE
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = lib.MODEL_NAMESPACE_PREFIX
         return super(Namespaces, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -634,17 +605,13 @@ class Nodes(API_Filter):
         lib.ID_FIELD: lib.ID_FIELD,
         lib.BE_KUID_FIELD: lib.BE_KUID_FIELD,
         lib.NAME_FIELD: f"{lib.METADATA_FIELD}.{lib.METADATA_NAME_FIELD}",
-        lib.NAMESPACE_FIELD: (
-            f"{lib.METADATA_FIELD}.{lib.METADATA_NAMESPACE_FIELD}"
-        ),
+        lib.NAMESPACE_FIELD: (f"{lib.METADATA_FIELD}.{lib.METADATA_NAMESPACE_FIELD}"),
     }
     name_or_uid_props = [lib.ID_FIELD, lib.NAME_FIELD, lib.BE_KUID_FIELD]
     source_type = SOURCE_TYPE_CLUID_BASE
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = lib.MODEL_NODE_PREFIX
         return super(Nodes, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -658,9 +625,7 @@ class OpsFlags(API_Filter):
     alternate_source_type = SOURCE_TYPE_CLUID_FLAG
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = lib.EVENT_OPSFLAG_PREFIX
         return super(OpsFlags, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -672,17 +637,13 @@ class Pods(API_Filter):
         lib.ID_FIELD: lib.ID_FIELD,
         lib.BE_KUID_FIELD: lib.BE_KUID_FIELD,
         lib.NAME_FIELD: f"{lib.METADATA_FIELD}.{lib.METADATA_NAME_FIELD}",
-        lib.NAMESPACE_FIELD: (
-            f"{lib.METADATA_FIELD}.{lib.METADATA_NAMESPACE_FIELD}"
-        ),
+        lib.NAMESPACE_FIELD: (f"{lib.METADATA_FIELD}.{lib.METADATA_NAMESPACE_FIELD}"),
     }
     name_or_uid_props = [lib.ID_FIELD, lib.METADATA_NAME_FIELD]
     source_type = SOURCE_TYPE_CLUID_POCO
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = lib.MODEL_POD_PREFIX
         return super(Pods, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -694,17 +655,13 @@ class ReplicaSet(API_Filter):
         lib.ID_FIELD: lib.ID_FIELD,
         lib.BE_KUID_FIELD: lib.BE_KUID_FIELD,
         lib.NAME_FIELD: f"{lib.METADATA_FIELD}.{lib.METADATA_NAME_FIELD}",
-        lib.NAMESPACE_FIELD: (
-            f"{lib.METADATA_FIELD}.{lib.METADATA_NAMESPACE_FIELD}"
-        ),
+        lib.NAMESPACE_FIELD: (f"{lib.METADATA_FIELD}.{lib.METADATA_NAMESPACE_FIELD}"),
     }
     name_or_uid_props = [lib.ID_FIELD, lib.METADATA_NAME_FIELD]
     source_type = SOURCE_TYPE_CLUID_BASE
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = lib.MODEL_REPLICASET_PREFIX
         return super(ReplicaSet, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -716,17 +673,13 @@ class Role(API_Filter):
         lib.ID_FIELD: lib.ID_FIELD,
         lib.BE_KUID_FIELD: lib.BE_KUID_FIELD,
         lib.NAME_FIELD: f"{lib.METADATA_FIELD}.{lib.METADATA_NAME_FIELD}",
-        lib.NAMESPACE_FIELD: (
-            f"{lib.METADATA_FIELD}.{lib.METADATA_NAMESPACE_FIELD}"
-        ),
+        lib.NAMESPACE_FIELD: (f"{lib.METADATA_FIELD}.{lib.METADATA_NAMESPACE_FIELD}"),
     }
     name_or_uid_props = [lib.ID_FIELD, lib.METADATA_NAME_FIELD]
     source_type = SOURCE_TYPE_CLUID_BASE
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = lib.MODEL_K8S_ROLE_PREFIX
         return super(Role, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -738,17 +691,13 @@ class ClusterRole(API_Filter):
         lib.ID_FIELD: lib.ID_FIELD,
         lib.BE_KUID_FIELD: lib.BE_KUID_FIELD,
         lib.NAME_FIELD: f"{lib.METADATA_FIELD}.{lib.METADATA_NAME_FIELD}",
-        lib.NAMESPACE_FIELD: (
-            f"{lib.METADATA_FIELD}.{lib.METADATA_NAMESPACE_FIELD}"
-        ),
+        lib.NAMESPACE_FIELD: (f"{lib.METADATA_FIELD}.{lib.METADATA_NAMESPACE_FIELD}"),
     }
     name_or_uid_props = [lib.ID_FIELD, lib.METADATA_NAME_FIELD]
     source_type = SOURCE_TYPE_CLUID_BASE
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = lib.MODEL_K8S_CLUSTERROLE_PREFIX
         return super(ClusterRole, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -760,17 +709,13 @@ class RoleBinding(API_Filter):
         lib.ID_FIELD: lib.ID_FIELD,
         lib.BE_KUID_FIELD: lib.BE_KUID_FIELD,
         lib.NAME_FIELD: f"{lib.METADATA_FIELD}.{lib.METADATA_NAME_FIELD}",
-        lib.NAMESPACE_FIELD: (
-            f"{lib.METADATA_FIELD}.{lib.METADATA_NAMESPACE_FIELD}"
-        ),
+        lib.NAMESPACE_FIELD: (f"{lib.METADATA_FIELD}.{lib.METADATA_NAMESPACE_FIELD}"),
     }
     name_or_uid_props = [lib.ID_FIELD, lib.METADATA_NAME_FIELD]
     source_type = SOURCE_TYPE_CLUID_BASE
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = lib.MODEL_ROLEBINDING_PREFIX
         return super(RoleBinding, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -782,17 +727,13 @@ class ClusterRoleBinding(API_Filter):
         lib.ID_FIELD: lib.ID_FIELD,
         lib.BE_KUID_FIELD: lib.BE_KUID_FIELD,
         lib.NAME_FIELD: f"{lib.METADATA_FIELD}.{lib.METADATA_NAME_FIELD}",
-        lib.NAMESPACE_FIELD: (
-            f"{lib.METADATA_FIELD}.{lib.METADATA_NAMESPACE_FIELD}"
-        ),
+        lib.NAMESPACE_FIELD: (f"{lib.METADATA_FIELD}.{lib.METADATA_NAMESPACE_FIELD}"),
     }
     name_or_uid_props = [lib.ID_FIELD, lib.METADATA_NAME_FIELD]
     source_type = SOURCE_TYPE_CLUID_BASE
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = lib.MODEL_CLUSTERROLE_BINDING_PREFIX
         return super(ClusterRoleBinding, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -815,9 +756,7 @@ class Processes(API_Filter):
     source_type = SOURCE_TYPE_MUID
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = lib.MODEL_PROCESS_PREFIX
         return super(Processes, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -829,17 +768,13 @@ class Daemonsets(API_Filter):
         lib.ID_FIELD: lib.ID_FIELD,
         lib.BE_KUID_FIELD: lib.BE_KUID_FIELD,
         lib.NAME_FIELD: f"{lib.METADATA_FIELD}.{lib.METADATA_NAME_FIELD}",
-        lib.NAMESPACE_FIELD: (
-            f"{lib.METADATA_FIELD}.{lib.METADATA_NAMESPACE_FIELD}"
-        ),
+        lib.NAMESPACE_FIELD: (f"{lib.METADATA_FIELD}.{lib.METADATA_NAMESPACE_FIELD}"),
     }
     name_or_uid_props = [lib.ID_FIELD, lib.NAME_FIELD, lib.BE_KUID_FIELD]
     source_type = SOURCE_TYPE_CLUID_BASE
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = lib.MODEL_DAEMONSET_PREFIX
         return super(Daemonsets, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -857,9 +792,7 @@ class RedFlags(API_Filter):
     alternate_source_type = SOURCE_TYPE_CLUID_FLAG
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = lib.EVENT_REDFLAG_PREFIX
         return super(RedFlags, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -890,9 +823,7 @@ class Spydertraces(API_Filter):
     source_type = SOURCE_TYPE_MUID
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = lib.MODEL_SPYDERTRACE_PREFIX
         return super(Spydertraces, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -907,9 +838,7 @@ class SpydertraceSummaries(API_Filter):
     source_type = SOURCE_TYPE_MUID
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = f"{lib.MODEL_FINGERPRINT_PREFIX}:{lib.POL_TYPE_TRACE}"
         return super(SpydertraceSummaries, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters
@@ -925,9 +854,7 @@ class SpydertopData(API_Filter):
     source_type = SOURCE_TYPE_MUID
 
     @classmethod
-    def generate_pipeline(
-        cls, name_or_uid=None, latest_model=True, filters={}
-    ) -> List:
+    def generate_pipeline(cls, name_or_uid=None, latest_model=True, filters={}) -> List:
         schema = f"{lib.EVENT_TOP_DATA_PREFIX}"
         return super(SpydertopData, cls).generate_pipeline(
             schema, name_or_uid, latest_model, filters

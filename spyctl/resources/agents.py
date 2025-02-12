@@ -3,12 +3,12 @@ from typing import Dict, List, Tuple
 
 from tabulate import tabulate
 
+import spyctl.api.agents as agents_api
 import spyctl.config.configs as cfg
 import spyctl.resources.api_filters as _af
 import spyctl.spyctl_lib as lib
 from spyctl import cli
 from spyctl.api.source_queries import MAX_TIME_RANGE_SECS, time_blocks
-import spyctl.api.agents as agents_api
 
 
 def agent_summary_output(agents: List[Dict]) -> str:
@@ -169,10 +169,7 @@ def __calc_latest_metrics(agent: Dict, metrics_record: Dict):
     kBps = str(round(metrics_record["bandwidth_1min_Bps"] / 1000, 1)) + "-kBps"
     total_mem = agent["total_mem_B"]
     mem_p = (
-        str(
-            round((metrics_record["mem_1min_B"]["agent"] / total_mem * 100), 2)
-        )
-        + "%"
+        str(round((metrics_record["mem_1min_B"]["agent"] / total_mem * 100), 2)) + "%"
     )
     cpu_p = str(round(metrics_record["cpu_1min_P"]["agent"] * 100, 2)) + "%"
     return (kBps, mem_p, cpu_p, lib.epoch_to_zulu(metrics_record["time"]))

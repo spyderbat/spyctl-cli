@@ -24,9 +24,7 @@ def nodes_output_summary(
     limit_mem=False,
 ) -> str:
     data = []
-    for node in get_nodes(
-        *ctx.get_api_data(), clusters, time, pipeline, limit_mem
-    ):
+    for node in get_nodes(*ctx.get_api_data(), clusters, time, pipeline, limit_mem):
         data.append(__node_summary_data(node))
     rv = tabulate(
         sorted(data, key=lambda x: [x[4], x[1], x[2], x[0]]),

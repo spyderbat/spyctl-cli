@@ -6,8 +6,8 @@ from spyctl import spyctl_lib as lib
 from spyctl.api.custom_flags import get_custom_flags
 from spyctl.api.notifications import put_set_notification_settings
 from spyctl.commands.notifications.configure.shared_options import (
-    notification_settings_options,
     get_target_map,
+    notification_settings_options,
 )
 from spyctl.config import configs as cfg
 
@@ -32,9 +32,7 @@ def configure_custom_flag(name_or_uid, **kwargs):
     if not custom_flags:
         lib.err_exit(f"Custom flag '{name_or_uid}' not found")
     if len(custom_flags) > 1:
-        lib.err_exit(
-            f"Custom flag '{name_or_uid}' is ambiguous, use full name or UID"
-        )
+        lib.err_exit(f"Custom flag '{name_or_uid}' is ambiguous, use full name or UID")
     custom_flag = custom_flags[0]
     put_set_notification_settings(
         *ctx.get_api_data(), custom_flag["uid"], notification_settings
@@ -43,12 +41,6 @@ def configure_custom_flag(name_or_uid, **kwargs):
         lib.try_log(
             f"No notification targets configured for custom flag '{name_or_uid}'"
         )
-        lib.try_log(
-            f"Use 'spyctl edit custom-flag \"{name_or_uid}\"' to configure"
-        )
-        lib.try_log(
-            "Or re-run this command with --targets and/or --target-map options"
-        )
-    lib.try_log(
-        f"Notification settings for custom flag '{name_or_uid}' updated"
-    )
+        lib.try_log(f"Use 'spyctl edit custom-flag \"{name_or_uid}\"' to configure")
+        lib.try_log("Or re-run this command with --targets and/or --target-map options")
+    lib.try_log(f"Notification settings for custom flag '{name_or_uid}' updated")

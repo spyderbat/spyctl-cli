@@ -10,9 +10,7 @@ import spyctl.spyctl_lib as lib
 from spyctl.commands.get import get_lib
 
 
-@click.command(
-    "notification-templates", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG
-)
+@click.command("notification-templates", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)
 @_so.help_option
 @_so.name_or_id_arg
 @_so.output_option
@@ -57,9 +55,7 @@ from spyctl.commands.get import get_lib
 )
 def get_notification_templates(name_or_id, output, **kwargs):
     """Get notification_templates by name or id."""
-    get_lib.output_time_log(
-        lib.NOTIFICATION_TEMPLATES_RESOURCE.name_plural, None, None
-    )
+    get_lib.output_time_log(lib.NOTIFICATION_TEMPLATES_RESOURCE.name_plural, None, None)
     kwargs = {key: value for key, value in kwargs.items() if value is not None}
     handle_get_notification_templates(name_or_id, output, **kwargs)
 

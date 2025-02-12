@@ -12,9 +12,7 @@ import spyctl.spyctl_lib as lib
 # ----------------------------------------------------------------- #
 
 
-@click.command(
-    "print", cls=lib.CustomCommand, hidden=True, epilog=lib.SUB_EPILOG
-)
+@click.command("print", cls=lib.CustomCommand, hidden=True, epilog=lib.SUB_EPILOG)
 @click.option(
     "-f",
     "--filename",

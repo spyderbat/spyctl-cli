@@ -20,9 +20,7 @@ def namespace_summary_output(
 ) -> str:
     data = []
     field_names = _af.Namespaces.get_name_or_uid_fields()
-    for namespace in get_namespaces(
-        *ctx.get_api_data(), clusters, time, pipeline
-    ):
+    for namespace in get_namespaces(*ctx.get_api_data(), clusters, time, pipeline):
         ns = [namespace]
         if name_or_uid:
             ns = filt.filter_obj(ns, field_names, name_or_uid)

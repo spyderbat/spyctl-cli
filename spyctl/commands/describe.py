@@ -185,13 +185,9 @@ def describe_connections(spec: Dict):
         }
     }
     rv["Connection Details"]["DNS MAP"].update(
-        **__sort_dict(
-            {h_name: list(ip_set) for h_name, ip_set in dns_map.items()}
-        )
+        **__sort_dict({h_name: list(ip_set) for h_name, ip_set in dns_map.items()})
     )
-    rv["Connection Details"]["DNS MAP"].update(
-        **{"unknown ips": list(unknown_ips)}
-    )
+    rv["Connection Details"]["DNS MAP"].update(**{"unknown ips": list(unknown_ips)})
     rv["Connection Details"]["DNS MAP"].update(
         **{"unknown hostnames": list(unknown_hostnames)}
     )

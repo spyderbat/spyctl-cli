@@ -21,9 +21,7 @@ class BaseRuleset:
 
     supported_rule_types = {}
 
-    def __init__(
-        self, uid: str, org_uid: str, name: str, ruleset_type
-    ) -> None:
+    def __init__(self, uid: str, org_uid: str, name: str, ruleset_type) -> None:
         self.uid = uid
         self.org_uid = org_uid
         self.name = name

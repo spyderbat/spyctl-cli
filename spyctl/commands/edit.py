@@ -139,9 +139,7 @@ def handle_edit(resource=None, name_or_id=None, file_io=None):
         elif resource == lib.AGENT_HEALTH_NOTIFICATION_RESOURCE:
             handle_edit_agent_health_notification(name_or_id)
         else:
-            cli.err_exit(
-                f"The 'edit' command is not supported for '{resource}'"
-            )
+            cli.err_exit(f"The 'edit' command is not supported for '{resource}'")
 
 
 def handle_edit_file(file: IO):
@@ -254,19 +252,15 @@ def handle_edit_agent_health_notification(name_or_id):
     params = {
         "name_or_uid_contains": name_or_id,
     }
-    agent_health_notification_settings, _ = (
-        get_agent_health_notification_settings_list(
-            *ctx.get_api_data(), **params
-        )
+    agent_health_notification_settings, _ = get_agent_health_notification_settings_list(
+        *ctx.get_api_data(), **params
     )
     if len(agent_health_notification_settings) > 1:
         cli.err_exit(
             f"Agent health notification settings '{name_or_id}' is ambiguous, use full UID."
         )
     if not agent_health_notification_settings:
-        cli.err_exit(
-            f"No agent health notification settings matching '{name_or_id}'."
-        )
+        cli.err_exit(f"No agent health notification settings matching '{name_or_id}'.")
     agent_health_notification_data = agent_health_notification_settings[0]
     agent_health_notification = r.agent_health.data_to_yaml(
         agent_health_notification_data
@@ -330,9 +324,7 @@ def handle_edit_notif_tgt(name_or_id):
     }
     targets, _ = get_notification_targets(*ctx.get_api_data(), **params)
     if len(targets) > 1:
-        cli.err_exit(
-            f"Notification target '{name_or_id}' is ambiguous, use full UID."
-        )
+        cli.err_exit(f"Notification target '{name_or_id}' is ambiguous, use full UID.")
     if not targets:
         cli.err_exit(f"No notification targets matching '{name_or_id}'.")
     target_data = targets[0]
@@ -436,9 +428,7 @@ def edit_resource(
     temp_file = None
     while True:
         if not temp_file:
-            edit_yaml = click.edit(
-                __add_edit_prompt(resource_yaml), extension=".yaml"
-            )
+            edit_yaml = click.edit(__add_edit_prompt(resource_yaml), extension=".yaml")
         else:
             try:
                 with open(temp_file, "r", encoding="UTF-8") as f:
@@ -527,9 +517,7 @@ def apply_policy_edits(edit_dict: Dict, policy_id: str):
     # Ensure the user didn't manipulate the uid
     edit_dict[lib.METADATA_FIELD][lib.METADATA_UID_FIELD] = policy_id
     put_policy_update(*ctx.get_api_data(), edit_dict)
-    cli.try_log(
-        f"Successfully edited {__pol_resrc_name(pol_type)} '{policy_id}'"
-    )
+    cli.try_log(f"Successfully edited {__pol_resrc_name(pol_type)} '{policy_id}'")
 
 
 def apply_ruleset_edits(edit_dict: Dict, ruleset_id: str):
@@ -554,9 +542,7 @@ def apply_agent_health_notification_edits(
     Returns:
         None
     """
-    edit_dict[lib.METADATA_FIELD][
-        lib.METADATA_UID_FIELD
-    ] = agent_health_notification_id
+    edit_dict[lib.METADATA_FIELD][lib.METADATA_UID_FIELD] = agent_health_notification_id
     handle_apply_agent_health_notification(edit_dict, from_edit=True)
 
 
@@ -624,9 +610,7 @@ def __add_edit_prompt(yaml_string: str):
     return EDIT_PROMPT + yaml_string
 
 
-def __add_error_comments(
-    resource: str, yaml_string: str, error: str, name: str = None
-):
+def __add_error_comments(resource: str, yaml_string: str, error: str, name: str = None):
     if isinstance(name, TextIOWrapper):
         name = f' "{name.name}" '
     else:
@@ -649,6 +633,4 @@ POL_TYPE_TO_RESOURCE_NAME: Dict[str, str] = {
 
 
 def __pol_resrc_name(policy_type: str) -> str:
-    return POL_TYPE_TO_RESOURCE_NAME.get(
-        policy_type, lib.POLICIES_RESOURCE.name
-    )
+    return POL_TYPE_TO_RESOURCE_NAME.get(policy_type, lib.POLICIES_RESOURCE.name)

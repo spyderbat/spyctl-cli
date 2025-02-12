@@ -8,8 +8,8 @@ from typing import Dict, List
 import requests
 import tqdm
 
-from spyctl.api.primitives import post
 from spyctl import cli
+from spyctl.api.primitives import post
 
 OBJECTS_LIMIT = 500
 
@@ -37,13 +37,16 @@ def get_objects(
     """
     url = f"{api_url}/api/v1/org/{org_uid}/objects"
     rv = []
-    with tqdm.tqdm(
-        total=math.ceil(len(ids) / OBJECTS_LIMIT),
-        leave=False,
-        file=sys.stderr,
-        disable=not kwargs.get("use_pbar", True),
-        desc=kwargs.get("desc", "Retrieving Objects"),
-    ) as pbar, ThreadPoolExecutor(max_workers=10) as executor:
+    with (
+        tqdm.tqdm(
+            total=math.ceil(len(ids) / OBJECTS_LIMIT),
+            leave=False,
+            file=sys.stderr,
+            disable=not kwargs.get("use_pbar", True),
+            desc=kwargs.get("desc", "Retrieving Objects"),
+        ) as pbar,
+        ThreadPoolExecutor(max_workers=10) as executor,
+    ):
         id_groups = [
             ids[i : i + OBJECTS_LIMIT]  # noqa: E203
             for i in range(0, len(ids), OBJECTS_LIMIT)
@@ -59,7 +62,5 @@ def get_objects(
                 results = json_data.get("results", [])
                 rv.extend(results)
             except requests.exceptions.JSONDecodeError:
-                cli.err_exit(
-                    f"Failed to decode JSON response: {response.text}"
-                )
+                cli.err_exit(f"Failed to decode JSON response: {response.text}")
     return rv

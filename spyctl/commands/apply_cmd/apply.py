@@ -32,14 +32,14 @@ from spyctl.api.saved_queries import (
     post_new_saved_query,
     put_saved_query_update,
 )
+from spyctl.commands.apply_cmd.agent_health import (
+    handle_apply_agent_health_notification,
+)
 from spyctl.commands.apply_cmd.notification_target import (
     handle_apply_notification_target,
 )
 from spyctl.commands.apply_cmd.notification_template import (
     handle_apply_notification_template,
-)
-from spyctl.commands.apply_cmd.agent_health import (
-    handle_apply_agent_health_notification,
 )
 
 # import spyctl.commands.merge as m
@@ -88,9 +88,7 @@ def handle_apply(filename):
     if lib.ITEMS_FIELD in resrc_data:
         for resrc in resrc_data[lib.ITEMS_FIELD]:
             # Sort resource items by priority
-            resrc_data[lib.ITEMS_FIELD].sort(
-                key=__apply_priority, reverse=True
-            )
+            resrc_data[lib.ITEMS_FIELD].sort(key=__apply_priority, reverse=True)
             handle_apply_data(resrc)
     else:
         handle_apply_data(resrc_data)
@@ -197,9 +195,7 @@ def handle_apply_ruleset(ruleset: Dict):
         resp = post_new_ruleset(*ctx.get_api_data(), ruleset)
         if resp and resp.json():
             uid = resp.json().get("uid", "")
-            cli.try_log(
-                f"Successfully applied new {rs_type} ruleset with uid: {uid}"
-            )
+            cli.try_log(f"Successfully applied new {rs_type} ruleset with uid: {uid}")
 
 
 def handle_apply_saved_query(saved_query: Dict):
@@ -350,9 +346,7 @@ def handle_apply_custom_flag(
             " Do you want to update the saved query?"
         ):
             sq["query"] = query
-            put_saved_query_from_yaml(
-                sq_uid, _r.saved_queries.data_to_yaml(sq)
-            )
+            put_saved_query_from_yaml(sq_uid, _r.saved_queries.data_to_yaml(sq))
         elif not cli.query_yes_no(
             "Do you want to continue applying the custom flag without updating"
             " the saved query?"
@@ -394,9 +388,7 @@ def __handle_missing_saved_query(
     sq_name: Optional[str] = None,
 ) -> str:
     # Check for existing saved query with the same schema and query
-    potential_saved_query_uid, q_name = check_for_duplicate_query(
-        schema, query
-    )
+    potential_saved_query_uid, q_name = check_for_duplicate_query(schema, query)
     if potential_saved_query_uid:
         if cli.query_yes_no(
             "Duplicate query found. Use existing saved query?"
@@ -438,16 +430,12 @@ def post_custom_flag_from_yaml(custom_flag: Dict) -> str:
     req_body = {
         "name": custom_flag[lib.METADATA_FIELD][lib.METADATA_NAME_FIELD],
         "description": flag_settings[lib.FLAG_DESCRIPTION],
-        "saved_query_uid": custom_flag[lib.METADATA_FIELD][
-            lib.SAVED_QUERY_UID
-        ],
+        "saved_query_uid": custom_flag[lib.METADATA_FIELD][lib.SAVED_QUERY_UID],
         "severity": flag_settings[lib.FLAG_SEVERITY],
         "type": flag_settings[lib.TYPE_FIELD],
     }
     if lib.METADATA_TAGS_FIELD in custom_flag[lib.METADATA_FIELD]:
-        req_body["tags"] = custom_flag[lib.METADATA_FIELD][
-            lib.METADATA_TAGS_FIELD
-        ]
+        req_body["tags"] = custom_flag[lib.METADATA_FIELD][lib.METADATA_TAGS_FIELD]
     if lib.FLAG_IMPACT in flag_settings:
         req_body["impact"] = flag_settings[lib.FLAG_IMPACT]
     if lib.FLAG_CONTENT in flag_settings:
@@ -476,9 +464,7 @@ def put_custom_flag_from_yaml(uid: str, custom_flag: Dict) -> str:
     req_body = {
         "name": custom_flag[lib.METADATA_FIELD][lib.METADATA_NAME_FIELD],
         "description": flag_settings[lib.FLAG_DESCRIPTION],
-        "saved_query_uid": custom_flag[lib.METADATA_FIELD][
-            lib.SAVED_QUERY_UID
-        ],
+        "saved_query_uid": custom_flag[lib.METADATA_FIELD][lib.SAVED_QUERY_UID],
         "severity": flag_settings[lib.FLAG_SEVERITY],
         "type": flag_settings[lib.TYPE_FIELD],
         "notification_settings": custom_flag[lib.SPEC_FIELD].get(
@@ -486,9 +472,7 @@ def put_custom_flag_from_yaml(uid: str, custom_flag: Dict) -> str:
         ),
     }
     if lib.METADATA_TAGS_FIELD in custom_flag[lib.METADATA_FIELD]:
-        req_body["tags"] = custom_flag[lib.METADATA_FIELD][
-            lib.METADATA_TAGS_FIELD
-        ]
+        req_body["tags"] = custom_flag[lib.METADATA_FIELD][lib.METADATA_TAGS_FIELD]
     if lib.FLAG_IMPACT in flag_settings:
         req_body["impact"] = flag_settings[lib.FLAG_IMPACT]
     if lib.FLAG_CONTENT in flag_settings:

@@ -6,8 +6,8 @@ import spyctl.merge_lib.merge_schema as _ms
 import spyctl.merge_lib.ruleset_policy_merge as _rpm
 import spyctl.schemas_v2 as schemas
 import spyctl.spyctl_lib as lib
-from spyctl.merge_lib.merge_object import MergeObject
 from spyctl.api.rulesets import get_rulesets
+from spyctl.merge_lib.merge_object import MergeObject
 
 
 class RulesetPolicyMergeObject(MergeObject):
@@ -47,9 +47,7 @@ class RulesetPolicyMergeObject(MergeObject):
                     checksum_or_id
                 )
             else:
-                self.relevant_objects.setdefault(other_kind, set()).add(
-                    checksum_or_id
-                )
+                self.relevant_objects.setdefault(other_kind, set()).add(checksum_or_id)
 
         return super().asymmetric_merge(other, check_irrelevant)
 
@@ -67,9 +65,7 @@ class RulesetPolicyMergeObject(MergeObject):
         pol_uid = self.original_obj[lib.METADATA_FIELD][lib.METADATA_UID_FIELD]
         if not ctx:
             ctx = cfg.get_current_context()
-        rs_data = get_rulesets(
-            *ctx.get_api_data(), params={"in_policy": pol_uid}
-        )
+        rs_data = get_rulesets(*ctx.get_api_data(), params={"in_policy": pol_uid})
         self.rulesets = {
             rs_dict[lib.METADATA_FIELD][lib.METADATA_NAME_FIELD]: MergeObject(
                 rs_dict, _ms.RULESET_MERGE_SCHEMAS, schemas.valid_object
@@ -91,13 +87,9 @@ class RulesetPolicyMergeObject(MergeObject):
 
         for rs in self.rulesets.values():
             if orig_obj:
-                rules: List[Dict] = rs.original_obj[lib.SPEC_FIELD][
-                    lib.RULES_FIELD
-                ]
+                rules: List[Dict] = rs.original_obj[lib.SPEC_FIELD][lib.RULES_FIELD]
             else:
-                rules: List[Dict] = rs.obj_data[lib.SPEC_FIELD][
-                    lib.RULES_FIELD
-                ]
+                rules: List[Dict] = rs.obj_data[lib.SPEC_FIELD][lib.RULES_FIELD]
             for rule in rules:
                 self.sort_rule_values(rule)
             rules.sort(key=sort_key)
@@ -107,9 +99,7 @@ class RulesetPolicyMergeObject(MergeObject):
         values: List[str] = rule[lib.RULE_VALUES_FIELD]
         values.sort()
 
-    def get_default_rules_tracker(
-        self, target: str
-    ) -> Tuple[str, _rpm.RulesTracker]:
+    def get_default_rules_tracker(self, target: str) -> Tuple[str, _rpm.RulesTracker]:
         """Retrieve ruleset rules tracker for the default ruleset.
         The default ruleset is the one that gets any new rules
         that don't have a pre-determined ruleset.
@@ -125,9 +115,7 @@ class RulesetPolicyMergeObject(MergeObject):
     ) -> Optional[Union[str, Dict]]:
         if only_rulesets:
             rv = []
-            pol_name = self.original_obj[lib.METADATA_FIELD][
-                lib.METADATA_NAME_FIELD
-            ]
+            pol_name = self.original_obj[lib.METADATA_FIELD][lib.METADATA_NAME_FIELD]
             rv.append(f'Diff for rulesets in policy "{pol_name}"')
             for rs_name, rs in self.rulesets.items():
                 rv.append("--------------------------------")

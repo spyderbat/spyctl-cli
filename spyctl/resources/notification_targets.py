@@ -28,9 +28,7 @@ def data_to_yaml(data: Dict) -> Dict:
         tags=data.get("tags"),
         description=data.get("description"),
     )
-    spec = data.get(
-        "target_data"
-    )  # Target data may be sensitive and not returned
+    spec = data.get("target_data")  # Target data may be sensitive and not returned
     if not spec:
         spec = None
     model = schemas.NotificationTgtResourceModel(
@@ -39,9 +37,7 @@ def data_to_yaml(data: Dict) -> Dict:
         metadata=metadata,
         spec=spec,
     )
-    return model.model_dump(
-        by_alias=True, exclude_unset=True, exclude_none=True
-    )
+    return model.model_dump(by_alias=True, exclude_unset=True, exclude_none=True)
 
 
 SUMMARY_HEADERS = [
@@ -53,9 +49,7 @@ SUMMARY_HEADERS = [
 ]
 
 
-def summary_output(
-    targets: List[Dict], total_pages: int, current_page: int = 0
-):
+def summary_output(targets: List[Dict], total_pages: int, current_page: int = 0):
     """
     Print a summary of notification targets.
 

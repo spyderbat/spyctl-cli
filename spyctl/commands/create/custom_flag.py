@@ -207,6 +207,4 @@ def __validate_input(**kwargs):
     schema = kwargs.get("schema")
     saved_query_uid = kwargs.get("saved_query")
     if not saved_query_uid and (not query or not schema):
-        cli.err_exit(
-            "Query and schema are required if saved query is not provided."
-        )
+        cli.err_exit("Query and schema are required if saved query is not provided.")

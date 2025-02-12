@@ -1,8 +1,8 @@
 """All the resource-related modules"""
 
 from . import (
-    agents,
     agent_health,
+    agents,
     bash_cmds,
     cluster_policies,
     cluster_rulesets,
@@ -27,9 +27,9 @@ from . import (
     nodes,
     notification_config_templates,
     notification_configs,
+    notification_settings,
     notification_targets,
     notification_templates,
-    notification_settings,
     pods,
     policies,
     processes,

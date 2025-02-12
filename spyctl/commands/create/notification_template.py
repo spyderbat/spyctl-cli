@@ -2,14 +2,14 @@
 
 import click
 
-import spyctl.spyctl_lib as lib
 import spyctl.config.configs as cfg
+import spyctl.spyctl_lib as lib
 from spyctl import cli
-from spyctl.resources import notification_templates as _nts
+from spyctl.api.notification_templates import get_notification_template
 from spyctl.commands.apply_cmd.notification_template import (
     handle_apply_notification_template,
 )
-from spyctl.api.notification_templates import get_notification_template
+from spyctl.resources import notification_templates as _nts
 
 
 def template_settings_options(f):
@@ -326,9 +326,7 @@ def pagerduty(output, name, **kwargs):
             lib.TMPL_PD_SUMMARY_FIELD: kwargs.pop("summary", None),
             lib.TMPL_PD_SEVERITY_FIELD: kwargs.pop("severity", None),
             lib.TMPL_PD_DEDUP_KEY_FIELD: kwargs.pop("dedup_key", None),
-            lib.TMPL_PD_CUSTOM_DETAILS_FIELD: kwargs.pop(
-                "custom_details", None
-            ),
+            lib.TMPL_PD_CUSTOM_DETAILS_FIELD: kwargs.pop("custom_details", None),
             lib.TMPL_PD_GROUP_FIELD: kwargs.pop("group", None),
         },
         "description": kwargs.pop("description", None),
@@ -404,9 +402,7 @@ def webhook(output, name, **kwargs):
         "template_type": lib.TMPL_TYPE_WEBHOOK,
         "template_data": {
             lib.TMPL_WEBHOOK_PAYLOAD_FIELD: kwargs.pop("payload", None),
-            lib.TMPL_WEBHOOK_ENTIRE_OBJECT_FIELD: kwargs.pop(
-                "entire_object", None
-            ),
+            lib.TMPL_WEBHOOK_ENTIRE_OBJECT_FIELD: kwargs.pop("entire_object", None),
         },
         "description": kwargs.pop("description", None),
         "tags": kwargs.pop("tags", None),

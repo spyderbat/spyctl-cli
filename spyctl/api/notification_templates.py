@@ -1,6 +1,6 @@
 """Handles the API calls for notification templates."""
 
-from spyctl.api.primitives import get, post, put, delete
+from spyctl.api.primitives import delete, get, post, put
 
 
 def get_notification_template(api_url, api_key, org_uid, template_uid):
@@ -14,9 +14,7 @@ def get_notification_template(api_url, api_key, org_uid, template_uid):
     Returns:
         dict: The API response containing the notification template details.
     """
-    endpoint = (
-        f"{api_url}/api/v1/org/{org_uid}/notification_template/{template_uid}"
-    )
+    endpoint = f"{api_url}/api/v1/org/{org_uid}/notification_template/{template_uid}"
     return get(endpoint, api_key).json()["notification_template"]
 
 
@@ -105,7 +103,9 @@ def update_email_notification_template(
     Returns:
         dict: The API response containing the updated notification template.
     """
-    endpoint = f"{api_url}/api/v1/org/{org_uid}/notification_template/email/{template_uid}"
+    endpoint = (
+        f"{api_url}/api/v1/org/{org_uid}/notification_template/email/{template_uid}"
+    )
 
     template_data = {
         "name": kwargs.get("name"),
@@ -157,9 +157,7 @@ def create_pagerduty_notification_template(
     Returns:
         str: The UID of the created notification template.
     """
-    endpoint = (
-        f"{api_url}/api/v1/org/{org_uid}/notification_template/pagerduty/"
-    )
+    endpoint = f"{api_url}/api/v1/org/{org_uid}/notification_template/pagerduty/"
 
     template_data = {
         "name": kwargs["name"],
@@ -211,7 +209,9 @@ def update_pagerduty_notification_template(
     Returns:
         dict: The API response for the updated template.
     """
-    endpoint = f"{api_url}/api/v1/org/{org_uid}/notification_template/pagerduty/{template_uid}"
+    endpoint = (
+        f"{api_url}/api/v1/org/{org_uid}/notification_template/pagerduty/{template_uid}"
+    )
 
     template_data = {
         "name": kwargs.get("name"),
@@ -405,7 +405,9 @@ def update_webhook_notification_template(
     Returns:
         dict: The API response for the updated template, containing the updated notification_template details.
     """
-    endpoint = f"{api_url}/api/v1/org/{org_uid}/notification_template/webhook/{template_uid}"
+    endpoint = (
+        f"{api_url}/api/v1/org/{org_uid}/notification_template/webhook/{template_uid}"
+    )
 
     query_params = {
         "clear_description": kwargs.get("clear_description"),
@@ -440,7 +442,5 @@ def delete_notification_template(api_url, api_key, org_uid, template_uid):
     Returns:
         dict: The API response for the deleted template.
     """
-    endpoint = (
-        f"{api_url}/api/v1/org/{org_uid}/notification_template/{template_uid}"
-    )
+    endpoint = f"{api_url}/api/v1/org/{org_uid}/notification_template/{template_uid}"
     return delete(endpoint, api_key)

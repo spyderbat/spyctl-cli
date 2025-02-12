@@ -39,14 +39,10 @@ def build_trace_suppression_policy(
         trace = trace[0]
         summary_uid = trace.get(lib.TRACE_SUMMARY_FIELD)
         if not summary_uid:
-            cli.err_exit(
-                f"Unable to find a Trace Summary for Trace {trace_id}"
-            )
+            cli.err_exit(f"Unable to find a Trace Summary for Trace {trace_id}")
         t_sum = get_objects(*ctx.get_api_data(), [summary_uid])
         if not t_sum:
-            cli.err_exit(
-                f"Unable to find a Trace Summary with UID {summary_uid}"
-            )
+            cli.err_exit(f"Unable to find a Trace Summary with UID {summary_uid}")
         t_sum = t_sum[0]
         pol = __build_trace_suppression_policy(
             t_sum, include_users, mode=mode, name=name

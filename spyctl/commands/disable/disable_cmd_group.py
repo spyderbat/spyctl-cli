@@ -1,6 +1,7 @@
 """Handles the 'disable' command group for spyctl."""
 
 import click
+
 import spyctl.spyctl_lib as lib
 from spyctl.commands.disable import (
     custom_flag,

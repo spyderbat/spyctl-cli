@@ -33,3 +33,9 @@ test_coverage:
 view_coverage_wsl:
 	coverage html
 	explorer.exe "htmlcov\index.html" ||:
+
+format:
+	./black.sh
+
+isort:
+	isort --profile black --filter-files --skip-gitignore .

@@ -40,10 +40,7 @@ class ConnBunGroup:
             self.server_port = conn_bun[lib.SERVER_PORT]
         self.count += 1
         self.conn_count += conn_bun[lib.NUM_CONNECTIONS]
-        if (
-            not self.latest_timestamp
-            or self.latest_timestamp < conn_bun["time"]
-        ):
+        if not self.latest_timestamp or self.latest_timestamp < conn_bun["time"]:
             self.latest_timestamp = conn_bun["time"]
 
     def summary_data(self) -> List[str]:
