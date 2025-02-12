@@ -69,17 +69,11 @@ def handle_get_saved_queries(name_or_id, output, **kwargs):
     ctx = cfg.get_current_context()
     if name_or_id:
         kwargs["name_or_uid_contains"] = name_or_id
-    saved_queries, total_pages = sq_api.get_saved_queries(
-        *ctx.get_api_data(), **kwargs
-    )
+    saved_queries, total_pages = sq_api.get_saved_queries(*ctx.get_api_data(), **kwargs)
     get_lib.show_get_data(
         saved_queries,
         output,
-        lambda data: _r.saved_queries.summary_output(
-            data, total_pages, kwargs["page"]
-        ),
-        lambda data: _r.saved_queries.wide_output(
-            data, total_pages, kwargs["page"]
-        ),
+        lambda data: _r.saved_queries.summary_output(data, total_pages, kwargs["page"]),
+        lambda data: _r.saved_queries.wide_output(data, total_pages, kwargs["page"]),
         data_parser=_r.saved_queries.data_to_yaml,
     )

@@ -4,6 +4,7 @@ import os
 import shutil
 
 from click.testing import CliRunner
+
 from spyctl import spyctl
 
 

@@ -75,9 +75,7 @@ def query_yes_no(question, default="yes", ignore_yes_option=False):
         elif choice in valid:
             return valid[choice]
         else:
-            sys.stderr.write(
-                "Please respond with 'yes' or 'no' " "(or 'y' or 'n').\n"
-            )
+            sys.stderr.write("Please respond with 'yes' or 'no' " "(or 'y' or 'n').\n")
 
 
 def notice(notice_msg):
@@ -96,19 +94,13 @@ class CustomDumper(yaml.SafeDumper):
 
     def represent_mapping(self, tag, mapping, flow_style=None):
         # Flow style for the
-        if (
-            mapping
-            and lib.KEY_FIELD in mapping
-            and lib.OPERATOR_FIELD in mapping
-        ):
+        if mapping and lib.KEY_FIELD in mapping and lib.OPERATOR_FIELD in mapping:
             return super().represent_mapping(tag, mapping, flow_style=True)
         return super().represent_mapping(tag, mapping, flow_style)
 
 
 def make_yaml(obj) -> str:
-    return yaml.dump(
-        obj, sort_keys=False, width=float("inf"), Dumper=CustomDumper
-    )
+    return yaml.dump(obj, sort_keys=False, width=float("inf"), Dumper=CustomDumper)
 
 
 def show(
@@ -165,9 +157,7 @@ def show(
                 out_file.write_text(out_data)
                 try_log(f"Saved output to {output_fn}")
             except Exception:
-                try_log(
-                    f"Unable to write output to {output_fn}", is_warning=True
-                )
+                try_log(f"Unable to write output to {output_fn}", is_warning=True)
                 return
         elif dest == lib.OUTPUT_DEST_PAGER:
             output_to_pager(out_data)
@@ -262,6 +252,4 @@ def strip_color(text: str):
 
 
 def _seq_but_not_str(obj):
-    return isinstance(obj, Sequence) and not isinstance(
-        obj, (str, bytes, bytearray)
-    )
+    return isinstance(obj, Sequence) and not isinstance(obj, (str, bytes, bytearray))

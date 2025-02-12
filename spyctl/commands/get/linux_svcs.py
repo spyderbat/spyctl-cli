@@ -24,9 +24,7 @@ from spyctl.commands.get import get_lib
 def get_linux_svc(name_or_id, output, st, et, **filters):
     """Get linux services by name or id."""
     get_lib.output_time_log(lib.LINUX_SVC_RESOURCE.name_plural, st, et)
-    filters = {
-        key: value for key, value in filters.items() if value is not None
-    }
+    filters = {key: value for key, value in filters.items() if value is not None}
     exact = filters.pop("exact")
     name_or_id = get_lib.wildcard_name_or_id(name_or_id, exact)
     handle_get_linux_svc(name_or_id, output, st, et, **filters)

@@ -311,15 +311,12 @@ def handle_diff(
             elif with_obj is False:
                 continue
             else:
-                cli.try_log(
-                    f"{file.name} has nothing to diff with... skipping."
-                )
+                cli.try_log(f"{file.name} has nothing to diff with... skipping.")
                 __nothing_to_diff_with(target_name, target, latest)
     elif policy_target:
         pager = (
             True
-            if len(policy_target) > 1
-            or (ALL in policy_target and len(POLICIES) > 1)
+            if len(policy_target) > 1 or (ALL in policy_target and len(POLICIES) > 1)
             else False
         )
         policy_target = sorted(policy_target)
@@ -370,9 +367,7 @@ def handle_diff(
                     )
                     continue
                 for policy in policies:
-                    pol_uid = policy[lib.METADATA_FIELD][
-                        lib.METADATA_UID_FIELD
-                    ]
+                    pol_uid = policy[lib.METADATA_FIELD][lib.METADATA_UID_FIELD]
                     targets[pol_uid] = policy
             targets = sorted(
                 list(targets.values()),
@@ -382,9 +377,7 @@ def handle_diff(
                 pager = True
             for target in targets:
                 t_name = lib.get_metadata_name(target)
-                t_uid = target.get(lib.METADATA_FIELD, {}).get(
-                    lib.METADATA_UID_FIELD
-                )
+                t_uid = target.get(lib.METADATA_FIELD, {}).get(lib.METADATA_UID_FIELD)
                 target_name = f"applied policy '{t_name} - {t_uid}'"
                 with_obj = get_with_obj(
                     target,
@@ -425,9 +418,7 @@ def get_with_obj(
     target_uid = target.get(lib.METADATA_FIELD, {}).get(lib.METADATA_UID_FIELD)
     if with_file:
         with_obj = load_with_file(with_file)
-        if not cli.query_yes_no(
-            f"diff {target_name} with '{with_file.name}'?"
-        ):
+        if not cli.query_yes_no(f"diff {target_name} with '{with_file.name}'?"):
             return False
     elif with_policy == MATCHING:
         if not target_uid:
@@ -440,9 +431,7 @@ def get_with_obj(
         with_obj = get_with_policy(target_uid, POLICIES)
         if with_obj:
             pol_name = lib.get_metadata_name(with_obj)
-            pol_uid = with_obj.get(lib.METADATA_FIELD, {}).get(
-                lib.METADATA_UID_FIELD
-            )
+            pol_uid = with_obj.get(lib.METADATA_FIELD, {}).get(lib.METADATA_UID_FIELD)
             if not cli.query_yes_no(
                 f"diff {target_name} with data from applied policy"
                 f" '{pol_name} - {pol_uid}'?"
@@ -452,9 +441,7 @@ def get_with_obj(
         with_obj = get_with_policy(with_policy, POLICIES)
         if with_obj:
             pol_name = lib.get_metadata_name(with_obj)
-            pol_uid = with_obj.get(lib.METADATA_FIELD, {}).get(
-                lib.METADATA_UID_FIELD
-            )
+            pol_uid = with_obj.get(lib.METADATA_FIELD, {}).get(lib.METADATA_UID_FIELD)
             if not cli.query_yes_no(
                 f"diff {target_name} with data from applied policy"
                 f" '{pol_name} - {pol_uid}'?"
@@ -540,6 +527,4 @@ def __nothing_to_diff_with(
             f" update '{lib.LATEST_TIMESTAMP_FIELD}' field on merge."
         )
         return
-    cli.try_log(
-        f"{name.capitalize()} has nothing to {src_cmd} with... skipping."
-    )
+    cli.try_log(f"{name.capitalize()} has nothing to {src_cmd} with... skipping.")

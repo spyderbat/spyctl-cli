@@ -2,17 +2,15 @@ from typing import (
     Dict,
 )
 
+import spyctl.merge_lib.merge_schema as _ms
 import spyctl.schemas_v2 as schemas
 import spyctl.spyctl_lib as lib
 from spyctl import cli
-import spyctl.merge_lib.merge_schema as _ms
 from spyctl.merge_lib.merge_object import MergeObject
 from spyctl.merge_lib.ruleset_merge_object import RulesetPolicyMergeObject
 
 
-def get_merge_object(
-    resrc_kind: str, target: Dict, merge_network: bool, src_cmd: str
-):
+def get_merge_object(resrc_kind: str, target: Dict, merge_network: bool, src_cmd: str):
     if resrc_kind == lib.POL_KIND:
         resrc_type = target[lib.METADATA_FIELD][lib.METADATA_TYPE_FIELD]
         if resrc_type == lib.POL_TYPE_TRACE:
@@ -32,9 +30,7 @@ def get_merge_object(
             # merge_obj.asymmetric_merge(other=merge_obj.original_obj)
             # merge_obj.original_obj = merge_obj.obj_data
     elif resrc_kind == lib.RULESET_KIND:
-        merge_obj = MergeObject(
-            target, _ms.RULESET_MERGE_SCHEMAS, schemas.valid_object
-        )
+        merge_obj = MergeObject(target, _ms.RULESET_MERGE_SCHEMAS, schemas.valid_object)
     else:
         cli.try_log(
             f"The '{src_cmd}' command is not supported for {resrc_kind}",

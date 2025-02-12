@@ -42,9 +42,7 @@ def get_deviations_stream(
     policy_uids = {
         policy[lib.METADATA_FIELD].get(
             lib.METADATA_UID_FIELD
-        ): _m_obj_h.get_merge_object(
-            lib.POL_KIND, policy, True, "check_deviations"
-        )
+        ): _m_obj_h.get_merge_object(lib.POL_KIND, policy, True, "check_deviations")
         for policy in policies
     }  # policy uid -> merge object
     emit_processed = {}  # tracks if we should emit a deviation

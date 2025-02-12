@@ -126,9 +126,7 @@ PROPERTY_MAP = {
 
 def connection_query(name_or_uid: str, **filters) -> Dict:
     def make_query_value(key, value):
-        if isinstance(value, int) or (
-            isinstance(value, str) and value.isdigit()
-        ):
+        if isinstance(value, int) or (isinstance(value, str) and value.isdigit()):
             return int(value)
 
         return f'"{value}"'

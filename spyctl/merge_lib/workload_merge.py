@@ -59,9 +59,7 @@ class ProcessNode:
 
     def asymmetrical_merge(self, other_node: "ProcessNode"):
         if not fnmatch.fnmatch(other_node.name, self.name):
-            raise m_lib.InvalidMergeError(
-                "Bug detected, name mismatch in merge."
-            )
+            raise m_lib.InvalidMergeError("Bug detected, name mismatch in merge.")
         self.__merge_exes(other_node.exes)
         self.__merge_eusers(other_node.eusers)
         self.__merge_listening_socks(other_node.listening_sockets)
@@ -82,12 +80,8 @@ class ProcessNode:
                 key=lambda d: d[lib.PORT_FIELD],
             )
         if len(self.children) > 0:
-            child_nodes = [
-                self.node_list.get_node(c_id) for c_id in self.children
-            ]
-            rv[lib.CHILDREN_FIELD] = [
-                n.as_dict(self.eusers) for n in child_nodes
-            ]
+            child_nodes = [self.node_list.get_node(c_id) for c_id in self.children]
+            rv[lib.CHILDREN_FIELD] = [n.as_dict(self.eusers) for n in child_nodes]
             rv[lib.CHILDREN_FIELD].sort(key=lambda x: x[lib.NAME_FIELD])
         return rv
 
@@ -96,10 +90,7 @@ class ProcessNode:
             if not self.__match_exes(other.exes):
                 return False
             wildcard_name = m_lib.make_wildcard([self.name, other.name])
-            if (
-                not fnmatch.fnmatch(other.name, self.name)
-                and not wildcard_name
-            ):
+            if not fnmatch.fnmatch(other.name, self.name) and not wildcard_name:
                 return False
             return True
         return False
@@ -129,9 +120,7 @@ class ProcessNode:
                 or fnmatch.fnmatch(self.name, other.name)
             ):
                 return False
-            if not self.__match_exes(
-                other.exes, strict=True, single_match=True
-            ):
+            if not self.__match_exes(other.exes, strict=True, single_match=True):
                 return False
             if not self.__match_eusers(other.eusers):
                 return False
@@ -153,9 +142,7 @@ class ProcessNode:
                     return True
         return False
 
-    def __match_exes(
-        self, other_exes: str, strict=False, single_match=False
-    ) -> bool:
+    def __match_exes(self, other_exes: str, strict=False, single_match=False) -> bool:
         match = False
         for other_exe in other_exes:
             if single_match:
@@ -250,9 +237,7 @@ class ProcessNodeList:
             match = False
             node = None
             for node in self.roots:
-                if node.symmetrical_in(
-                    other_node
-                ) or other_node.symmetrical_in(node):
+                if node.symmetrical_in(other_node) or other_node.symmetrical_in(node):
                     match = True
                     break
             if match:
@@ -295,9 +280,7 @@ class ProcessNodeList:
                 new_id = "_".join(id_parts)
         return new_id
 
-    def __symmetrical_merge_helper(
-        self, node: ProcessNode, other_node: ProcessNode
-    ):
+    def __symmetrical_merge_helper(self, node: ProcessNode, other_node: ProcessNode):
         for o_child_id in other_node.children:
             match = False
             o_child_node = other_node.node_list.get_node(o_child_id)
@@ -318,9 +301,7 @@ class ProcessNodeList:
             else:
                 self.__add_merged_subtree(o_child_node, node)
 
-    def __asymmetrical_merge_helper(
-        self, node: ProcessNode, other_node: ProcessNode
-    ):
+    def __asymmetrical_merge_helper(self, node: ProcessNode, other_node: ProcessNode):
         for o_child_id in other_node.children:
             match = False
             o_child_node = other_node.node_list.get_node(o_child_id)
@@ -339,9 +320,7 @@ class ProcessNodeList:
             else:
                 self.__add_merged_subtree(o_child_node, node)
 
-    def __add_node(
-        self, node_data: Dict, eusers=None, parent=None
-    ) -> "ProcessNode":
+    def __add_node(self, node_data: Dict, eusers=None, parent=None) -> "ProcessNode":
         if not eusers:
             eusers = []
         if "policyNode" in node_data:
@@ -389,9 +368,7 @@ class ProcessNodeList:
             raise m_lib.InvalidMergeError("Root process has no eusers")
         self.roots.append(root_node)
 
-    def __add_merged_subtree(
-        self, other_node: ProcessNode, parent_node: ProcessNode
-    ):
+    def __add_merged_subtree(self, other_node: ProcessNode, parent_node: ProcessNode):
         sub_tree_root = self.__add_merged_node(
             other_node, other_node.eusers, parent_node.id
         )
@@ -444,9 +421,7 @@ class IPBlock:
     def as_dict(self) -> Dict:
         ipblock_dict = {lib.CIDR_FIELD: str(self.network)}
         if self.except_networks:
-            ipblock_dict[lib.EXCEPT_FIELD] = [
-                str(net) for net in self.except_networks
-            ]
+            ipblock_dict[lib.EXCEPT_FIELD] = [str(net) for net in self.except_networks]
         rv = {lib.IP_BLOCK_FIELD: ipblock_dict}
         return rv
 
@@ -471,8 +446,7 @@ class IPBlock:
         if not isinstance(__o, IPBlock):
             return False
         return (
-            self.network == __o.network
-            and self.except_networks == __o.except_networks
+            self.network == __o.network and self.except_networks == __o.except_networks
         )
 
 
@@ -583,25 +557,19 @@ class NetworkNode:
 
     def as_dict(self) -> Optional[Dict]:
         or_field_string = (
-            lib.TO_FIELD
-            if self.type == m_lib.NODE_TYPE_EGRESS
-            else lib.FROM_FIELD
+            lib.TO_FIELD if self.type == m_lib.NODE_TYPE_EGRESS else lib.FROM_FIELD
         )
         rv = {}
         dns_names = [
             {lib.DNS_SELECTOR_FIELD: [name]} for name in sorted(self.dns_names)
         ]
         ipv4_blocks = [
-            b
-            for b in self.ip_blocks
-            if isinstance(b.network, ipaddr.IPv4Network)
+            b for b in self.ip_blocks if isinstance(b.network, ipaddr.IPv4Network)
         ]
         ipv4_blocks.sort(key=lambda x: x.network)
         ipv4_blocks = [b.as_dict() for b in ipv4_blocks]
         ipv6_blocks = [
-            b
-            for b in self.ip_blocks
-            if isinstance(b.network, ipaddr.IPv6Network)
+            b for b in self.ip_blocks if isinstance(b.network, ipaddr.IPv6Network)
         ]
         ipv6_blocks.sort(key=lambda x: x.network)
         ipv6_blocks = [b.as_dict() for b in ipv6_blocks]
@@ -630,9 +598,7 @@ class NetworkNode:
             for i, node_id in enumerate(rv.processes.copy()):
                 proc_node = rv.__find_proc_node(node_id, self.proc_node_list)
                 if proc_node is None:
-                    raise InvalidNetworkNode(
-                        "Unable to find process node to convert"
-                    )
+                    raise InvalidNetworkNode("Unable to find process node to convert")
                 if proc_node.merged_id is not None:
                     rv.processes[i] = proc_node.merged_id
             rv.processes = list(set(rv.processes))
@@ -660,9 +626,7 @@ class NetworkNode:
                             except_networks.append(except_net)
                 except ipaddr.AddressValueError:
                     try:
-                        ip_network = ipaddr.IPv6Network(
-                            ip_block[lib.CIDR_FIELD]
-                        )
+                        ip_network = ipaddr.IPv6Network(ip_block[lib.CIDR_FIELD])
                         except_block = ip_block.get(lib.EXCEPT_FIELD)
                         except_networks = []
                         if except_block:
@@ -730,10 +694,7 @@ class NetworkNode:
         for o_ip_block in other_ip_blocks:
             if self.node_list.ignore_private and o_ip_block.network.is_private:
                 continue
-            if (
-                self.node_list.ignore_public
-                and not o_ip_block.network.is_private
-            ):
+            if self.node_list.ignore_public and not o_ip_block.network.is_private:
                 continue
             self.__merge_ip_block(o_ip_block, symmetrical)
 
@@ -769,9 +730,7 @@ class NetworkNode:
         symmetrical=False,
     ):
         for o_dns_name in other_dns_names:
-            if self.node_list.ignore_private and lib.is_private_dns(
-                o_dns_name
-            ):
+            if self.node_list.ignore_private and lib.is_private_dns(o_dns_name):
                 continue
             if self.node_list.ignore_public and lib.is_public_dns(o_dns_name):
                 continue
@@ -792,10 +751,7 @@ class NetworkNode:
         for o_ip_block in other_ip_blocks:
             if self.node_list.ignore_private and o_ip_block.network.is_private:
                 continue
-            if (
-                self.node_list.ignore_public
-                and not o_ip_block.network.is_private
-            ):
+            if self.node_list.ignore_public and not o_ip_block.network.is_private:
                 continue
             if not self.__contains_ip_block(o_ip_block):
                 return False
@@ -807,9 +763,7 @@ class NetworkNode:
                 return True
         return False
 
-    def __contains_port_ranges(
-        self, other_port_ranges: List[PortRange]
-    ) -> bool:
+    def __contains_port_ranges(self, other_port_ranges: List[PortRange]) -> bool:
         for o_port_range in other_port_ranges:
             if not self.__contains_port_range(o_port_range):
                 return False
@@ -823,9 +777,7 @@ class NetworkNode:
 
     def __contains_dns_names(self, other_dns_names: List[str]) -> bool:
         for o_dns_name in other_dns_names:
-            if self.node_list.ignore_private and lib.is_private_dns(
-                o_dns_name
-            ):
+            if self.node_list.ignore_private and lib.is_private_dns(o_dns_name):
                 continue
             if self.node_list.ignore_public and lib.is_public_dns(o_dns_name):
                 continue
@@ -879,9 +831,7 @@ class NetworkNode:
                     return False
                 if not self.__contains_dns_names(other.dns_names):
                     return False
-            if not self.__contains_processes(
-                other.processes, other.proc_node_list
-            ):
+            if not self.__contains_processes(other.processes, other.proc_node_list):
                 return False
             return True
         return False
@@ -896,9 +846,7 @@ class NetworkNode:
                 return False
             if not self.__contains_dns_names(other.dns_names):
                 return False
-            if not self.__contains_processes(
-                other.processes, other.proc_node_list
-            ):
+            if not self.__contains_processes(other.processes, other.proc_node_list):
                 return False
             return True
         return False

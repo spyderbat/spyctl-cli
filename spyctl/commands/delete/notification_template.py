@@ -7,14 +7,12 @@ import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
 from spyctl import cli
 from spyctl.api.notification_templates import (
-    get_notification_templates,
     delete_notification_template,
+    get_notification_templates,
 )
 
 
-@click.command(
-    "notification-template", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG
-)
+@click.command("notification-template", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)
 @_so.delete_options
 def delete_notif_tmpl_cmd(name_or_id, yes=False):
     """Delete a notification template by name or uid"""
@@ -40,8 +38,6 @@ def handle_delete_notif_tmpl(name_or_id):
         )
         if perform_delete:
             delete_notification_template(*ctx.get_api_data(), uid)
-            cli.try_log(
-                f"Successfully deleted notification template '{name} - {uid}'"
-            )
+            cli.try_log(f"Successfully deleted notification template '{name} - {uid}'")
         else:
             cli.try_log(f"Skipping delete of '{name} - {uid}'")

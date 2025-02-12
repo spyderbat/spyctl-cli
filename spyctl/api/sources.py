@@ -68,7 +68,5 @@ def get_sources(api_url, api_key, org_uid, **kwargs) -> List[Dict]:
     else:
         rv = list(machines.values())
     if kwargs.get("exclude_clustermonitors", False):
-        rv = [
-            machine for machine in rv if not machine["uid"].startswith("muid")
-        ]
+        rv = [machine for machine in rv if not machine["uid"].startswith("muid")]
     return rv

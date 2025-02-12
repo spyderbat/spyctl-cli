@@ -8,10 +8,10 @@ from typing import Dict, List, Optional, Tuple, Union
 import requests
 import tqdm
 
-from spyctl import cli
-from spyctl.api.primitives import post
-from spyctl.api.objects import get_objects
 import spyctl.spyctl_lib as lib
+from spyctl import cli
+from spyctl.api.objects import get_objects
+from spyctl.api.primitives import post
 
 # Athena Search
 SEARCH_RESULT_LIMIT = 10000
@@ -58,9 +58,7 @@ def search_athena(
         cli.try_log(f"Creating new search job{desc}...")
     kwargs["start_time"] = int(kwargs["start_time"])
     kwargs["end_time"] = int(kwargs["end_time"])
-    search_id = post_new_search(
-        api_url, api_key, org_uid, schema, query, **kwargs
-    )
+    search_id = post_new_search(api_url, api_key, org_uid, schema, query, **kwargs)
     if search_id == "FAILED":
         return []
     token = None
@@ -199,9 +197,7 @@ def retrieve_search_data(
     return "FAILED", rv_token, result_count
 
 
-def validate_search_query(
-    api_url, api_key, org_uid, schema_type: str, query: str
-):
+def validate_search_query(api_url, api_key, org_uid, schema_type: str, query: str):
     """
     Validates a search query against a specified schema.
 

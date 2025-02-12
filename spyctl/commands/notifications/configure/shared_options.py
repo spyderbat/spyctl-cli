@@ -79,9 +79,7 @@ def get_target_map(**kwargs) -> Dict:
             tgt_params = {
                 "name_or_uid_equals": tgt_name_or_uid,
             }
-            tgts, _ = get_notification_targets(
-                *ctx.get_api_data(), **tgt_params
-            )
+            tgts, _ = get_notification_targets(*ctx.get_api_data(), **tgt_params)
             if not tgts:
                 lib.err_exit(f"Target '{tgt_name_or_uid}' not found")
             tgt = tgts[0]
@@ -92,18 +90,14 @@ def get_target_map(**kwargs) -> Dict:
             tgt_params = {
                 "name_or_uid_equals": tgt_name_or_uid,
             }
-            tgts, _ = get_notification_targets(
-                *ctx.get_api_data(), **tgt_params
-            )
+            tgts, _ = get_notification_targets(*ctx.get_api_data(), **tgt_params)
             if not tgts:
                 lib.err_exit(f"Target '{tgt_name_or_uid}' not found")
             tgt = tgts[0]
             tmpl_params = {
                 "name_or_uid_equals": tmpl_name_or_uid,
             }
-            tmpls, _ = get_notification_templates(
-                *ctx.get_api_data(), **tmpl_params
-            )
+            tmpls, _ = get_notification_templates(*ctx.get_api_data(), **tmpl_params)
             if not tmpls:
                 lib.err_exit(f"Template '{tmpl_name_or_uid}' not found")
             tmpl = tmpls[0]

@@ -31,8 +31,7 @@ from spyctl.commands.get import get_lib
 )
 @click.option(
     "--get-deviations",
-    help="In the summary output, show deviations count for the"
-    " provided time window",
+    help="In the summary output, show deviations count for the" " provided time window",
     is_flag=True,
 )
 @click.option(
@@ -71,9 +70,7 @@ def handle_get_policies(name_or_id, output, st, et, **filters):
         from_archive = True
     ctx = cfg.get_current_context()
     params = {
-        "name_or_uid_contains": (
-            name_or_id.strip("*") if name_or_id else None
-        ),
+        "name_or_uid_contains": (name_or_id.strip("*") if name_or_id else None),
         "from_archive": from_archive,
     }
     if "type" in filters:
@@ -93,9 +90,7 @@ def handle_get_policies(name_or_id, output, st, et, **filters):
             if output != lib.OUTPUT_JSON:
                 output = lib.OUTPUT_YAML
             out_fn = lib.unique_fn(out_fn, output)
-            cli.show(
-                policy, output, dest=lib.OUTPUT_DEST_FILE, output_fn=out_fn
-            )
+            cli.show(policy, output, dest=lib.OUTPUT_DEST_FILE, output_fn=out_fn)
     else:
         if output in [lib.OUTPUT_DEFAULT, lib.OUTPUT_WIDE]:
             summary = _r.policies.policies_summary_output(

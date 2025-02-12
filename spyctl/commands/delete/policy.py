@@ -1,10 +1,11 @@
 """Handles the delete policy command"""
 
 import click
+
+import spyctl.commands.delete.shared_options as _so
 import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
 from spyctl import cli
-import spyctl.commands.delete.shared_options as _so
 from spyctl.api.policies import delete_policy, get_policies
 
 

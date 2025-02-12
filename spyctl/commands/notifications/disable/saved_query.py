@@ -3,8 +3,8 @@
 import click
 
 from spyctl import spyctl_lib as lib
-from spyctl.api.saved_queries import get_saved_queries
 from spyctl.api.notifications import put_disable_notification_settings
+from spyctl.api.saved_queries import get_saved_queries
 from spyctl.config import configs as cfg
 
 
@@ -21,9 +21,7 @@ def disable_saved_query(name_or_uid):
     if not saved_queries:
         lib.err_exit(f"Saved query '{name_or_uid}' not found")
     if len(saved_queries) > 1:
-        lib.err_exit(
-            f"Saved query '{name_or_uid}' is ambiguous, use full name or UID"
-        )
+        lib.err_exit(f"Saved query '{name_or_uid}' is ambiguous, use full name or UID")
     saved_query = saved_queries[0]
     put_disable_notification_settings(*ctx.get_api_data(), saved_query["uid"])
     lib.try_log(f"Notifications for saved query '{name_or_uid}' disabled")

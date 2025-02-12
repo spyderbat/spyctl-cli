@@ -2,9 +2,9 @@ from typing import Dict, List, Tuple
 
 from tabulate import tabulate
 
-from spyctl.api.source_query_resources import get_deployments
 import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
+from spyctl.api.source_query_resources import get_deployments
 
 SUMMARY_HEADERS = [
     "NAME",

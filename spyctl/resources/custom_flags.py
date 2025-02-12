@@ -63,9 +63,7 @@ def data_to_yaml(data: Dict) -> Dict:
         metadata=metadata,
         spec=spec,
     )
-    return model.model_dump(
-        exclude_unset=True, exclude_none=True, by_alias=True
-    )
+    return model.model_dump(exclude_unset=True, exclude_none=True, by_alias=True)
 
 
 SUMMARY_HEADERS = [
@@ -90,9 +88,7 @@ HISTORY_SUMMARY = [
 ]
 
 
-def summary_output(
-    custom_flags: List[Dict], total_pages: int, current_page: int = 0
-):
+def summary_output(custom_flags: List[Dict], total_pages: int, current_page: int = 0):
     """
     Generate a summary output for the given custom flags.
 
@@ -181,9 +177,7 @@ HISTORY_WIDE_HEADERS = [
 ]
 
 
-def wide_output(
-    custom_flags: List[Dict], total_pages: int, current_page: int = 0
-):
+def wide_output(custom_flags: List[Dict], total_pages: int, current_page: int = 0):
     """
     Generate a wide output for the given custom flags.
 
