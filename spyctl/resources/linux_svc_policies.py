@@ -7,15 +7,14 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Dict, List, Set, Tuple
 
-
 import spyctl.config.configs as cfg
 import spyctl.merge_lib.merge_object_helper as _moh
 import spyctl.schemas_v2 as schemas
 import spyctl.spyctl_lib as lib
 from spyctl.resources.container_policies import (
-    build_ingress_model,
-    build_egress_model,
     PolicyInputs,
+    build_egress_model,
+    build_ingress_model,
     make_proc_id,
     safe_get_objects,
 )
@@ -48,9 +47,7 @@ def create_service_policies(
     return policies
 
 
-def assemble_policies(
-    svc_map: "ServiceMappings", mode: str, **kwargs
-) -> List[Dict]:
+def assemble_policies(svc_map: "ServiceMappings", mode: str, **kwargs) -> List[Dict]:
     """
     Assemble the Linux service policies from the given service mappings.
 
@@ -71,19 +68,13 @@ def assemble_policies(
                 pol_inp.procs[puid].base_model for puid in pol_inp.roots
             ],
             lib.NET_POLICY_FIELD: {
-                lib.INGRESS_FIELD: [
-                    i.base_model for i in pol_inp.ingress.values()
-                ],
-                lib.EGRESS_FIELD: [
-                    e.base_model for e in pol_inp.egress.values()
-                ],
+                lib.INGRESS_FIELD: [i.base_model for i in pol_inp.ingress.values()],
+                lib.EGRESS_FIELD: [e.base_model for e in pol_inp.egress.values()],
             },
             lib.RESPONSE_FIELD: lib.RESPONSE_ACTION_TEMPLATE,
         }
         name = f"Pol for {svc_pat}"[:127]
-        metadata = schemas.GuardianMetadataModel(
-            name=name, type=lib.POL_TYPE_SVC
-        )
+        metadata = schemas.GuardianMetadataModel(name=name, type=lib.POL_TYPE_SVC)
         spec = schemas.GuardianPolicySpecModel(**spec_dict)
         pol = schemas.GuardianPolicyModel(
             apiVersion=lib.API_VERSION,
@@ -113,22 +104,16 @@ def build_selectors(svc_pat: str, **kwargs) -> Dict:
             "cgroup": svc_pat,
         }
     )
-    rv[lib.SVC_SELECTOR_FIELD] = svc_s.model_dump(
-        by_alias=True, exclude_none=True
-    )
+    rv[lib.SVC_SELECTOR_FIELD] = svc_s.model_dump(by_alias=True, exclude_none=True)
     if "service_name" in kwargs:
-        rv[lib.SVC_SELECTOR_FIELD]["matchFields"]["name"] = kwargs[
-            "service_name"
-        ]
+        rv[lib.SVC_SELECTOR_FIELD]["matchFields"]["name"] = kwargs["service_name"]
     if "clustername" in kwargs:
         cls = schemas.ClusterSelectorModel(
             matchFields={
                 "name": kwargs["clustername"],
             }
         )
-        rv[lib.CLUS_SELECTOR_FIELD] = cls.model_dump(
-            by_alias=True, exclude_none=True
-        )
+        rv[lib.CLUS_SELECTOR_FIELD] = cls.model_dump(by_alias=True, exclude_none=True)
     if "hostname" in kwargs or "muid" in kwargs:
         if "hostname" in kwargs and "muid" in kwargs:
             ms = schemas.MachineSelectorModel(
@@ -149,9 +134,7 @@ def build_selectors(svc_pat: str, **kwargs) -> Dict:
                     "muid": kwargs["muid"],
                 }
             )
-        rv[lib.MACHINE_SELECTOR_FIELD] = ms.model_dump(
-            by_alias=True, exclude_none=True
-        )
+        rv[lib.MACHINE_SELECTOR_FIELD] = ms.model_dump(by_alias=True, exclude_none=True)
     return rv
 
 
@@ -162,9 +145,7 @@ class ServiceMappings:
     """
 
     cgroup_to_svc_pat: Dict[str, str] = field(default_factory=dict)
-    svc_pat_to_pol_inputs: Dict[str, PolicyInputs] = field(
-        default_factory=dict
-    )
+    svc_pat_to_pol_inputs: Dict[str, PolicyInputs] = field(default_factory=dict)
 
 
 @dataclass
@@ -205,9 +186,7 @@ def build_svc_mappings(procs: List[Dict]) -> ServiceMappings:
             cgroup_path = svc_t.cgroup_paths.pop()
         svc_pat = f"{cgroup_path}/{svc_name}"
         rv.svc_pat_to_pol_inputs[svc_pat] = PolicyInputs()
-        rv.cgroup_to_svc_pat.update(
-            {cgroup: svc_pat for cgroup in svc_t.cgroups}
-        )
+        rv.cgroup_to_svc_pat.update({cgroup: svc_pat for cgroup in svc_t.cgroups})
     return rv
 
 
@@ -287,9 +266,7 @@ def build_proc_models(svc_map: ServiceMappings, procs: List[Dict]):
                 if not pproc_model.base_model.children:
                     pproc_model.base_model.children = [proc_model.base_model]
                 else:
-                    pproc_model.base_model.children.append(
-                        proc_model.base_model
-                    )
+                    pproc_model.base_model.children.append(proc_model.base_model)
             else:
                 # We found a root
                 pol_inp.roots.add(proc_model.rec["id"])

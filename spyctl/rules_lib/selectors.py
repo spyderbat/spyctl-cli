@@ -5,7 +5,7 @@ from __future__ import annotations
 import fnmatch
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Any, Dict, List, Set, Tuple, Optional
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 import spyctl.rules_lib.scope as _scp
 
@@ -122,10 +122,7 @@ class ScopeSelector:
         """
         rv = set()
         for sm in self.scope_matchers:
-            if (
-                valid_match_items is not None
-                and sm.match_item not in valid_match_items
-            ):
+            if valid_match_items is not None and sm.match_item not in valid_match_items:
                 # No reason to evaluate match_items no longer
                 # applicable
                 continue
@@ -337,28 +334,17 @@ class Expression:
 
     def __scope_evaluate(self, scope: _scp.BaseScope) -> bool:
         if self.operator == OP_EXISTS:
-            return (
-                hasattr(scope, self.key)
-                and getattr(scope, self.key) is not None
-            )
+            return hasattr(scope, self.key) and getattr(scope, self.key) is not None
         if self.operator == OP_DOES_NOT_EXIST:
-            return (
-                not hasattr(scope, self.key)
-                or getattr(scope, self.key) is None
-            )
+            return not hasattr(scope, self.key) or getattr(scope, self.key) is None
         if self.operator == OP_IN:
             if not hasattr(scope, self.key):
                 return False
             return self.values.bool_match(self.key, getattr(scope, self.key))
         if self.operator == OP_NOT_IN:
-            if (
-                not hasattr(scope, self.key)
-                or getattr(scope, self.key) is None
-            ):
+            if not hasattr(scope, self.key) or getattr(scope, self.key) is None:
                 return True
-            return not self.values.bool_match(
-                self.key, getattr(scope, self.key)
-            )
+            return not self.values.bool_match(self.key, getattr(scope, self.key))
         raise ValueError(f"Invalid operator: {self.operator}")
 
     def __dict_evaluate(self, scope_dict: dict) -> bool:
@@ -380,8 +366,8 @@ class Expression:
 class ExpressionGroup:
     def __init__(self, key=None) -> None:
         self.key = key
-        self.expressions: dict[str, list[Expression | ExpressionGroup]] = (
-            defaultdict(list)
+        self.expressions: dict[str, list[Expression | ExpressionGroup]] = defaultdict(
+            list
         )
 
     def add_expression(self, expression: Expression | ExpressionGroup):
@@ -399,9 +385,7 @@ class ExpressionGroup:
                 return False
         return result
 
-    def __evaluate_key(
-        self, key: str, scope: _scp.BaseScope | dict
-    ) -> set[str]:
+    def __evaluate_key(self, key: str, scope: _scp.BaseScope | dict) -> set[str]:
         """Every expression for a given key must match.
         We combine the match items across expressions for use later.
         """

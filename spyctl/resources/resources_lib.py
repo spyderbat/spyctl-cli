@@ -28,9 +28,7 @@ def handle_input_data(
     elif obj_kind == lib.FPRINT_GROUP_KIND:
         rv.extend(__handle_fprint_group_input(data))
     elif obj_kind == lib.UID_LIST_KIND:
-        rv.extend(
-            __handle_uid_list_input(data, ctx, deviation_src=deviation_src)
-        )
+        rv.extend(__handle_uid_list_input(data, ctx, deviation_src=deviation_src))
     elif lib.ITEMS_FIELD in data:
         rv.extend(__handle_spyctl_items_input(data))
     return rv
@@ -40,9 +38,7 @@ def __handle_fprint_group_input(data: Dict):
     return data[lib.DATA_FIELD][lib.FPRINT_GRP_FINGERPRINTS_FIELD]
 
 
-def __handle_uid_list_input(
-    data: Dict, ctx: cfg.Context = None, deviation_src=None
-):
+def __handle_uid_list_input(data: Dict, ctx: cfg.Context = None, deviation_src=None):
     if not ctx:
         ctx = cfg.get_current_context()
     time = (
@@ -51,17 +47,13 @@ def __handle_uid_list_input(
     )
     src = ctx.global_source
     fprint_uids = [
-        uid
-        for uid in data[lib.DATA_FIELD][lib.UIDS_FIELD]
-        if uid.startswith("fprint")
+        uid for uid in data[lib.DATA_FIELD][lib.UIDS_FIELD] if uid.startswith("fprint")
     ]
     fprints = []
     if fprint_uids:
         fprint_pipeline = _af.UID_List.generate_pipeline(fprint_uids)
         fprints = list(
-            get_fingerprints(
-                *ctx.get_api_data(), [src], time, pipeline=fprint_pipeline
-            )
+            get_fingerprints(*ctx.get_api_data(), [src], time, pipeline=fprint_pipeline)
         )
     deviation_uids = [
         uid

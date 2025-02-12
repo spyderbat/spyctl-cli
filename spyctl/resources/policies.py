@@ -257,17 +257,13 @@ def matching_fingerprints_summary(
     output_list = []
     headers = ["UID", "NAME", "STATUS", "TYPE", "CREATE_TIME"]
     if len(no_matching) > 0:
-        output_list.append(
-            "Policies WITH NO matching fingerprints in last query:"
-        )
+        output_list.append("Policies WITH NO matching fingerprints in last query:")
         no_match_data = []
         for pol in no_matching:
             no_match_data.append(policy_summary_data(pol))
         output_list.append(tabulate(no_match_data, headers, tablefmt="plain"))
     if len(has_matching) > 0:
-        output_list.append(
-            "\nPolicies WITH matching fingerprints in last query:"
-        )
+        output_list.append("\nPolicies WITH matching fingerprints in last query:")
         data = []
         for pol in has_matching:
             data.append(policy_summary_data(pol))
@@ -312,9 +308,7 @@ def policies_summary_output(
             include_irrelevant=include_irrelevant,
         )
     for policy in policies:
-        data.append(
-            policy_summary_data(policy, deviation_counts, get_deviations_count)
-        )
+        data.append(policy_summary_data(policy, deviation_counts, get_deviations_count))
     data.sort(key=lambda x: [x[3], x[1]])
     output_list.append(tabulate(data, headers, tablefmt="plain"))
     return "\n".join(output_list)
@@ -343,9 +337,7 @@ def policy_summary_data(
     create_time = policy[lib.METADATA_FIELD].get(lib.METADATA_CREATE_TIME)
     if create_time:
         try:
-            create_time = (
-                zulu.parse(create_time).format("YYYY-MM-ddTHH:mm:ss") + "Z"
-            )
+            create_time = zulu.parse(create_time).format("YYYY-MM-ddTHH:mm:ss") + "Z"
         except Exception:
             pass
     else:
@@ -408,14 +400,10 @@ def get_deviation_counts(
     policy_uids = {
         policy[lib.METADATA_FIELD].get(
             lib.METADATA_UID_FIELD
-        ): _m_obj_h.get_merge_object(
-            lib.POL_KIND, policy, True, "check_deviations"
-        )
+        ): _m_obj_h.get_merge_object(lib.POL_KIND, policy, True, "check_deviations")
         for policy in policies
     }  # policy uid -> merge object
-    pipeline = _af.Deviations.generate_pipeline(
-        dev_name_or_uid, filters=dev_filters
-    )
+    pipeline = _af.Deviations.generate_pipeline(dev_name_or_uid, filters=dev_filters)
     for deviation in spyctl_dev.get_deviations_stream(
         ctx,
         list(policy_uids),

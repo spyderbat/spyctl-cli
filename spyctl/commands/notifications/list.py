@@ -2,12 +2,12 @@
 
 import click
 
-import spyctl.config.configs as cfg
-import spyctl.spyctl_lib as lib
 import spyctl.commands.get.shared_options as _so
-from spyctl.commands.get import get_lib
-from spyctl.api import notifications as notif_api
+import spyctl.config.configs as cfg
 import spyctl.resources as _r
+import spyctl.spyctl_lib as lib
+from spyctl.api import notifications as notif_api
+from spyctl.commands.get import get_lib
 
 
 @click.command("list", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)

@@ -2,9 +2,9 @@ from typing import Dict, List, Tuple
 
 from tabulate import tabulate
 
-from spyctl.api.source_query_resources import get_machines
 import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
+from spyctl.api.source_query_resources import get_machines
 
 SUMMARY_HEADERS = ["NAME", "UID", "OS", "CLOUD_TYPE", "AGE", "CLUSTER"]
 
@@ -17,9 +17,7 @@ def machines_summary_output(
     limit_mem=False,
 ) -> str:
     data = []
-    for machine in get_machines(
-        *ctx.get_api_data(), muids, time, pipeline, limit_mem
-    ):
+    for machine in get_machines(*ctx.get_api_data(), muids, time, pipeline, limit_mem):
         data.append(__machine_summary_data(machine))
     data.sort(key=lambda x: [x[0], lib.to_timestamp(x[3])])
     return tabulate(data, SUMMARY_HEADERS, tablefmt="plain")

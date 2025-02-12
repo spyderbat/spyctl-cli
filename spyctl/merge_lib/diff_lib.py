@@ -42,9 +42,7 @@ def guardian_object_diff(original_data: Dict, other_data: Dict):
 
 
 def guardian_procs_diff(original_spec, other_spec):
-    def guardian_proc_diff(
-        other_proc: Dict, orig_procs: List[Dict], rv: List[Dict]
-    ):
+    def guardian_proc_diff(other_proc: Dict, orig_procs: List[Dict], rv: List[Dict]):
         diff_proc = other_proc.copy()
         diff_proc.pop(lib.CHILDREN_FIELD, None)
         match_proc = None
@@ -70,9 +68,7 @@ def guardian_procs_diff(original_spec, other_spec):
         # Recursively check
         if lib.CHILDREN_FIELD in other_proc:
             diff_proc[lib.CHILDREN_FIELD] = []
-            orig_children = (
-                match_proc.get(lib.CHILDREN_FIELD, []) if match_proc else []
-            )
+            orig_children = match_proc.get(lib.CHILDREN_FIELD, []) if match_proc else []
             for c_proc in other_proc[lib.CHILDREN_FIELD]:
                 guardian_proc_diff(
                     c_proc,
@@ -131,11 +127,7 @@ def guardian_network_diff(original_spec, other_spec):
         processes: List[str] = None
 
         def as_dict(self):
-            tf_str = (
-                lib.FROM_FIELD
-                if self.type == lib.INGRESS_FIELD
-                else lib.TO_FIELD
-            )
+            tf_str = lib.FROM_FIELD if self.type == lib.INGRESS_FIELD else lib.TO_FIELD
             rv = {
                 tf_str: self.to_or_from,
                 lib.PORTS_FIELD: self.ports,
@@ -213,9 +205,7 @@ def guardian_network_diff(original_spec, other_spec):
             for port in ports:
                 if processes:
                     for proc in processes:
-                        rv_set.add(
-                            GuardianNetNode([tf], [port], net_type, [proc])
-                        )
+                        rv_set.add(GuardianNetNode([tf], [port], net_type, [proc]))
                 else:
                     rv_set.add(GuardianNetNode([tf], [port], net_type))
 

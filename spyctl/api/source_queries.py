@@ -285,9 +285,7 @@ def threadpool_progress_bar(
             yield task.result()
 
 
-def time_blocks(
-    time_tup: Tuple, max_time_range=MAX_TIME_RANGE_SECS
-) -> List[Tuple]:
+def time_blocks(time_tup: Tuple, max_time_range=MAX_TIME_RANGE_SECS) -> List[Tuple]:
     """Takes a time tuple (start, end) in epoch time and converts
     it to smaller chunks if necessary.
 

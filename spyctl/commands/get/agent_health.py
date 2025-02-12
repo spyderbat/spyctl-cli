@@ -47,9 +47,7 @@ def get_agent_health_notification_settings(name_or_id, output, **kwargs):
     handle_get_agent_health_notification_settings(name_or_id, output, **kwargs)
 
 
-def handle_get_agent_health_notification_settings(
-    name_or_id, output, **kwargs
-):
+def handle_get_agent_health_notification_settings(name_or_id, output, **kwargs):
     """Handle the retrieval of agent health notification settings."""
     kwargs["page"] = kwargs.get("page", 0)
     kwargs["page_size"] = kwargs.get("page_size", 10)
@@ -68,11 +66,7 @@ def handle_get_agent_health_notification_settings(
     get_lib.show_get_data(
         agent_health_notification_settings,
         output,
-        lambda data: _r.agent_health.summary_output(
-            data, total_pages, kwargs["page"]
-        ),
-        lambda data: _r.agent_health.wide_output(
-            data, total_pages, kwargs["page"]
-        ),
+        lambda data: _r.agent_health.summary_output(data, total_pages, kwargs["page"]),
+        lambda data: _r.agent_health.wide_output(data, total_pages, kwargs["page"]),
         data_parser=data_parser,
     )

@@ -17,9 +17,7 @@ SUMMARY_HEADERS = [
 ]
 
 
-def summary_output(
-    notifications: List[Dict], total_pages: int, current_page: int = 0
-):
+def summary_output(notifications: List[Dict], total_pages: int, current_page: int = 0):
     """
     Print a summary of notification settings.
 
@@ -35,11 +33,7 @@ def summary_output(
                 notification["feature"],
                 notification["trigger"],
                 notification["is_enabled"],
-                (
-                    len(notification["target_map"])
-                    if notification["target_map"]
-                    else 0
-                ),
+                (len(notification["target_map"]) if notification["target_map"] else 0),
                 lib.epoch_to_zulu(notification["valid_from"]),
             ]
         )

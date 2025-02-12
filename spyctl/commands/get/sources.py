@@ -2,13 +2,13 @@
 
 import click
 
+import spyctl.api.sources as src_api
 import spyctl.commands.get.shared_options as _so
 import spyctl.config.configs as cfg
 import spyctl.filter_resource as filt
 import spyctl.resources as _r
 import spyctl.spyctl_lib as lib
 from spyctl.commands.get import get_lib
-import spyctl.api.sources as src_api
 
 
 @click.command("sources", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)

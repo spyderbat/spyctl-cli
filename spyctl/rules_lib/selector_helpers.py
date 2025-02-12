@@ -47,9 +47,7 @@ def exprs_from_ns_sel_dict(
         for expr in exprs_from_labels(ns_sel_dict[sel.MATCH_LABELS]):
             labels_expr_grp.add_expression(expr)
     if sel.MATCH_EXPRESSIONS in ns_sel_dict:
-        for expr in __build_expressions_from_dicts(
-            ns_sel_dict[sel.MATCH_EXPRESSIONS]
-        ):
+        for expr in __build_expressions_from_dicts(ns_sel_dict[sel.MATCH_EXPRESSIONS]):
             labels_expr_grp.add_expression(expr)
     if labels_expr_grp.expressions:
         rv.add_expression(labels_expr_grp)
@@ -74,9 +72,7 @@ def exprs_from_pod_sel_dict(
         for expr in exprs_from_labels(pod_sel_dict[sel.MATCH_LABELS]):
             labels_expr_grp.add_expression(expr)
     if sel.MATCH_EXPRESSIONS in pod_sel_dict:
-        for expr in __build_expressions_from_dicts(
-            pod_sel_dict[sel.MATCH_EXPRESSIONS]
-        ):
+        for expr in __build_expressions_from_dicts(pod_sel_dict[sel.MATCH_EXPRESSIONS]):
             labels_expr_grp.add_expression(expr)
     if labels_expr_grp.expressions:
         rv.add_expression(labels_expr_grp)

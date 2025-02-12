@@ -33,9 +33,7 @@ from spyctl.api.policies import get_policies
     "--type",
     "meta_type",
     help="The type of policy to return.",
-    type=click.Choice(
-        [lib.POL_TYPE_TRACE, lib.POL_TYPE_CONT, lib.POL_TYPE_SVC]
-    ),
+    type=click.Choice([lib.POL_TYPE_TRACE, lib.POL_TYPE_CONT, lib.POL_TYPE_SVC]),
     metavar="",
     required=False,
 )
@@ -43,9 +41,7 @@ from spyctl.api.policies import get_policies
     "-o",
     "--output",
     default=lib.OUTPUT_YAML,
-    type=click.Choice(
-        lib.OUTPUT_CHOICES + [lib.OUTPUT_WIDE], case_sensitive=False
-    ),
+    type=click.Choice(lib.OUTPUT_CHOICES + [lib.OUTPUT_WIDE], case_sensitive=False),
     required=False,
 )
 def export(
@@ -115,9 +111,7 @@ def handle_export_policies(
 
     ctx = cfg.get_current_context()
     params = {
-        "name_or_uid_contains": (
-            name_or_id.strip("*") if name_or_id else None
-        ),
+        "name_or_uid_contains": (name_or_id.strip("*") if name_or_id else None),
     }
     if rtype:
         params["type"] = rtype
@@ -125,10 +119,7 @@ def handle_export_policies(
     policies = get_policies(*ctx.get_api_data(), params=params)
     exported_pols = []
     for policy in policies:
-        if (
-            policy[lib.METADATA_FIELD][lib.METADATA_TYPE_FIELD]
-            == lib.POL_TYPE_CLUS
-        ):
+        if policy[lib.METADATA_FIELD][lib.METADATA_TYPE_FIELD] == lib.POL_TYPE_CLUS:
             continue
         old_meta = policy[lib.METADATA_FIELD]
         policy[lib.METADATA_FIELD] = {

@@ -23,11 +23,11 @@ from pydantic import ValidationError
 
 import spyctl.merge_lib.diff_lib as d_lib
 import spyctl.merge_lib.merge_lib as m_lib
+import spyctl.merge_lib.merge_schema as _ms
 import spyctl.merge_lib.workload_merge as _wl
 import spyctl.schemas_v2 as schemas
 import spyctl.spyctl_lib as lib
 from spyctl import cli
-import spyctl.merge_lib.merge_schema as _ms
 
 
 class MergeObject:
@@ -66,9 +66,7 @@ class MergeObject:
             data = self.obj_data.get(schema.field_key)
             other_data = other.get(schema.field_key, {})
             if (
-                not self.__merge_subfields(
-                    data, other_data, schema, symmetric=True
-                )
+                not self.__merge_subfields(data, other_data, schema, symmetric=True)
                 and schema.field_key in self.obj_data
             ):
                 del self.obj_data[schema.field_key]
@@ -127,9 +125,7 @@ class MergeObject:
         if not rv:
             rv = other[lib.METADATA_FIELD].get(lib.METADATA_UID_FIELD)
         if not rv:
-            rv = other[lib.METADATA_FIELD].get(
-                lib.METADATA_NAME_FIELD, "unknown"
-            )
+            rv = other[lib.METADATA_FIELD].get(lib.METADATA_NAME_FIELD, "unknown")
         return rv
 
     @property
@@ -215,9 +211,7 @@ class MergeObject:
     ) -> bool:
         for field, func in schema.merge_functions.items():
             f_data = data.get(field) if data is not None else None
-            f_other_data = (
-                other_data.get(field) if other_data is not None else None
-            )
+            f_other_data = other_data.get(field) if other_data is not None else None
             result = self.__handle_merge_functions(
                 f_data, f_other_data, func, symmetric
             )
@@ -231,9 +225,7 @@ class MergeObject:
                     "Bug Detected! Field mismatch with field in sub schema."
                 )
             f_data = data.get(field) if data is not None else None
-            f_other_data = (
-                other_data.get(field) if other_data is not None else None
-            )
+            f_other_data = other_data.get(field) if other_data is not None else None
             if symmetric:
                 if f_data is None and f_other_data is None:
                     continue
@@ -267,9 +259,7 @@ class MergeObject:
                     ):
                         del data[field]
         # Clear any fields not found in the schema
-        valid_fields = set(schema.merge_functions).union(
-            set(schema.sub_schemas)
-        )
+        valid_fields = set(schema.merge_functions).union(set(schema.sub_schemas))
         if data:
             for field in set(data) - valid_fields:
                 del data[field]
@@ -300,18 +290,14 @@ class MergeObject:
         return result
 
     def __parse_disable_procs_settings(self, s: str) -> bool:
-        dpf = self.original_obj.get(lib.SPEC_FIELD, {}).get(
-            lib.DISABLE_PROCS_FIELD, ""
-        )
+        dpf = self.original_obj.get(lib.SPEC_FIELD, {}).get(lib.DISABLE_PROCS_FIELD, "")
         if s == lib.DISABLE_PROCS_ALL or dpf == lib.DISABLE_PROCS_ALL:
             self.disable_procs = lib.DISABLE_PROCS_ALL
         else:
             self.disable_procs = None
 
     def __parse_disable_conns_settings(self, s: str) -> bool:
-        dcf = self.original_obj.get(lib.SPEC_FIELD, {}).get(
-            lib.DISABLE_CONNS_FIELD, ""
-        )
+        dcf = self.original_obj.get(lib.SPEC_FIELD, {}).get(lib.DISABLE_CONNS_FIELD, "")
         if s == lib.DISABLE_CONNS_ALL or dcf == lib.DISABLE_CONNS_ALL:
             self.disable_conns = lib.DISABLE_CONNS_ALL
         elif s == lib.DISABLE_CONNS_EGRESS or dcf == lib.EGRESS_FIELD:

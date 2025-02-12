@@ -3,8 +3,8 @@
 from typing import Any, Dict, List
 
 import spyctl.rules_lib.scope as _scp
-import spyctl.rules_lib.selectors as sel
 import spyctl.rules_lib.selector_helpers as _sel_h
+import spyctl.rules_lib.selectors as sel
 import spyctl.spyctl_lib as lib
 
 VERB_FIELD = "verb"
@@ -129,9 +129,7 @@ def build_rule(rule_data: Dict, rs_name: str = None):
     return rule
 
 
-def new_rule(
-    target: str, verb: str, values: List[str], selectors: Dict = None
-) -> Dict:
+def new_rule(target: str, verb: str, values: List[str], selectors: Dict = None) -> Dict:
     """Create a new rule"""
     if selectors is None:
         selectors = {}

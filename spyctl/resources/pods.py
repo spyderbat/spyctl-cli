@@ -2,9 +2,9 @@ from typing import Dict, List, Tuple
 
 from tabulate import tabulate
 
-from spyctl.api.source_query_resources import get_pods
 import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
+from spyctl.api.source_query_resources import get_pods
 
 SUMMARY_HEADERs = [
     "NAME",
@@ -26,9 +26,7 @@ def pods_output_summary(
     limit_mem=False,
 ) -> str:
     data = []
-    for pod in get_pods(
-        *ctx.get_api_data(), clusters, time, pipeline, limit_mem
-    ):
+    for pod in get_pods(*ctx.get_api_data(), clusters, time, pipeline, limit_mem):
         data.append(__pod_summary_data(pod))
     output = tabulate(
         sorted(data, key=lambda x: [x[7], x[6], x[0]]),

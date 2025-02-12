@@ -20,14 +20,12 @@ from spyctl.commands.get import get_lib
 @_so.time_options
 @click.option(
     "--usage-csv",
-    help="Outputs the usage metrics for 1 or more agents to"
-    " a specified csv file.",
+    help="Outputs the usage metrics for 1 or more agents to" " a specified csv file.",
     type=click.File(mode="w"),
 )
 @click.option(
     "--usage-json",
-    help="Outputs the usage metrics for 1 or more agents to"
-    " stdout in json format.",
+    help="Outputs the usage metrics for 1 or more agents to" " stdout in json format.",
     is_flag=True,
     default=False,
 )
@@ -51,9 +49,7 @@ def get_agents(name_or_id, output, st, et, **filters):
     exact = filters.pop("exact")
     get_lib.output_time_log(lib.AGENT_RESOURCE.name_plural, st, et)
     name_or_id = get_lib.wildcard_name_or_id(name_or_id, exact)
-    filters = {
-        key: value for key, value in filters.items() if value is not None
-    }
+    filters = {key: value for key, value in filters.items() if value is not None}
     handle_get_agents(name_or_id, output, st, et, **filters)
 
 
@@ -65,9 +61,7 @@ def handle_get_agents(name_or_id, output, st, et, **filters):
     raw_metrics_json: bool = filters.pop("raw_metrics_json", False)
     include_latest_metrics = not filters.pop("health_only", False)
     sources, filters = _af.Agents.build_sources_and_filters(**filters)
-    pipeline = _af.Agents.generate_pipeline(
-        name_or_id, None, True, filters=filters
-    )
+    pipeline = _af.Agents.generate_pipeline(name_or_id, None, True, filters=filters)
     if usage_csv_file:
         agent_st = __st_at_least_2hrs(st)
         agents = list(
@@ -117,9 +111,7 @@ def handle_get_agents(name_or_id, output, st, et, **filters):
             cli.show(summary, lib.OUTPUT_RAW)
         elif output == lib.OUTPUT_WIDE:
             cli.try_log("Retrieving source data for agent(s).")
-            sources_data = ag_api.get_sources_data_for_agents(
-                *ctx.get_api_data()
-            )
+            sources_data = ag_api.get_sources_data_for_agents(*ctx.get_api_data())
             summary = _r.agents.agents_output_wide(
                 agents, sources_data, include_latest_metrics
             )
@@ -168,9 +160,7 @@ def handle_agent_usage_csv(agents: List[Dict], st, et, metrics_csv_file: IO):
         *ctx.get_api_data(), sources, (st, et), pipeline
     ):
         metrics_csv_file.write(
-            _r.agents.usage_line(
-                metrics_record, agent_map.get(metrics_record["ref"])
-            )
+            _r.agents.usage_line(metrics_record, agent_map.get(metrics_record["ref"]))
         )
 
 
@@ -188,8 +178,6 @@ def handle_agent_usage_json(agents: List[Dict], st, et):
         not lib.is_redirected(),
     ):
         cli.show(
-            _r.agents.usage_dict(
-                metrics_record, agent_map.get(metrics_record["ref"])
-            ),
+            _r.agents.usage_dict(metrics_record, agent_map.get(metrics_record["ref"])),
             lib.OUTPUT_JSON,
         )

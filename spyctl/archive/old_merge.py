@@ -1,14 +1,14 @@
 import ipaddress as ipaddr
+from difflib import SequenceMatcher
 from os import path
 from typing import Dict, Generator, List, Optional, TypeVar, Union
-from difflib import SequenceMatcher
 
 import yaml
 from typing_extensions import Self
 
-import spyctl.spyctl_lib as lib
 import spyctl.cli as cli
 import spyctl.resources.baselines as spyctl_baselines
+import spyctl.spyctl_lib as lib
 
 T1 = TypeVar("T1")
 
@@ -26,9 +26,7 @@ def handle_merge(filename, with_file, latest, output):
     else:
         with_resource = None
     if resrc_kind == lib.BASELINE_KIND:
-        spyctl_baselines.merge_baseline(
-            resource, with_resource, latest, output
-        )
+        spyctl_baselines.merge_baseline(resource, with_resource, latest, output)
 
 
 def find(obj_list: List[T1], obj: T1) -> Optional[T1]:
@@ -137,9 +135,7 @@ class ProcessID:
             while proc_id.unique_id in used:
                 try:
                     last_num = int(proc_id.unique_id[-1])
-                    proc_id.unique_id = proc_id.unique_id[:-1] + str(
-                        last_num + 1
-                    )
+                    proc_id.unique_id = proc_id.unique_id[:-1] + str(last_num + 1)
                 except ValueError:
                     proc_id.unique_id += f"_{proc_id.index}"
             used.add(proc_id.unique_id)
@@ -160,9 +156,7 @@ class ProcessNode:
         self.children = []
         self.appearances = set((current_fingerprint,))
         if "children" in self.node:
-            self.children = [
-                ProcessNode(child) for child in self.node["children"]
-            ]
+            self.children = [ProcessNode(child) for child in self.node["children"]]
         ProcessID.all_ids.append(self.id)
 
     def __eq__(self, other):
@@ -177,9 +171,7 @@ class ProcessNode:
             if self_exe[0] == other_exe[0] and self_exe[1] != other_exe[1]:
                 self_start = self_exe[1][:3]
                 other_start = other_exe[1][:3]
-                merged = make_wildcard(
-                    (self.node["exe"][0], other.node["exe"][0])
-                )
+                merged = make_wildcard((self.node["exe"][0], other.node["exe"][0]))
                 if self_start == other_start:
                     new_exe = input(
                         f"Merge {self.node['exe'][0]} and"
@@ -219,9 +211,7 @@ class ProcessNode:
 
 
 class ConnectionBlock:
-    def __init__(
-        self, node: Dict = None, ip: ipaddr.IPv4Network = None
-    ) -> None:
+    def __init__(self, node: Dict = None, ip: ipaddr.IPv4Network = None) -> None:
         if ip is not None:
             node = {"ipBlock": {"cidr": str(ip)}}
         elif node is not None:
@@ -266,9 +256,7 @@ class ConnectionNode:
             ]
         self.has_to = "to" in self.node
         if self.has_to:
-            self.node["to"] = [
-                ConnectionBlock(node=conn) for conn in self.node["to"]
-            ]
+            self.node["to"] = [ConnectionBlock(node=conn) for conn in self.node["to"]]
         self.appearances = set((current_fingerprint,))
         self.unify_ids()
 
@@ -350,9 +338,7 @@ class DiffDumper(yaml.Dumper):
         return dumper.represent_mapping(tag, data.node)
 
     @staticmethod
-    def list_representer(
-        dumper: yaml.Dumper, data: Union[IfAllEqList, WildcardList]
-    ):
+    def list_representer(dumper: yaml.Dumper, data: Union[IfAllEqList, WildcardList]):
         objs, appearances = data.get_for_diff()
         seq = []
         for obj, appear in zip(objs, appearances):
@@ -381,9 +367,7 @@ class MergeDumper(yaml.Dumper):
         return dumper.represent_dict(data.node)
 
     @staticmethod
-    def list_representer(
-        dumper: yaml.Dumper, data: Union[IfAllEqList, WildcardList]
-    ):
+    def list_representer(dumper: yaml.Dumper, data: Union[IfAllEqList, WildcardList]):
         obj = data.get_for_merge()
         return dumper.represent_data(obj)
 
