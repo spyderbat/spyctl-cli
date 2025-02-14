@@ -477,9 +477,7 @@ def mock_get_fingerprints(
             "version": 1689423128,
         },
         "spec": {
-            "serviceSelector": {
-                "cgroup": "systemd:/system.slice/update-motd.service"
-            },
+            "serviceSelector": {"cgroup": "systemd:/system.slice/update-motd.service"},
             "machineSelector": {"hostname": "mock_machine"},
             "processPolicy": [
                 {
@@ -551,9 +549,7 @@ def mock_get_guardian_fingerprints(
             "version": 1689423128,
         },
         "spec": {
-            "serviceSelector": {
-                "cgroup": "systemd:/system.slice/update-motd.service"
-            },
+            "serviceSelector": {"cgroup": "systemd:/system.slice/update-motd.service"},
             "machineSelector": {"hostname": "mock_machine"},
             "processPolicy": [
                 {
