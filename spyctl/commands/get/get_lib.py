@@ -1,6 +1,6 @@
 """Library functions for the 'get' command."""
 
-from typing import Callable, Dict, List
+from typing import Callable, Dict, List, Optional
 
 import spyctl.spyctl_lib as lib
 from spyctl import cli
@@ -9,9 +9,9 @@ from spyctl import cli
 def show_get_data(
     data: List[Dict],
     output: str,
-    summary_func: Callable | None = None,
-    wide_func: Callable | None = None,
-    data_parser: Callable | None = None,
+    summary_func: Optional[Callable] = None,
+    wide_func: Optional[Callable] = None,
+    data_parser: Optional[Callable] = None,
     raw_data: bool = False,
 ):
     """
