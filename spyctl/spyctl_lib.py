@@ -2,6 +2,7 @@ import copy
 import hashlib
 import inspect
 import io
+import ipaddress
 import json
 import os
 import re
@@ -13,6 +14,7 @@ from datetime import timezone
 from fnmatch import fnmatch
 from pathlib import Path
 from typing import IO, Any, Dict, Iterable, List, Optional, Tuple, Union
+from dataclasses import dataclass
 from urllib.parse import urlparse
 from uuid import uuid4
 
@@ -25,7 +27,9 @@ from click_aliases import ClickAliasedGroup
 
 
 class Aliases:
-    def __init__(self, aliases: Iterable[str], name, name_plural="", kind=None) -> None:
+    def __init__(
+        self, aliases: Iterable[str], name, name_plural="", kind=None
+    ) -> None:
         self.name = name
         self.name_plural = name_plural
         self.aliases = set(aliases)
@@ -425,7 +429,9 @@ CONFIG_ALIAS = Aliases(
 )
 
 ALL_RESOURCES: List[Aliases] = [
-    g_var for g_var_name, g_var in globals().items() if g_var_name.endswith("RESOURCE")
+    g_var
+    for g_var_name, g_var in globals().items()
+    if g_var_name.endswith("RESOURCE")
 ]
 
 
@@ -492,7 +498,9 @@ RESOURCES_WITH_SCHEMAS = [
 
 CMD_ORG_FIELD = "org"
 
-SUB_EPILOG = 'Use "spyctl <command> --help" for more information about a given command.'
+SUB_EPILOG = (
+    'Use "spyctl <command> --help" for more information about a given command.'
+)
 
 
 def tmp_context_options(function):
@@ -602,6 +610,30 @@ class DictParam(click.ParamType):
             key, val = v.strip().split("=")
             rv_dict[key.strip()] = val.strip()
         return rv_dict
+
+
+class IPParam(click.ParamType):
+    def convert(
+        self,
+        value: Any,
+        param: Optional[click.Parameter],
+        ctx: Optional[click.Context],
+    ) -> Any:
+        try:
+            # Try parsing as IPv4/IPv6 address or subnet
+            try:
+                ipaddress.ip_network(value, strict=False)
+                return value
+            except ValueError:
+                # If not a subnet, try as a single IP
+                ipaddress.ip_address(value)
+                return value
+        except ValueError:
+            self.fail(
+                f"{value} is not a valid IPv4/IPv6 address or subnet",
+                param,
+                ctx,
+            )
 
 
 class ListDictParam(click.ParamType):
@@ -1480,7 +1512,9 @@ class CustomGroup(click.Group):
         "validate": SECTION_BASIC,
     }
 
-    def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+    def format_help(
+        self, ctx: click.Context, formatter: click.HelpFormatter
+    ) -> None:
         self.format_help_text(ctx, formatter)
         self.format_options(ctx, formatter)
         self.format_usage(ctx, formatter)
@@ -1496,14 +1530,18 @@ class CustomGroup(click.Group):
             formatter.write_paragraph()
             formatter.write_text(text)
 
-    def format_usage(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+    def format_usage(
+        self, ctx: click.Context, formatter: click.HelpFormatter
+    ) -> None:
         formatter.write_paragraph()
         formatter.write_text("Usage:")
         formatter.indent()
         formatter.write_text("spyctl [command] [options]")
         formatter.dedent()
 
-    def format_epilog(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+    def format_epilog(
+        self, ctx: click.Context, formatter: click.HelpFormatter
+    ) -> None:
         """Writes the epilog into the formatter if it exists."""
         if self.epilog:
             epilog = inspect.cleandoc(self.epilog)
@@ -1556,9 +1594,9 @@ class CustomSubGroup(ClickAliasedGroup):
                 # we have a list so create group aliases
                 _args = [args[0][0]] + list(args[1:])
                 for alias in args[0][1:]:
-                    grp = super(CustomSubGroup, self).group(alias, *args[1:], **kwargs)(
-                        f
-                    )
+                    grp = super(CustomSubGroup, self).group(
+                        alias, *args[1:], **kwargs
+                    )(f)
                     grp.short_help = "Alias for '{}'".format(_args[0])
                     aliased_group.append(grp)
             else:
@@ -1575,7 +1613,9 @@ class CustomSubGroup(ClickAliasedGroup):
 
         return decorator
 
-    def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+    def format_help(
+        self, ctx: click.Context, formatter: click.HelpFormatter
+    ) -> None:
         self.format_help_text(ctx, formatter)
         self.format_options(ctx, formatter)
         self.format_usage(ctx, formatter)
@@ -1591,14 +1631,20 @@ class CustomSubGroup(ClickAliasedGroup):
             formatter.write_paragraph()
             formatter.write_text(text)
 
-    def format_usage(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+    def format_usage(
+        self, ctx: click.Context, formatter: click.HelpFormatter
+    ) -> None:
         formatter.write_paragraph()
         prefix = "Usage:\n  "
         pieces = self.collect_usage_pieces(ctx)
-        formatter.write_usage(ctx.command_path, " ".join(pieces), prefix=prefix)
+        formatter.write_usage(
+            ctx.command_path, " ".join(pieces), prefix=prefix
+        )
         formatter.dedent()
 
-    def format_epilog(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+    def format_epilog(
+        self, ctx: click.Context, formatter: click.HelpFormatter
+    ) -> None:
         """Writes the epilog into the formatter if it exists."""
         if self.epilog:
             epilog = inspect.cleandoc(self.epilog)
@@ -1611,7 +1657,9 @@ class CustomCommand(click.Command):
         self.aliases = kwargs.pop("aliases", [])
         super().__init__(*args, **kwargs)
 
-    def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+    def format_help(
+        self, ctx: click.Context, formatter: click.HelpFormatter
+    ) -> None:
         self.format_help_text(ctx, formatter)
         self.format_options(ctx, formatter)
         self.format_usage(ctx, formatter)
@@ -1627,19 +1675,33 @@ class CustomCommand(click.Command):
             formatter.write_paragraph()
             formatter.write_text(text)
 
-    def format_usage(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+    def format_usage(
+        self, ctx: click.Context, formatter: click.HelpFormatter
+    ) -> None:
         formatter.write_paragraph()
         prefix = "Usage:\n  "
         pieces = self.collect_usage_pieces(ctx)
-        formatter.write_usage(ctx.command_path, " ".join(pieces), prefix=prefix)
+        formatter.write_usage(
+            ctx.command_path, " ".join(pieces), prefix=prefix
+        )
         formatter.dedent()
 
-    def format_epilog(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+    def format_epilog(
+        self, ctx: click.Context, formatter: click.HelpFormatter
+    ) -> None:
         """Writes the epilog into the formatter if it exists."""
         if self.epilog:
             epilog = inspect.cleandoc(self.epilog)
             formatter.write_paragraph()
             formatter.write_text(epilog)
+
+    def get_help(self, ctx: click.Context) -> str:
+        help_text = super().get_help(ctx)
+        threshold = 50
+        if len(help_text.splitlines()) > threshold:
+            click.echo_via_pager(help_text)
+            return ""
+        return help_text
 
 
 class ArgumentParametersCommand(CustomCommand):
@@ -1684,7 +1746,9 @@ class ArgumentParametersCommand(CustomCommand):
         specific_index = {}
         if self.unspecific:
             for obj in self.argument_value_parameters:
-                index = ", ".join(str(option) for option in obj[self.argument_name])
+                index = ", ".join(
+                    str(option) for option in obj[self.argument_name]
+                )
                 specific_index[index] = len(obj["args"])
                 for arg_maker in obj["args"]:
                     arg_maker(self)
@@ -1734,7 +1798,9 @@ class MutuallyExclusiveOption(click.Option):
                 f"Illegal usage: `{self.name}` is mutually exclusive with "
                 f"arguments `{', '.join(self.mutually_exclusive)}`."
             )
-        return super(MutuallyExclusiveOption, self).handle_parse_result(ctx, opts, args)
+        return super(MutuallyExclusiveOption, self).handle_parse_result(
+            ctx, opts, args
+        )
 
 
 class OptionEatAll(click.Option):
@@ -1772,7 +1838,9 @@ class OptionEatAll(click.Option):
 
         retval = super(OptionEatAll, self).add_to_parser(parser, ctx)
         for name in self.opts:
-            our_parser = parser._long_opt.get(name) or parser._short_opt.get(name)
+            our_parser = parser._long_opt.get(name) or parser._short_opt.get(
+                name
+            )
             if our_parser:
                 self._eat_all_parser = our_parser
                 self._previous_parser_process = our_parser.process
@@ -1955,7 +2023,9 @@ def label_input_to_dict(input: Union[str, List[str], Dict]) -> Optional[Dict]:
                     try:
                         k, s = set_str.split(in_str)
                         s = s.replace("(", "").replace(")", "").split(",")
-                        s = [value.strip(" ") for value in s if value.strip(" ")]
+                        s = [
+                            value.strip(" ") for value in s if value.strip(" ")
+                        ]
                         if not s:
                             try_log(
                                 f"{set_str} cannot contain an empty",
@@ -2070,7 +2140,9 @@ class UniqueKeyLoader(yaml.SafeLoader):
         for key_node, value_node in node.value:
             key = self.construct_object(key_node, deep=deep)
             if key in mapping:
-                raise ValueError(f"Duplicate key {key!r} found in {self.name!r}.")
+                raise ValueError(
+                    f"Duplicate key {key!r} found in {self.name!r}."
+                )
             mapping.add(key)
         return super().construct_mapping(node, deep)
 
@@ -2122,11 +2194,14 @@ def __validate_data_structure_on_load(resrc_data: Any, validate_cmd=False):
             )
             sys.exit(0)
         err_exit(
-            "Resource file does not contain a dictionary or list of" " dictionaries."
+            "Resource file does not contain a dictionary or list of"
+            " dictionaries."
         )
 
 
-def __validate_resource_on_load(resrc_data: Dict, name, validate_cmd=False, index=None):
+def __validate_resource_on_load(
+    resrc_data: Dict, name, validate_cmd=False, index=None
+):
     msg_suffix = "" if index is None else f" at index {index}"
     from spyctl.schemas_v2 import valid_object
 
@@ -2155,11 +2230,15 @@ def __load_json_file(file: Union[str, IO]) -> Tuple[str, Any]:
     try:
         if isinstance(file, io.TextIOWrapper):
             name = file.name
-            resrc_data = json.load(file, object_pairs_hook=dict_raise_on_duplicates)
+            resrc_data = json.load(
+                file, object_pairs_hook=dict_raise_on_duplicates
+            )
         else:
             name = file
             with open(file) as f:
-                resrc_data = json.load(f, object_pairs_hook=dict_raise_on_duplicates)
+                resrc_data = json.load(
+                    f, object_pairs_hook=dict_raise_on_duplicates
+                )
     except IOError as e:
         err_exit(" ".join(e.args))
     return name, resrc_data
@@ -2188,7 +2267,10 @@ def to_timestamp(zulu_str):
 
 def epoch_to_zulu(epoch):
     try:
-        return zulu.Zulu.fromtimestamp(epoch).format("YYYY-MM-ddTHH:mm:ss") + " UTC"
+        return (
+            zulu.Zulu.fromtimestamp(epoch).format("YYYY-MM-ddTHH:mm:ss")
+            + " UTC"
+        )
     except Exception:
         return epoch
 
@@ -2506,3 +2588,227 @@ def limit_line_length(s: str, max_length: int = 50) -> str:
             line = line[max_length:]
         new_lines.append(line)
     return "\n".join(new_lines)
+
+
+EQUALS_VARIANT = "equals"
+NOT_EQUALS_VARIANT = "not-equals"
+CONTAINS_VARIANT = "contains"
+NOT_CONTAINS_VARIANT = "not-contains"
+STARTS_WITH_VARIANT = "starts-with"
+ENDS_WITH_VARIANT = "ends-with"
+GREATER_THAN_VARIANT = "gt"
+GREATER_THAN_OR_EQUAL_VARIANT = "gte"
+LESS_THAN_VARIANT = "lt"
+LESS_THAN_OR_EQUAL_VARIANT = "lte"
+ANY_ITEM_EQUALS_VARIANT = "any-item-equals"
+ANY_ITEM_CONTAINS_VARIANT = "any-item-contains"
+ALL_ITEMS_NOT_EQUALS_VARIANT = "all-items-not-equals"
+ALL_ITEMS_NOT_CONTAINS_VARIANT = "all-items-not-contains"
+ANY_KEY_EQUALS_VARIANT = "any-key-equals"
+ANY_KEY_CONTAINS_VARIANT = "any-key-contains"
+ANY_VALUE_EQUALS_VARIANT = "any-value-equals"
+ANY_VALUE_CONTAINS_VARIANT = "any-value-contains"
+IN_SUBNET_VARIANT = "in-subnet"
+NOT_IN_SUBNET_VARIANT = "not-in-subnet"
+
+
+@dataclass
+class SchemaOptions:
+    """Helps build the command line options for a schema field."""
+
+    click_type: click.ParamType
+    option_variants: list[str]
+
+
+@dataclass
+class SchemaOption:
+    """Helps build a query clause for a single option."""
+
+    click_type: click.ParamType
+    option_variant: str
+    query_field: str
+
+
+BUILT_QUERY_OPTIONS = {}  # schema -> option -> SchemaOption
+
+TYPE_STR_TO_CLICK_TYPE = {
+    "string": SchemaOptions(
+        click.STRING,
+        [
+            EQUALS_VARIANT,
+            NOT_EQUALS_VARIANT,
+            CONTAINS_VARIANT,
+            NOT_CONTAINS_VARIANT,
+            STARTS_WITH_VARIANT,
+            ENDS_WITH_VARIANT,
+        ],
+    ),
+    "string_array": SchemaOptions(
+        click.STRING,
+        [
+            ANY_ITEM_EQUALS_VARIANT,
+            ANY_ITEM_CONTAINS_VARIANT,
+            ALL_ITEMS_NOT_EQUALS_VARIANT,
+            ALL_ITEMS_NOT_CONTAINS_VARIANT,
+        ],
+    ),
+    "boolean": SchemaOptions(click.BOOL, []),
+    "bool": SchemaOptions(click.BOOL, []),
+    "ip": SchemaOptions(
+        IPParam(),
+        [
+            EQUALS_VARIANT,
+            NOT_EQUALS_VARIANT,
+            IN_SUBNET_VARIANT,
+            NOT_IN_SUBNET_VARIANT,
+        ],
+    ),
+    "integer": SchemaOptions(
+        click.INT,
+        [
+            EQUALS_VARIANT,
+            NOT_EQUALS_VARIANT,
+            GREATER_THAN_VARIANT,
+            GREATER_THAN_OR_EQUAL_VARIANT,
+            LESS_THAN_VARIANT,
+        ],
+    ),
+    "double": SchemaOptions(
+        click.FLOAT,
+        [
+            EQUALS_VARIANT,
+            NOT_EQUALS_VARIANT,
+            GREATER_THAN_VARIANT,
+            GREATER_THAN_OR_EQUAL_VARIANT,
+            LESS_THAN_VARIANT,
+        ],
+    ),
+    "long": SchemaOptions(
+        click.INT,
+        [
+            EQUALS_VARIANT,
+            NOT_EQUALS_VARIANT,
+            GREATER_THAN_VARIANT,
+            GREATER_THAN_OR_EQUAL_VARIANT,
+            LESS_THAN_VARIANT,
+        ],
+    ),
+    "map_str_str": SchemaOptions(
+        click.STRING,
+        [
+            ANY_KEY_EQUALS_VARIANT,
+            ANY_KEY_CONTAINS_VARIANT,
+            ANY_VALUE_EQUALS_VARIANT,
+            ANY_VALUE_CONTAINS_VARIANT,
+        ],
+    ),
+}
+
+VARIANT_TO_OP = {
+    EQUALS_VARIANT: "=",
+    NOT_EQUALS_VARIANT: "!=",
+    CONTAINS_VARIANT: "~=",
+    NOT_CONTAINS_VARIANT: "~=",
+    STARTS_WITH_VARIANT: "~=",
+    ENDS_WITH_VARIANT: "~=",
+    GREATER_THAN_VARIANT: ">",
+    GREATER_THAN_OR_EQUAL_VARIANT: ">=",
+    LESS_THAN_VARIANT: "<",
+    LESS_THAN_OR_EQUAL_VARIANT: "<=",
+    ANY_ITEM_EQUALS_VARIANT: "=",
+    ANY_ITEM_CONTAINS_VARIANT: "~=",
+    ALL_ITEMS_NOT_EQUALS_VARIANT: "!=",
+    ALL_ITEMS_NOT_CONTAINS_VARIANT: "!~=",
+    ANY_KEY_EQUALS_VARIANT: "=",
+    ANY_KEY_CONTAINS_VARIANT: "~=",
+    ANY_VALUE_EQUALS_VARIANT: "=",
+    ANY_VALUE_CONTAINS_VARIANT: "~=",
+    IN_SUBNET_VARIANT: "<<",
+    NOT_IN_SUBNET_VARIANT: "<<",
+}
+
+NAME_OR_UID_FIELDS = {
+    "model_machine": ["hostname"],
+    "model_k8s_namespace": ["metadata.name"],
+    "model_k8s_node": ["metadata.name"],
+    "event_opsflag": ["short_name"],
+    "event_redflag": ["short_name"],
+    "model_k8s_pod": ["metadata.name"],
+    "model_k8s_replicaset": ["metadata.name"],
+    "event_k8s_rolebinding": ["metadata.name"],
+}
+
+
+def query_builder(
+    schema: str, name_or_uid: str = None, show_hint: bool = True, **filters
+):
+    """Dynamically build a query based on the schema and filters."""
+
+    def make_query_value(so: SchemaOption, value):
+        if so.click_type == click.STRING:
+            return f'"{value}"'
+        return value
+
+    def prefix(q: str):
+        if q:
+            return " AND "
+        return ""
+
+    def name_or_uid_clause(schema: str) -> str:
+        name_or_uid_fields = NAME_OR_UID_FIELDS.get(schema, [])
+        name_or_uid_fields.append("id")
+        return f" ({' OR '.join([f'{field} ~= "{name_or_uid}"' for field in name_or_uid_fields])})"
+
+    schema_opts = BUILT_QUERY_OPTIONS[schema]
+    query = ""
+    if name_or_uid:
+        query += name_or_uid_clause(schema)
+    for k, v_tup in filters.items():
+        if k not in schema_opts or not v_tup:
+            continue
+        # The same option may be specified multiple times, so we need to
+        # iterate over the values.
+        for v in v_tup:
+            so: SchemaOption = schema_opts[k]
+            op = VARIANT_TO_OP[so.option_variant]
+            if so.option_variant == NOT_CONTAINS_VARIANT:
+                query += f"{prefix(query)}NOT {so.query_field} {op} '*{v}*'"
+            elif so.option_variant == STARTS_WITH_VARIANT:
+                query += f"{prefix(query)}{so.query_field} {op} '{v}*'"
+            elif so.option_variant == ENDS_WITH_VARIANT:
+                query += f"{prefix(query)}{so.query_field} {op} '*{v}'"
+            elif so.option_variant == CONTAINS_VARIANT:
+                query += f"{prefix(query)}{so.query_field} {op} '*{v}*'"
+            elif so.option_variant == ANY_ITEM_EQUALS_VARIANT:
+                query += f"{prefix(query)}{so.query_field}[*] {op} '{v}'"
+            elif so.option_variant == ANY_ITEM_CONTAINS_VARIANT:
+                query += f"{prefix(query)}{so.query_field}[*] {op} '*{v}*'"
+            elif so.option_variant == ALL_ITEMS_NOT_EQUALS_VARIANT:
+                query += f"{prefix(query)}NOT {so.query_field}[*] {op} '{v}'"
+            elif so.option_variant == ALL_ITEMS_NOT_CONTAINS_VARIANT:
+                query += f"{prefix(query)}NOT {so.query_field}[*] {op} '*{v}*'"
+            elif so.option_variant == ANY_KEY_EQUALS_VARIANT:
+                query += f"{prefix(query)}{so.query_field}:keys[*] {op} '{v}'"
+            elif so.option_variant == ANY_KEY_CONTAINS_VARIANT:
+                query += (
+                    f"{prefix(query)}{so.query_field}:keys[*] {op} '*{v}*'"
+                )
+            elif so.option_variant == ANY_VALUE_EQUALS_VARIANT:
+                query += f"{prefix(query)}{so.query_field}:vals[*] {op} '{v}'"
+            elif so.option_variant == ANY_VALUE_CONTAINS_VARIANT:
+                query += (
+                    f"{prefix(query)}{so.query_field}:vals[*] {op} '*{v}*'"
+                )
+            elif so.option_variant == IN_SUBNET_VARIANT:
+                query += f"{prefix(query)}{so.query_field} {op} '{v}'"
+            elif so.option_variant == NOT_IN_SUBNET_VARIANT:
+                query += f"{prefix(query)}NOT {so.query_field} {op} '{v}'"
+            else:
+                query += f"{prefix(query)}{so.query_field} {op} {make_query_value(so, v)}"
+    query = "*" if not query else query  # If no filters, return all
+    if show_hint:
+        try_log(
+            "Hint: Run the following command to retrieve the same data in a raw format\n"
+            f'    spyctl search {schema} "{query}"'
+        )
+    return query

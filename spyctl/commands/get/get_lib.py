@@ -9,9 +9,9 @@ from spyctl import cli
 def show_get_data(
     data: List[Dict],
     output: str,
-    summary_func: Callable,
-    wide_func: Callable = None,
-    data_parser: Callable = None,
+    summary_func: Callable | None = None,
+    wide_func: Callable | None = None,
+    data_parser: Callable | None = None,
     raw_data: bool = False,
 ):
     """
@@ -34,6 +34,12 @@ def show_get_data(
         if not wide_func and output == lib.OUTPUT_WIDE:
             output = lib.OUTPUT_DEFAULT
         if output == lib.OUTPUT_DEFAULT:
+            if not summary_func:
+                cli.try_log(
+                    "This resource has no summary or wide output.\n"
+                    "Use -o yaml or -o json to retrieve the raw data."
+                )
+                return
             summary = summary_func(data)
             cli.show(summary, lib.OUTPUT_RAW)
         elif output == lib.OUTPUT_WIDE:

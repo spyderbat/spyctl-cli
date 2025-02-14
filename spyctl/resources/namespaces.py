@@ -1,31 +1,19 @@
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 from tabulate import tabulate
 
-import spyctl.config.configs as cfg
-import spyctl.filter_resource as filt
-import spyctl.resources.api_filters as _af
 import spyctl.spyctl_lib as lib
-from spyctl.api.source_query_resources import get_namespaces
 
 SUMMARY_HEADERS = ["NAME", "LAST_SEEN_STATUS", "AGE", "CLUSTER"]
 
 
 def namespace_summary_output(
-    name_or_uid: str,
-    ctx: cfg.Context,
-    clusters: List[str],
-    time: Tuple[float, float],
-    pipeline=None,
+    namespaces: List[Dict],
 ) -> str:
+    """Output namespaces in a table format."""
     data = []
-    field_names = _af.Namespaces.get_name_or_uid_fields()
-    for namespace in get_namespaces(*ctx.get_api_data(), clusters, time, pipeline):
-        ns = [namespace]
-        if name_or_uid:
-            ns = filt.filter_obj(ns, field_names, name_or_uid)
-        if ns:
-            data.append(__namespace_data(namespace))
+    for namespace in namespaces:
+        data.append(__namespace_data(namespace))
     data.sort(key=lambda x: (x[3], x[0]))
     return tabulate(
         data,

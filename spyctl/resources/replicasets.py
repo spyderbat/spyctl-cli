@@ -1,10 +1,11 @@
-from typing import Dict, List, Tuple
+"""Library for handling replicasets."""
+
+from typing import Dict, List
 
 from tabulate import tabulate
 
-import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
-from spyctl.api.source_query_resources import get_replicaset
+
 
 SUMMARY_HEADERS = [
     "NAME",
@@ -19,16 +20,11 @@ SUMMARY_HEADERS = [
 
 
 def replicaset_output_summary(
-    ctx: cfg.Context,
-    clusters: List[str],
-    time: Tuple[float, float],
-    pipeline=None,
-    limit_mem=False,
+    replicasets: List[Dict],
 ) -> str:
+    """Output replicasets in a table format."""
     data = []
-    for replicaset in get_replicaset(
-        *ctx.get_api_data(), clusters, time, pipeline, limit_mem
-    ):
+    for replicaset in replicasets:
         data.append(replicaset_summary_data(replicaset))
     rv = tabulate(
         sorted(data, key=lambda x: [x[2], x[5]]),
@@ -40,6 +36,7 @@ def replicaset_output_summary(
 
 
 def replicaset_summary_data(replicaset: Dict) -> List[str]:
+    """Builds a row of data for a replicaset summary."""
     last_status_seen = replicaset["status"]
     cluster_name = replicaset["cluster_name"]
     meta = replicaset[lib.METADATA_FIELD]
