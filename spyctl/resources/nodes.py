@@ -1,10 +1,10 @@
-from typing import Dict, List, Tuple
+"""Library for handling node records."""
+
+from typing import Dict, List
 
 from tabulate import tabulate
 
-import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
-from spyctl.api.source_query_resources import get_nodes
 
 SUMMARY_HEADERS = [
     "NAME",
@@ -17,14 +17,11 @@ SUMMARY_HEADERS = [
 
 
 def nodes_output_summary(
-    ctx: cfg.Context,
-    clusters: List[str],
-    time: Tuple[float, float],
-    pipeline=None,
-    limit_mem=False,
+    nodes: List[Dict],
 ) -> str:
+    """Output nodes in a table format."""
     data = []
-    for node in get_nodes(*ctx.get_api_data(), clusters, time, pipeline, limit_mem):
+    for node in nodes:
         data.append(__node_summary_data(node))
     rv = tabulate(
         sorted(data, key=lambda x: [x[4], x[1], x[2], x[0]]),
