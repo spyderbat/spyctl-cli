@@ -34,10 +34,7 @@ class FlagsGroup:
     def __update_latest_timestamp(self, timestamp):
         if timestamp is None:
             return
-        if (
-            self.latest_timestamp is None
-            or self.latest_timestamp == NOT_AVAILABLE
-        ):
+        if self.latest_timestamp is None or self.latest_timestamp == NOT_AVAILABLE:
             self.latest_timestamp = timestamp
         elif timestamp > self.latest_timestamp:
             self.latest_timestamp = timestamp
@@ -45,10 +42,7 @@ class FlagsGroup:
     def summary_data(self) -> List[str]:
         """Output flags in a table format."""
         timestamp = NOT_AVAILABLE
-        if (
-            self.latest_timestamp is not None
-            and self.latest_timestamp != NOT_AVAILABLE
-        ):
+        if self.latest_timestamp is not None and self.latest_timestamp != NOT_AVAILABLE:
             timestamp = lib.epoch_to_zulu(self.latest_timestamp)
         ref_obj = self.ref_flag["class"][1]
         if ref_obj in lib.CLASS_LONG_NAMES:

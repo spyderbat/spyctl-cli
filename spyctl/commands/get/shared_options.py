@@ -147,14 +147,10 @@ def schema_options(schema):
                     continue
                 schema_opts = lib.TYPE_STR_TO_CLICK_TYPE[type_str]
                 field_title = (
-                    schema_data["descriptions"]
-                    .get(field, {})
-                    .get("title", field)
+                    schema_data["descriptions"].get(field, {}).get("title", field)
                 )
                 if schema_opts.click_type == click.BOOL:
-                    option_name = f"is-{field.removeprefix('is-')}".replace(
-                        "_", "-"
-                    )
+                    option_name = f"is-{field.removeprefix('is-')}".replace("_", "-")
                     lib.BUILT_QUERY_OPTIONS.setdefault(schema, {})[
                         option_name.replace("-", "_").replace(".", "_")
                     ] = lib.SchemaOption(
@@ -228,9 +224,7 @@ output_option = click.option(
     "-o",
     "--output",
     default=lib.OUTPUT_DEFAULT,
-    type=click.Choice(
-        lib.OUTPUT_CHOICES + [lib.OUTPUT_WIDE], case_sensitive=False
-    ),
+    type=click.Choice(lib.OUTPUT_CHOICES + [lib.OUTPUT_WIDE], case_sensitive=False),
 )
 
 page_option = click.option(

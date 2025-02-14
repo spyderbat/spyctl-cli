@@ -57,7 +57,7 @@ def test_help():
 
 
 @mock.patch(
-    "spyctl.commands.get.namespaces.sq_api.get_namespaces",
+    "spyctl.commands.get.namespaces.search_athena",
     mock_func.mock_get_namespaces,
 )
 def test_get_namespaces():
@@ -156,7 +156,9 @@ def test_create():
         ["create", "policy", "-f", resources_dir / "test_fprint_group.yaml"],
     )
     assert response.exit_code == 0
-    with open(resources_dir / "test_created_policy.yaml", "r", encoding="utf-8") as f:
+    with open(
+        resources_dir / "test_created_policy.yaml", "r", encoding="utf-8"
+    ) as f:
         assert response.output.strip("\n") == f.read().strip("\n")
 
 
@@ -199,13 +201,17 @@ def test_update_policy():
     assert response.output.startswith(
         "Successfully applied new container guardian policy with uid:"
     )
-    response = runner.invoke(spyctl.main, ["get", "policies", "spyderbat-test"])
+    response = runner.invoke(
+        spyctl.main, ["get", "policies", "spyderbat-test"]
+    )
     assert response.exit_code == 0
     assert "spyderbat-test" in response.output
     lines = response.stdout.splitlines()
     uid = lines[2].split(" ")[0]
     get_runner = CliRunner(mix_stderr=False)
-    response = get_runner.invoke(spyctl.main, ["get", "policies", uid, "-o", "yaml"])
+    response = get_runner.invoke(
+        spyctl.main, ["get", "policies", uid, "-o", "yaml"]
+    )
     assert response.exit_code == 0
     assert "spyderbat-test" in response.output
     policy_with_uid = "uid_pol.yaml"
@@ -214,7 +220,9 @@ def test_update_policy():
     response = runner.invoke(spyctl.main, ["apply", "-f", policy_with_uid])
     assert response.exit_code == 0
     assert response.output.startswith("Successfully updated policy")
-    response = runner.invoke(spyctl.main, ["delete", "policy", "-y", "spyderbat-test"])
+    response = runner.invoke(
+        spyctl.main, ["delete", "policy", "-y", "spyderbat-test"]
+    )
     assert response.exit_code == 0
     assert response.output.startswith("Successfully deleted policy")
 
@@ -241,10 +249,14 @@ def test_apply_delete():
     assert response.output.startswith(
         "Successfully applied new container guardian policy with uid:"
     )
-    response = runner.invoke(spyctl.main, ["get", "policies", "spyderbat-test"])
+    response = runner.invoke(
+        spyctl.main, ["get", "policies", "spyderbat-test"]
+    )
     assert response.exit_code == 0
     assert "spyderbat-test" in response.output
-    response = runner.invoke(spyctl.main, ["delete", "policy", "-y", "spyderbat-test"])
+    response = runner.invoke(
+        spyctl.main, ["delete", "policy", "-y", "spyderbat-test"]
+    )
     assert response.exit_code == 0
     assert response.output.startswith("Successfully deleted policy")
 
