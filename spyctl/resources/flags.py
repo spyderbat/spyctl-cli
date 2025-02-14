@@ -1,10 +1,10 @@
-from typing import Dict, List, Tuple
+"""Library for flags."""
+
+from typing import Dict, List
 
 from tabulate import tabulate
 
-import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
-from spyctl.api.source_query_resources import get_opsflags, get_redflags
 
 NOT_AVAILABLE = lib.NOT_AVAILABLE
 SUMMARY_HEADERS = [
@@ -17,12 +17,15 @@ SUMMARY_HEADERS = [
 
 
 class FlagsGroup:
+    """Group flags by class."""
+
     def __init__(self) -> None:
         self.ref_flag = None
         self.latest_timestamp = NOT_AVAILABLE
         self.count = 0
 
     def add_flag(self, flag: Dict):
+        """Add a flag to the group."""
         if self.ref_flag is None:
             self.ref_flag = flag
         self.__update_latest_timestamp(flag.get("time"))
@@ -37,6 +40,7 @@ class FlagsGroup:
             self.latest_timestamp = timestamp
 
     def summary_data(self) -> List[str]:
+        """Output flags in a table format."""
         timestamp = NOT_AVAILABLE
         if self.latest_timestamp is not None and self.latest_timestamp != NOT_AVAILABLE:
             timestamp = lib.epoch_to_zulu(self.latest_timestamp)
@@ -54,19 +58,11 @@ class FlagsGroup:
 
 
 def flags_output_summary(
-    ctx: cfg.Context,
-    flag_type: str,
-    muids: List[str],
-    time: Tuple[float, float],
-    pipeline=None,
-    limit_mem=False,
+    flags: List[Dict],
 ) -> str:
+    """Output flags in a table format."""
     groups: Dict[str, FlagsGroup] = {}
-    if flag_type == lib.EVENT_OPSFLAG_PREFIX:
-        api_func = get_opsflags
-    else:
-        api_func = get_redflags
-    for flag in api_func(*ctx.get_api_data(), muids, time, pipeline, limit_mem):
+    for flag in flags:
         flag_class = "/".join(flag["class"])
         if flag_class not in groups:
             groups[flag_class] = FlagsGroup()

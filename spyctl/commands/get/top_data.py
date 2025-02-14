@@ -2,18 +2,18 @@
 
 import click
 
-import spyctl.api.source_query_resources as sq_api
 import spyctl.commands.get.shared_options as _so
 import spyctl.config.configs as cfg
 import spyctl.resources.api_filters as _af
 import spyctl.spyctl_lib as lib
 from spyctl import cli
+from spyctl.api.athena_search import search_athena
 from spyctl.commands.get import get_lib
 
 
 @click.command("top-data", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)
-@_so.source_query_options
-@_so.container_context_options
+@_so.athena_query_options
+@_so.schema_options("event_top_data")
 def get_top_data_cmd(name_or_id, output, st, et, **filters):
     """Get top-data by name or id."""
     exact = filters.pop("exact")
@@ -26,28 +26,21 @@ def get_top_data_cmd(name_or_id, output, st, et, **filters):
 def handle_get_top_data(name_or_id, output, st, et, **filters):
     """Output top-data by name or id."""
     ctx = cfg.get_current_context()
-    if not name_or_id and lib.MACHINES_FIELD not in filters:
+    query = lib.query_builder("event_top_data", name_or_id, **filters)
+    if "muid" not in query:
         cli.err_exit(
-            "Provide the machine uid or source of the machine you want top data for.\n"  # noqa
-            "'spyctl get sources' will provide a list."
+            "Provide an option with the machine uid of the machine you want top data for.\n"  # noqa
+            "'spyctl get machines' will provide a list."
         )
-    if lib.MACHINES_FIELD not in filters:
-        filters[lib.MACHINES_FIELD] = name_or_id
-        name_or_id = None
-    sources, filters = _af.SpydertopData.build_sources_and_filters(**filters)
-    pipeline = _af.SpydertopData.generate_pipeline(name_or_id, filters=filters)
-    if output in [lib.OUTPUT_DEFAULT, lib.OUTPUT_WIDE]:
-        cli.try_log(
-            "Spydertop data has no summary or wide output.\n"
-            "Use the Spyderbat Console or SpyderTop CLI to see the 'htop' style view.\n"  # noqa
-            "Use -o yaml or -o json to retrieve the raw data."
-        )
-    else:
-        for top_data in sq_api.get_top_data(
-            *ctx.get_api_data(),
-            sources,
-            (st, et),
-            pipeline,
-            not lib.is_redirected(),
-        ):
-            cli.show(top_data, output)
+    top_data = search_athena(
+        *ctx.get_api_data(),
+        "event_top_data",
+        query,
+        start_time=st,
+        end_time=et,
+    )
+    get_lib.show_get_data(
+        top_data,
+        output,
+        None,
+    )

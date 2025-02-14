@@ -2,6 +2,7 @@ import copy
 import hashlib
 import inspect
 import io
+import ipaddress
 import json
 import os
 import re
@@ -9,6 +10,7 @@ import sys
 import time
 import unicodedata
 from base64 import urlsafe_b64encode as b64url
+from dataclasses import dataclass
 from datetime import timezone
 from fnmatch import fnmatch
 from pathlib import Path
@@ -602,6 +604,30 @@ class DictParam(click.ParamType):
             key, val = v.strip().split("=")
             rv_dict[key.strip()] = val.strip()
         return rv_dict
+
+
+class IPParam(click.ParamType):
+    def convert(
+        self,
+        value: Any,
+        param: Optional[click.Parameter],
+        ctx: Optional[click.Context],
+    ) -> Any:
+        try:
+            # Try parsing as IPv4/IPv6 address or subnet
+            try:
+                ipaddress.ip_network(value, strict=False)
+                return value
+            except ValueError:
+                # If not a subnet, try as a single IP
+                ipaddress.ip_address(value)
+                return value
+        except ValueError:
+            self.fail(
+                f"{value} is not a valid IPv4/IPv6 address or subnet",
+                param,
+                ctx,
+            )
 
 
 class ListDictParam(click.ParamType):
@@ -1641,6 +1667,14 @@ class CustomCommand(click.Command):
             formatter.write_paragraph()
             formatter.write_text(epilog)
 
+    def get_help(self, ctx: click.Context) -> str:
+        help_text = super().get_help(ctx)
+        threshold = 50
+        if len(help_text.splitlines()) > threshold:
+            click.echo_via_pager(help_text)
+            return ""
+        return help_text
+
 
 class ArgumentParametersCommand(CustomCommand):
     argument_value_parameters = []
@@ -2506,3 +2540,226 @@ def limit_line_length(s: str, max_length: int = 50) -> str:
             line = line[max_length:]
         new_lines.append(line)
     return "\n".join(new_lines)
+
+
+EQUALS_VARIANT = "equals"
+NOT_EQUALS_VARIANT = "not-equals"
+CONTAINS_VARIANT = "contains"
+NOT_CONTAINS_VARIANT = "not-contains"
+STARTS_WITH_VARIANT = "starts-with"
+ENDS_WITH_VARIANT = "ends-with"
+GREATER_THAN_VARIANT = "gt"
+GREATER_THAN_OR_EQUAL_VARIANT = "gte"
+LESS_THAN_VARIANT = "lt"
+LESS_THAN_OR_EQUAL_VARIANT = "lte"
+ANY_ITEM_EQUALS_VARIANT = "any-item-equals"
+ANY_ITEM_CONTAINS_VARIANT = "any-item-contains"
+ALL_ITEMS_NOT_EQUALS_VARIANT = "all-items-not-equals"
+ALL_ITEMS_NOT_CONTAINS_VARIANT = "all-items-not-contains"
+ANY_KEY_EQUALS_VARIANT = "any-key-equals"
+ANY_KEY_CONTAINS_VARIANT = "any-key-contains"
+ANY_VALUE_EQUALS_VARIANT = "any-value-equals"
+ANY_VALUE_CONTAINS_VARIANT = "any-value-contains"
+IN_SUBNET_VARIANT = "in-subnet"
+NOT_IN_SUBNET_VARIANT = "not-in-subnet"
+
+
+@dataclass
+class SchemaOptions:
+    """Helps build the command line options for a schema field."""
+
+    click_type: click.ParamType
+    option_variants: list[str]
+
+
+@dataclass
+class SchemaOption:
+    """Helps build a query clause for a single option."""
+
+    click_type: click.ParamType
+    option_variant: str
+    query_field: str
+
+
+BUILT_QUERY_OPTIONS = {}  # schema -> option -> SchemaOption
+
+TYPE_STR_TO_CLICK_TYPE = {
+    "string": SchemaOptions(
+        click.STRING,
+        [
+            EQUALS_VARIANT,
+            NOT_EQUALS_VARIANT,
+            CONTAINS_VARIANT,
+            NOT_CONTAINS_VARIANT,
+            STARTS_WITH_VARIANT,
+            ENDS_WITH_VARIANT,
+        ],
+    ),
+    "string_array": SchemaOptions(
+        click.STRING,
+        [
+            ANY_ITEM_EQUALS_VARIANT,
+            ANY_ITEM_CONTAINS_VARIANT,
+            ALL_ITEMS_NOT_EQUALS_VARIANT,
+            ALL_ITEMS_NOT_CONTAINS_VARIANT,
+        ],
+    ),
+    "boolean": SchemaOptions(click.BOOL, []),
+    "bool": SchemaOptions(click.BOOL, []),
+    "ip": SchemaOptions(
+        IPParam(),
+        [
+            EQUALS_VARIANT,
+            NOT_EQUALS_VARIANT,
+            IN_SUBNET_VARIANT,
+            NOT_IN_SUBNET_VARIANT,
+        ],
+    ),
+    "integer": SchemaOptions(
+        click.INT,
+        [
+            EQUALS_VARIANT,
+            NOT_EQUALS_VARIANT,
+            GREATER_THAN_VARIANT,
+            GREATER_THAN_OR_EQUAL_VARIANT,
+            LESS_THAN_VARIANT,
+        ],
+    ),
+    "double": SchemaOptions(
+        click.FLOAT,
+        [
+            EQUALS_VARIANT,
+            NOT_EQUALS_VARIANT,
+            GREATER_THAN_VARIANT,
+            GREATER_THAN_OR_EQUAL_VARIANT,
+            LESS_THAN_VARIANT,
+        ],
+    ),
+    "long": SchemaOptions(
+        click.INT,
+        [
+            EQUALS_VARIANT,
+            NOT_EQUALS_VARIANT,
+            GREATER_THAN_VARIANT,
+            GREATER_THAN_OR_EQUAL_VARIANT,
+            LESS_THAN_VARIANT,
+        ],
+    ),
+    "map_str_str": SchemaOptions(
+        click.STRING,
+        [
+            ANY_KEY_EQUALS_VARIANT,
+            ANY_KEY_CONTAINS_VARIANT,
+            ANY_VALUE_EQUALS_VARIANT,
+            ANY_VALUE_CONTAINS_VARIANT,
+        ],
+    ),
+}
+
+VARIANT_TO_OP = {
+    EQUALS_VARIANT: "=",
+    NOT_EQUALS_VARIANT: "!=",
+    CONTAINS_VARIANT: "~=",
+    NOT_CONTAINS_VARIANT: "~=",
+    STARTS_WITH_VARIANT: "~=",
+    ENDS_WITH_VARIANT: "~=",
+    GREATER_THAN_VARIANT: ">",
+    GREATER_THAN_OR_EQUAL_VARIANT: ">=",
+    LESS_THAN_VARIANT: "<",
+    LESS_THAN_OR_EQUAL_VARIANT: "<=",
+    ANY_ITEM_EQUALS_VARIANT: "=",
+    ANY_ITEM_CONTAINS_VARIANT: "~=",
+    ALL_ITEMS_NOT_EQUALS_VARIANT: "!=",
+    ALL_ITEMS_NOT_CONTAINS_VARIANT: "!~=",
+    ANY_KEY_EQUALS_VARIANT: "=",
+    ANY_KEY_CONTAINS_VARIANT: "~=",
+    ANY_VALUE_EQUALS_VARIANT: "=",
+    ANY_VALUE_CONTAINS_VARIANT: "~=",
+    IN_SUBNET_VARIANT: "<<",
+    NOT_IN_SUBNET_VARIANT: "<<",
+}
+
+NAME_OR_UID_FIELDS = {
+    "model_machine": ["hostname"],
+    "model_k8s_namespace": ["metadata.name"],
+    "model_k8s_node": ["metadata.name"],
+    "event_opsflag": ["short_name"],
+    "event_redflag": ["short_name"],
+    "model_k8s_pod": ["metadata.name"],
+    "model_k8s_replicaset": ["metadata.name"],
+    "event_k8s_rolebinding": ["metadata.name"],
+}
+
+
+def query_builder(
+    schema: str, name_or_uid: str = None, show_hint: bool = True, **filters
+):
+    """Dynamically build a query based on the schema and filters."""
+
+    def make_query_value(so: SchemaOption, value):
+        if so.click_type == click.STRING:
+            return f'"{value}"'
+        return value
+
+    def prefix(q: str):
+        if q:
+            return " AND "
+        return ""
+
+    def name_or_uid_clause(schema: str) -> str:
+        name_or_uid_fields = NAME_OR_UID_FIELDS.get(schema, [])
+        name_or_uid_fields.append("id")
+        or_clauses = [f'{field} ~= "{name_or_uid}"' for field in name_or_uid_fields]
+        return f" ({' OR '.join(or_clauses)})"
+
+    schema_opts = BUILT_QUERY_OPTIONS[schema]
+    query = ""
+    if name_or_uid:
+        query += name_or_uid_clause(schema)
+    for k, v_tup in filters.items():
+        if k not in schema_opts or not v_tup:
+            continue
+        # The same option may be specified multiple times, so we need to
+        # iterate over the values.
+        for v in v_tup:
+            so: SchemaOption = schema_opts[k]
+            op = VARIANT_TO_OP[so.option_variant]
+            if so.option_variant == NOT_CONTAINS_VARIANT:
+                query += f"{prefix(query)}NOT {so.query_field} {op} '*{v}*'"
+            elif so.option_variant == STARTS_WITH_VARIANT:
+                query += f"{prefix(query)}{so.query_field} {op} '{v}*'"
+            elif so.option_variant == ENDS_WITH_VARIANT:
+                query += f"{prefix(query)}{so.query_field} {op} '*{v}'"
+            elif so.option_variant == CONTAINS_VARIANT:
+                query += f"{prefix(query)}{so.query_field} {op} '*{v}*'"
+            elif so.option_variant == ANY_ITEM_EQUALS_VARIANT:
+                query += f"{prefix(query)}{so.query_field}[*] {op} '{v}'"
+            elif so.option_variant == ANY_ITEM_CONTAINS_VARIANT:
+                query += f"{prefix(query)}{so.query_field}[*] {op} '*{v}*'"
+            elif so.option_variant == ALL_ITEMS_NOT_EQUALS_VARIANT:
+                query += f"{prefix(query)}NOT {so.query_field}[*] {op} '{v}'"
+            elif so.option_variant == ALL_ITEMS_NOT_CONTAINS_VARIANT:
+                query += f"{prefix(query)}NOT {so.query_field}[*] {op} '*{v}*'"
+            elif so.option_variant == ANY_KEY_EQUALS_VARIANT:
+                query += f"{prefix(query)}{so.query_field}:keys[*] {op} '{v}'"
+            elif so.option_variant == ANY_KEY_CONTAINS_VARIANT:
+                query += f"{prefix(query)}{so.query_field}:keys[*] {op} '*{v}*'"
+            elif so.option_variant == ANY_VALUE_EQUALS_VARIANT:
+                query += f"{prefix(query)}{so.query_field}:vals[*] {op} '{v}'"
+            elif so.option_variant == ANY_VALUE_CONTAINS_VARIANT:
+                query += f"{prefix(query)}{so.query_field}:vals[*] {op} '*{v}*'"
+            elif so.option_variant == IN_SUBNET_VARIANT:
+                query += f"{prefix(query)}{so.query_field} {op} '{v}'"
+            elif so.option_variant == NOT_IN_SUBNET_VARIANT:
+                query += f"{prefix(query)}NOT {so.query_field} {op} '{v}'"
+            else:
+                query += (
+                    f"{prefix(query)}{so.query_field} {op} {make_query_value(so, v)}"
+                )
+    query = "*" if not query else query  # If no filters, return all
+    if show_hint:
+        try_log(
+            "Hint: Run the following command to retrieve the same data in a raw format\n"
+            f'    spyctl search {schema} "{query}"'
+        )
+    return query
