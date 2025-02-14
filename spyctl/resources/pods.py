@@ -1,10 +1,10 @@
-from typing import Dict, List, Tuple
+"""Library for handling pods."""
+
+from typing import Dict, List
 
 from tabulate import tabulate
 
-import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
-from spyctl.api.source_query_resources import get_pods
 
 SUMMARY_HEADERs = [
     "NAME",
@@ -18,15 +18,10 @@ SUMMARY_HEADERs = [
 ]
 
 
-def pods_output_summary(
-    ctx: cfg.Context,
-    clusters: List[str],
-    time: Tuple[float, float],
-    pipeline=None,
-    limit_mem=False,
-) -> str:
+def pods_output_summary(pods: list[dict]) -> str:
+    """Output a summary of the pods."""
     data = []
-    for pod in get_pods(*ctx.get_api_data(), clusters, time, pipeline, limit_mem):
+    for pod in pods:
         data.append(__pod_summary_data(pod))
     output = tabulate(
         sorted(data, key=lambda x: [x[7], x[6], x[0]]),

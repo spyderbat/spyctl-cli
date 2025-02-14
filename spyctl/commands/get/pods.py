@@ -2,19 +2,18 @@
 
 import click
 
-import spyctl.api.source_query_resources as sq_api
 import spyctl.commands.get.shared_options as _so
 import spyctl.config.configs as cfg
 import spyctl.resources as _r
 import spyctl.resources.api_filters as _af
 import spyctl.spyctl_lib as lib
-from spyctl import cli
+from spyctl.api.athena_search import search_athena
 from spyctl.commands.get import get_lib
 
 
 @click.command("pods", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)
-@_so.source_query_options
-@_so.container_context_options
+@_so.athena_query_options
+@_so.schema_options("model_k8s_pod")
 def get_pods_cmd(name_or_id, output, st, et, **filters):
     """Get pods by name or id."""
     exact = filters.pop("exact")
@@ -27,17 +26,17 @@ def get_pods_cmd(name_or_id, output, st, et, **filters):
 def handle_get_pods(name_or_id, output, st, et, **filters):
     """Output pods by name or id."""
     ctx = cfg.get_current_context()
-    sources, filters = _af.Pods.build_sources_and_filters(**filters)
-    pipeline = _af.Pods.generate_pipeline(name_or_id, filters=filters)
-    if output in [lib.OUTPUT_DEFAULT, lib.OUTPUT_WIDE]:
-        summary = _r.pods.pods_output_summary(ctx, sources, (st, et), pipeline)
-        cli.show(summary, lib.OUTPUT_RAW)
-    else:
-        for pod in sq_api.get_pods(
-            *ctx.get_api_data(),
-            sources,
-            (st, et),
-            pipeline=pipeline,
-            disable_pbar_on_first=not lib.is_redirected(),
-        ):
-            cli.show(pod, output)
+    query = lib.query_builder("model_k8s_pod", name_or_id, **filters)
+    pods = search_athena(
+        *ctx.get_api_data(),
+        "model_k8s_pod",
+        query,
+        start_time=st,
+        end_time=et,
+        desc="Retrieving Pods",
+    )
+    get_lib.show_get_data(
+        pods,
+        output,
+        _r.pods.pods_output_summary,
+    )

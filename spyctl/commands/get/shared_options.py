@@ -1,5 +1,6 @@
 """Contains click options shared by multiple get commands."""
 
+import json
 import time
 
 import click
@@ -117,7 +118,89 @@ def source_query_options(f):
     return f
 
 
+def athena_query_options(f):
+    """Add athena query options to a click command."""
+    f = time_options(f)
+    f = help_option(f)
+    f = output_option(f)
+    f = name_or_id_arg(f)
+    f = exact_match_option(f)
+    f = uid_option(f)
+    return f
+
+
+SKIP_FIELDS = ["id", "time", "valid_from", "valid_to"]
+
+
+def schema_options(schema):
+    """Build command line options dynamically based on the schema."""
+
+    def _add_options(f):
+        with open(
+            "spyctl/commands/get/resource_schemas.json", "r", encoding="utf-8"
+        ) as file:
+            schemas = json.load(file)
+            schema_data = schemas[schema]
+            title = schema_data["title"]
+            for field, type_str in schema_data["projection"].items():
+                if field in SKIP_FIELDS:
+                    continue
+                schema_opts = lib.TYPE_STR_TO_CLICK_TYPE[type_str]
+                field_title = (
+                    schema_data["descriptions"].get(field, {}).get("title", field)
+                )
+                if schema_opts.click_type == click.BOOL:
+                    option_name = f"is-{field.removeprefix('is-')}".replace("_", "-")
+                    lib.BUILT_QUERY_OPTIONS.setdefault(schema, {})[
+                        option_name.replace("-", "_").replace(".", "_")
+                    ] = lib.SchemaOption(
+                        click_type=schema_opts.click_type,
+                        option_variant=lib.EQUALS_VARIANT,
+                        query_field=field,
+                    )
+                    x = click.option(
+                        f"--{option_name}",
+                        help=f"Only show {title} resources where field"
+                        f" '{field_title}' matches the provided boolean value.",
+                        type=schema_opts.click_type,
+                        metavar="",
+                        multiple=True,
+                    )
+                    f = x(f)
+                else:
+                    for option_variant in schema_opts.option_variants:
+                        option_name = f"{field}-{option_variant}".replace(
+                            "_", "-"
+                        ).replace(".", "_")
+                        lib.BUILT_QUERY_OPTIONS.setdefault(schema, {})[
+                            option_name.replace("-", "_")
+                        ] = lib.SchemaOption(
+                            click_type=schema_opts.click_type,
+                            option_variant=option_variant,
+                            query_field=field,
+                        )
+                        x = click.option(
+                            f"--{option_name}",
+                            help=f"Only show {title} resources where field"
+                            f" '{field_title}' '{option_variant}' provided.",
+                            type=schema_opts.click_type,
+                            metavar="",
+                            multiple=True,
+                        )
+                        f = x(f)
+        return f
+
+    return _add_options
+
+
 help_option = click.help_option("-h", "--help", hidden=True)
+
+uid_option = click.option(
+    "--uid",
+    help="Only show resources with this uid.",
+    type=lib.ListParam(),
+    metavar="",
+)
 
 exact_match_option = click.option(
     "-E",

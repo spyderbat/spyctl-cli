@@ -1,23 +1,18 @@
-from typing import Dict, List, Tuple
+"""A library for handling machine records."""
+
+from typing import Dict, List
 
 from tabulate import tabulate
 
-import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
-from spyctl.api.source_query_resources import get_machines
 
-SUMMARY_HEADERS = ["NAME", "UID", "OS", "CLOUD_TYPE", "AGE", "CLUSTER"]
+SUMMARY_HEADERS = ["HOSTNAME", "UID", "OS", "CLOUD_TYPE", "AGE", "CLUSTER"]
 
 
-def machines_summary_output(
-    ctx: cfg.Context,
-    muids: List[str],
-    time: Tuple[float, float],
-    pipeline=None,
-    limit_mem=False,
-) -> str:
+def machines_summary_output(machines: List[Dict]) -> str:
+    """Output a summary of machines."""
     data = []
-    for machine in get_machines(*ctx.get_api_data(), muids, time, pipeline, limit_mem):
+    for machine in machines:
         data.append(__machine_summary_data(machine))
     data.sort(key=lambda x: [x[0], lib.to_timestamp(x[3])])
     return tabulate(data, SUMMARY_HEADERS, tablefmt="plain")

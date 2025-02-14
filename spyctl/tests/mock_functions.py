@@ -220,10 +220,11 @@ def mock_get_namespaces(
     api_url,
     api_key,
     org_uid,
-    clusters,
-    time,
-    pipeline=None,
-    disable_pbar_on_first: bool = False,
+    schema,
+    query,
+    start_time,
+    end_time,
+    desc="Retrieving Namespaces",
 ):
     mock_namespace = {
         "apiVersion": "v1",
