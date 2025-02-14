@@ -59,9 +59,7 @@ get.add_command(connections.get_connections_cmd, aliases=["connection"])
 get.add_command(containers.get_containers_cmd, aliases=["container"])
 get.add_command(custom_flags.get_custom_flags, aliases=["custom-flag"])
 get.add_command(daemonsets.get_daemonsets_cmd, aliases=["daemonset", "ds"])
-get.add_command(
-    deployments.get_deployments_cmd, aliases=["deployment", "deploy"]
-)
+get.add_command(deployments.get_deployments_cmd, aliases=["deployment", "deploy"])
 get.add_command(deviations.get_deviations_cmd, aliases=["deviation"])
 get.add_command(fingerprints.get_fingerprints_cmd, aliases=["fingerprint"])
 get.add_command(linux_svcs.get_linux_svc, aliases=["linux-svc"])
@@ -81,12 +79,6 @@ get.add_command(saved_queries.get_saved_queries, aliases=["saved-query"])
 get.add_command(sources.get_sources, aliases=["source"])
 get.add_command(spydertraces.get_spydertraces_cmd, aliases=["spydertrace"])
 get.add_command(top_data.get_top_data_cmd, aliases=["td"])
-get.add_command(
-    notification_targets.get_notification_targets, aliases=["ntar"]
-)
-get.add_command(
-    notification_templates.get_notification_templates, aliases=["ntem"]
-)
-get.add_command(
-    agent_health.get_agent_health_notification_settings, aliases=["ahns"]
-)
+get.add_command(notification_targets.get_notification_targets, aliases=["ntar"])
+get.add_command(notification_templates.get_notification_templates, aliases=["ntem"])
+get.add_command(agent_health.get_agent_health_notification_settings, aliases=["ahns"])

@@ -10,11 +10,11 @@ import sys
 import time
 import unicodedata
 from base64 import urlsafe_b64encode as b64url
+from dataclasses import dataclass
 from datetime import timezone
 from fnmatch import fnmatch
 from pathlib import Path
 from typing import IO, Any, Dict, Iterable, List, Optional, Tuple, Union
-from dataclasses import dataclass
 from urllib.parse import urlparse
 from uuid import uuid4
 
@@ -27,9 +27,7 @@ from click_aliases import ClickAliasedGroup
 
 
 class Aliases:
-    def __init__(
-        self, aliases: Iterable[str], name, name_plural="", kind=None
-    ) -> None:
+    def __init__(self, aliases: Iterable[str], name, name_plural="", kind=None) -> None:
         self.name = name
         self.name_plural = name_plural
         self.aliases = set(aliases)
@@ -429,9 +427,7 @@ CONFIG_ALIAS = Aliases(
 )
 
 ALL_RESOURCES: List[Aliases] = [
-    g_var
-    for g_var_name, g_var in globals().items()
-    if g_var_name.endswith("RESOURCE")
+    g_var for g_var_name, g_var in globals().items() if g_var_name.endswith("RESOURCE")
 ]
 
 
@@ -498,9 +494,7 @@ RESOURCES_WITH_SCHEMAS = [
 
 CMD_ORG_FIELD = "org"
 
-SUB_EPILOG = (
-    'Use "spyctl <command> --help" for more information about a given command.'
-)
+SUB_EPILOG = 'Use "spyctl <command> --help" for more information about a given command.'
 
 
 def tmp_context_options(function):
@@ -1512,9 +1506,7 @@ class CustomGroup(click.Group):
         "validate": SECTION_BASIC,
     }
 
-    def format_help(
-        self, ctx: click.Context, formatter: click.HelpFormatter
-    ) -> None:
+    def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
         self.format_help_text(ctx, formatter)
         self.format_options(ctx, formatter)
         self.format_usage(ctx, formatter)
@@ -1530,18 +1522,14 @@ class CustomGroup(click.Group):
             formatter.write_paragraph()
             formatter.write_text(text)
 
-    def format_usage(
-        self, ctx: click.Context, formatter: click.HelpFormatter
-    ) -> None:
+    def format_usage(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
         formatter.write_paragraph()
         formatter.write_text("Usage:")
         formatter.indent()
         formatter.write_text("spyctl [command] [options]")
         formatter.dedent()
 
-    def format_epilog(
-        self, ctx: click.Context, formatter: click.HelpFormatter
-    ) -> None:
+    def format_epilog(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
         """Writes the epilog into the formatter if it exists."""
         if self.epilog:
             epilog = inspect.cleandoc(self.epilog)
@@ -1594,9 +1582,9 @@ class CustomSubGroup(ClickAliasedGroup):
                 # we have a list so create group aliases
                 _args = [args[0][0]] + list(args[1:])
                 for alias in args[0][1:]:
-                    grp = super(CustomSubGroup, self).group(
-                        alias, *args[1:], **kwargs
-                    )(f)
+                    grp = super(CustomSubGroup, self).group(alias, *args[1:], **kwargs)(
+                        f
+                    )
                     grp.short_help = "Alias for '{}'".format(_args[0])
                     aliased_group.append(grp)
             else:
@@ -1613,9 +1601,7 @@ class CustomSubGroup(ClickAliasedGroup):
 
         return decorator
 
-    def format_help(
-        self, ctx: click.Context, formatter: click.HelpFormatter
-    ) -> None:
+    def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
         self.format_help_text(ctx, formatter)
         self.format_options(ctx, formatter)
         self.format_usage(ctx, formatter)
@@ -1631,20 +1617,14 @@ class CustomSubGroup(ClickAliasedGroup):
             formatter.write_paragraph()
             formatter.write_text(text)
 
-    def format_usage(
-        self, ctx: click.Context, formatter: click.HelpFormatter
-    ) -> None:
+    def format_usage(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
         formatter.write_paragraph()
         prefix = "Usage:\n  "
         pieces = self.collect_usage_pieces(ctx)
-        formatter.write_usage(
-            ctx.command_path, " ".join(pieces), prefix=prefix
-        )
+        formatter.write_usage(ctx.command_path, " ".join(pieces), prefix=prefix)
         formatter.dedent()
 
-    def format_epilog(
-        self, ctx: click.Context, formatter: click.HelpFormatter
-    ) -> None:
+    def format_epilog(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
         """Writes the epilog into the formatter if it exists."""
         if self.epilog:
             epilog = inspect.cleandoc(self.epilog)
@@ -1657,9 +1637,7 @@ class CustomCommand(click.Command):
         self.aliases = kwargs.pop("aliases", [])
         super().__init__(*args, **kwargs)
 
-    def format_help(
-        self, ctx: click.Context, formatter: click.HelpFormatter
-    ) -> None:
+    def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
         self.format_help_text(ctx, formatter)
         self.format_options(ctx, formatter)
         self.format_usage(ctx, formatter)
@@ -1675,20 +1653,14 @@ class CustomCommand(click.Command):
             formatter.write_paragraph()
             formatter.write_text(text)
 
-    def format_usage(
-        self, ctx: click.Context, formatter: click.HelpFormatter
-    ) -> None:
+    def format_usage(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
         formatter.write_paragraph()
         prefix = "Usage:\n  "
         pieces = self.collect_usage_pieces(ctx)
-        formatter.write_usage(
-            ctx.command_path, " ".join(pieces), prefix=prefix
-        )
+        formatter.write_usage(ctx.command_path, " ".join(pieces), prefix=prefix)
         formatter.dedent()
 
-    def format_epilog(
-        self, ctx: click.Context, formatter: click.HelpFormatter
-    ) -> None:
+    def format_epilog(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
         """Writes the epilog into the formatter if it exists."""
         if self.epilog:
             epilog = inspect.cleandoc(self.epilog)
@@ -1746,9 +1718,7 @@ class ArgumentParametersCommand(CustomCommand):
         specific_index = {}
         if self.unspecific:
             for obj in self.argument_value_parameters:
-                index = ", ".join(
-                    str(option) for option in obj[self.argument_name]
-                )
+                index = ", ".join(str(option) for option in obj[self.argument_name])
                 specific_index[index] = len(obj["args"])
                 for arg_maker in obj["args"]:
                     arg_maker(self)
@@ -1798,9 +1768,7 @@ class MutuallyExclusiveOption(click.Option):
                 f"Illegal usage: `{self.name}` is mutually exclusive with "
                 f"arguments `{', '.join(self.mutually_exclusive)}`."
             )
-        return super(MutuallyExclusiveOption, self).handle_parse_result(
-            ctx, opts, args
-        )
+        return super(MutuallyExclusiveOption, self).handle_parse_result(ctx, opts, args)
 
 
 class OptionEatAll(click.Option):
@@ -1838,9 +1806,7 @@ class OptionEatAll(click.Option):
 
         retval = super(OptionEatAll, self).add_to_parser(parser, ctx)
         for name in self.opts:
-            our_parser = parser._long_opt.get(name) or parser._short_opt.get(
-                name
-            )
+            our_parser = parser._long_opt.get(name) or parser._short_opt.get(name)
             if our_parser:
                 self._eat_all_parser = our_parser
                 self._previous_parser_process = our_parser.process
@@ -2023,9 +1989,7 @@ def label_input_to_dict(input: Union[str, List[str], Dict]) -> Optional[Dict]:
                     try:
                         k, s = set_str.split(in_str)
                         s = s.replace("(", "").replace(")", "").split(",")
-                        s = [
-                            value.strip(" ") for value in s if value.strip(" ")
-                        ]
+                        s = [value.strip(" ") for value in s if value.strip(" ")]
                         if not s:
                             try_log(
                                 f"{set_str} cannot contain an empty",
@@ -2140,9 +2104,7 @@ class UniqueKeyLoader(yaml.SafeLoader):
         for key_node, value_node in node.value:
             key = self.construct_object(key_node, deep=deep)
             if key in mapping:
-                raise ValueError(
-                    f"Duplicate key {key!r} found in {self.name!r}."
-                )
+                raise ValueError(f"Duplicate key {key!r} found in {self.name!r}.")
             mapping.add(key)
         return super().construct_mapping(node, deep)
 
@@ -2194,14 +2156,11 @@ def __validate_data_structure_on_load(resrc_data: Any, validate_cmd=False):
             )
             sys.exit(0)
         err_exit(
-            "Resource file does not contain a dictionary or list of"
-            " dictionaries."
+            "Resource file does not contain a dictionary or list of" " dictionaries."
         )
 
 
-def __validate_resource_on_load(
-    resrc_data: Dict, name, validate_cmd=False, index=None
-):
+def __validate_resource_on_load(resrc_data: Dict, name, validate_cmd=False, index=None):
     msg_suffix = "" if index is None else f" at index {index}"
     from spyctl.schemas_v2 import valid_object
 
@@ -2230,15 +2189,11 @@ def __load_json_file(file: Union[str, IO]) -> Tuple[str, Any]:
     try:
         if isinstance(file, io.TextIOWrapper):
             name = file.name
-            resrc_data = json.load(
-                file, object_pairs_hook=dict_raise_on_duplicates
-            )
+            resrc_data = json.load(file, object_pairs_hook=dict_raise_on_duplicates)
         else:
             name = file
             with open(file) as f:
-                resrc_data = json.load(
-                    f, object_pairs_hook=dict_raise_on_duplicates
-                )
+                resrc_data = json.load(f, object_pairs_hook=dict_raise_on_duplicates)
     except IOError as e:
         err_exit(" ".join(e.args))
     return name, resrc_data
@@ -2267,10 +2222,7 @@ def to_timestamp(zulu_str):
 
 def epoch_to_zulu(epoch):
     try:
-        return (
-            zulu.Zulu.fromtimestamp(epoch).format("YYYY-MM-ddTHH:mm:ss")
-            + " UTC"
-        )
+        return zulu.Zulu.fromtimestamp(epoch).format("YYYY-MM-ddTHH:mm:ss") + " UTC"
     except Exception:
         return epoch
 
@@ -2790,21 +2742,19 @@ def query_builder(
             elif so.option_variant == ANY_KEY_EQUALS_VARIANT:
                 query += f"{prefix(query)}{so.query_field}:keys[*] {op} '{v}'"
             elif so.option_variant == ANY_KEY_CONTAINS_VARIANT:
-                query += (
-                    f"{prefix(query)}{so.query_field}:keys[*] {op} '*{v}*'"
-                )
+                query += f"{prefix(query)}{so.query_field}:keys[*] {op} '*{v}*'"
             elif so.option_variant == ANY_VALUE_EQUALS_VARIANT:
                 query += f"{prefix(query)}{so.query_field}:vals[*] {op} '{v}'"
             elif so.option_variant == ANY_VALUE_CONTAINS_VARIANT:
-                query += (
-                    f"{prefix(query)}{so.query_field}:vals[*] {op} '*{v}*'"
-                )
+                query += f"{prefix(query)}{so.query_field}:vals[*] {op} '*{v}*'"
             elif so.option_variant == IN_SUBNET_VARIANT:
                 query += f"{prefix(query)}{so.query_field} {op} '{v}'"
             elif so.option_variant == NOT_IN_SUBNET_VARIANT:
                 query += f"{prefix(query)}NOT {so.query_field} {op} '{v}'"
             else:
-                query += f"{prefix(query)}{so.query_field} {op} {make_query_value(so, v)}"
+                query += (
+                    f"{prefix(query)}{so.query_field} {op} {make_query_value(so, v)}"
+                )
     query = "*" if not query else query  # If no filters, return all
     if show_hint:
         try_log(

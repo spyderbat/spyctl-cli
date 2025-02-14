@@ -18,9 +18,7 @@ def get_nodes_cmd(name_or_id, output, st, et, **filters):
     exact = filters.pop("exact")
     get_lib.output_time_log(lib.NODES_RESOURCE.name_plural, st, et)
     name_or_id = get_lib.wildcard_name_or_id(name_or_id, exact)
-    filters = {
-        key: value for key, value in filters.items() if value is not None
-    }
+    filters = {key: value for key, value in filters.items() if value is not None}
     handle_get_nodes(name_or_id, output, st, et, **filters)
 
 
