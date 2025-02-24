@@ -386,11 +386,11 @@ class ServiceSumData:
 
 
 def fprint_output_summary(
-        fprint_type: str,
-        fingerprints: List[dict],
-        group_by: List[str] = [],
-        sort_by: List[str] = [],
-        wide=False
+    fprint_type: str,
+    fingerprints: List[dict],
+    group_by: List[str] = [],
+    sort_by: List[str] = [],
+    wide=False,
 ) -> str:
     if fprint_type == FPRINT_TYPE_CONT:
         summary = __cont_fprint_summary(fingerprints, wide, group_by, sort_by)

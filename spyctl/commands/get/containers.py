@@ -13,8 +13,6 @@ from spyctl.commands.get import get_lib
 @click.command("containers", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)
 @_so.athena_query_options
 @_so.schema_options("model_container")
-
-
 def get_containers_cmd(name_or_id, output, st, et, **filters):
     """Get containers by name or id."""
     exact = filters.pop("exact")

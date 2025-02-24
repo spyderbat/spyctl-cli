@@ -2697,8 +2697,7 @@ NAME_OR_UID_FIELDS = {
     "event_deviation": ["metadata.id"],
     "event_fingerprint": ["metadata.id"],
     "model_bundled_connection": ["metadata.id"],
-    "model_agent": ["metadata.name"]
-    
+    "model_agent": ["metadata.name"],
 }
 
 
@@ -2722,7 +2721,7 @@ def query_builder(
         name_or_uid_fields.append("id")
         or_clauses = [f'{field} ~= "{name_or_uid}"' for field in name_or_uid_fields]
         return f" ({' OR '.join(or_clauses)})"
-    
+
     schema_opts = BUILT_QUERY_OPTIONS[schema]
     query = ""
     if name_or_uid:

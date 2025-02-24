@@ -91,7 +91,6 @@ def notice(notice_msg):
 
 
 class CustomDumper(yaml.SafeDumper):
-
     def represent_mapping(self, tag, mapping, flow_style=None):
         # Flow style for the
         if mapping and lib.KEY_FIELD in mapping and lib.OPERATOR_FIELD in mapping:

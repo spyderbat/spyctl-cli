@@ -28,7 +28,6 @@ report_input = {
 
 @pytest.fixture
 def reportid():
-
     if not API_URL or not API_KEY or not ORG:
         return 0
     if not DO_INTEGRATED_TESTS:

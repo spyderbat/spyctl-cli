@@ -134,12 +134,8 @@ def handle_get_agents(name_or_id, output, st, et, **filters):
                 source_uid = source["id"]  # muid
                 rv[source_uid] = {
                     "uid": source["id"],
-                    "cloud_region": source.get(
-                        "cloud_region", lib.NOT_AVAILABLE
-                    ),
-                    "cloud_type": source.get(
-                        "cloud_type", lib.NOT_AVAILABLE
-                    ),
+                    "cloud_region": source.get("cloud_region", lib.NOT_AVAILABLE),
+                    "cloud_type": source.get("cloud_type", lib.NOT_AVAILABLE),
                 }
             summary = _r.agents.agents_output_wide(agents, rv, include_latest_metrics)
             cli.show(summary, lib.OUTPUT_RAW)

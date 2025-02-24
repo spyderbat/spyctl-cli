@@ -13,8 +13,6 @@ from spyctl.commands.get import get_lib
 @click.command("clusterrolebindings", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)
 @_so.athena_query_options
 @_so.schema_options("model_k8s_clusterrolebinding")
-
-
 def get_clusterrolebindings_cmd(name_or_id, output, st, et, **filters):
     """Get clusterrolebindings by name or id."""
     exact = filters.pop("exact")
