@@ -44,7 +44,6 @@ def agents_output_wide(
         "ACTIVE BATS",
         "AGENT VERSION",
         "CLUSTER",
-        "LAST DATA",
         "CLOUD REGION",
         "CLOUD TYPE",
     ]
@@ -84,7 +83,6 @@ def agent_output_wide_data(
     if source:
         rv.extend(
             [
-                source["last_data"],
                 source["cloud_region"],
                 source["cloud_type"],
             ]

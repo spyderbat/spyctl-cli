@@ -2688,6 +2688,17 @@ NAME_OR_UID_FIELDS = {
     "model_k8s_pod": ["metadata.name"],
     "model_k8s_replicaset": ["metadata.name"],
     "event_k8s_rolebinding": ["metadata.name"],
+    "model_k8s_clusterrolebinding": ["metadata.name"],
+    "event_metric": ["metadata.id"],
+    "model_k8s_clusterrole": ["metadata.name"],
+    "model_k8s_daemonset": ["metadata.name"],
+    "model_k8s_deployment": ["metadata.name"],
+    "model_container": ["metadata.name"],
+    "event_deviation": ["metadata.id"],
+    "event_fingerprint": ["metadata.id"],
+    "model_bundled_connection": ["metadata.id"],
+    "model_agent": ["metadata.name"]
+    
 }
 
 
@@ -2711,7 +2722,7 @@ def query_builder(
         name_or_uid_fields.append("id")
         or_clauses = [f'{field} ~= "{name_or_uid}"' for field in name_or_uid_fields]
         return f" ({' OR '.join(or_clauses)})"
-
+    
     schema_opts = BUILT_QUERY_OPTIONS[schema]
     query = ""
     if name_or_uid:

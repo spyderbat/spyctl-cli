@@ -5,11 +5,9 @@ from typing import Dict, Generator, List, Set, Tuple
 import zulu
 from tabulate import tabulate
 
-import spyctl.config.configs as cfg
 import spyctl.filter_resource as filt
 import spyctl.spyctl_lib as lib
 from spyctl import cli
-from spyctl.api.source_query_resources import get_guardian_fingerprints
 
 FPRINT_KIND = lib.FPRINT_KIND
 FPRINT_TYPE_CONT = lib.POL_TYPE_CONT
@@ -388,27 +386,12 @@ class ServiceSumData:
 
 
 def fprint_output_summary(
-    ctx: cfg.Context,
-    fprint_type: str,
-    sources,
-    filters,
-    st,
-    et,
-    name_or_id_expr,
-    group_by: List[str] = [],
-    sort_by: List[str] = [],
-    wide=False,
+        fprint_type: str,
+        fingerprints: List[dict],
+        group_by: List[str] = [],
+        sort_by: List[str] = [],
+        wide=False
 ) -> str:
-    fingerprints = get_guardian_fingerprints(
-        *ctx.get_api_data(),
-        sources,
-        (st, et),
-        fprint_type,
-        unique=True,
-        limit_mem=True,
-        expr=name_or_id_expr,
-        **filters,
-    )
     if fprint_type == FPRINT_TYPE_CONT:
         summary = __cont_fprint_summary(fingerprints, wide, group_by, sort_by)
     elif fprint_type == FPRINT_TYPE_SVC:
