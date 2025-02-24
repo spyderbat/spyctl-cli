@@ -13,7 +13,6 @@ from spyctl.commands.get import get_lib
 @click.command("deployments", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)
 @_so.athena_query_options
 @_so.schema_options("model_k8s_deployment")
-
 def get_deployments_cmd(name_or_id, output, st, et, **filters):
     """Get deployments by name or id."""
     exact = filters.pop("exact")

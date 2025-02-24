@@ -2,7 +2,6 @@
 
 import click
 
-from spyctl.api.athena_search import search_athena
 import spyctl.api.policies as pol_api
 import spyctl.commands.get.shared_options as _so
 import spyctl.config.configs as cfg
@@ -11,6 +10,7 @@ import spyctl.resources as _r
 import spyctl.resources.api_filters as _af
 import spyctl.spyctl_lib as lib
 from spyctl import cli
+from spyctl.api.athena_search import search_athena
 from spyctl.commands.get import get_lib
 
 

@@ -13,7 +13,6 @@ from spyctl.commands.get import get_lib
 @click.command("connection-bundles", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)
 @_so.athena_query_options
 @_so.schema_options("model_bundled_connection")
-
 def get_conn_bun_cmd(name_or_id, output, st, et, **filters):
     """Get containers by name or id."""
     exact = filters.pop("exact")
