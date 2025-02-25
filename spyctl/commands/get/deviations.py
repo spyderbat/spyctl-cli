@@ -10,12 +10,13 @@ import spyctl.resources as _r
 import spyctl.resources.api_filters as _af
 import spyctl.spyctl_lib as lib
 from spyctl import cli
+from spyctl.api.athena_search import search_athena
 from spyctl.commands.get import get_lib
 
 
 @click.command("deviations", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)
-@_so.source_query_options
-@_so.container_context_options
+@_so.athena_query_options
+@_so.schema_options("event_deviation")
 @click.option(
     f"--{lib.POLICIES_FIELD}",
     "policies",
@@ -57,7 +58,6 @@ def handle_get_deviations(name_or_id, output, st, et, **filters):
     unique = not filters.pop("non_unique", False)  # Default is unique
     raw_data = filters.pop("raw_data", False)
     include_irrelevant = filters.pop("include_irrelevant", False)
-    ctx = cfg.get_current_context()
     sources, filters = _af.Deviations.build_sources_and_filters(**filters)
     if _af.POLICIES_CACHE:
         policies = _af.POLICIES_CACHE
@@ -92,7 +92,6 @@ def handle_get_deviations(name_or_id, output, st, et, **filters):
             for policy in policies
             if policy[lib.METADATA_FIELD][lib.METADATA_UID_FIELD] in sources_set
         ]
-    pipeline = _af.Deviations.generate_pipeline(dev_uid, filters=filters)
     if output in [lib.OUTPUT_DEFAULT, lib.OUTPUT_WIDE]:
         summary = _r.policies.policies_summary_output(
             policies,
@@ -105,15 +104,12 @@ def handle_get_deviations(name_or_id, output, st, et, **filters):
         )
         cli.show(summary, lib.OUTPUT_RAW)
     else:
-        for deviation in _r.deviations.get_deviations_stream(
-            ctx,
-            sources,
-            (st, et),
-            pipeline,
-            disable_pbar_on_first=not lib.is_redirected(),
-            unique=unique,
-            raw_data=raw_data,
-            include_irrelevant=include_irrelevant,
-            policies=policies,
-        ):
-            cli.show(deviation, output)
+        query = lib.query_builder("event_deviation", name_or_id, **filters)
+        deviations = search_athena(
+            *ctx.get_api_data(),
+            "event_deviation",
+            query,
+            start_time=st,
+            end_time=et,
+        )
+        cli.show(deviations, output)

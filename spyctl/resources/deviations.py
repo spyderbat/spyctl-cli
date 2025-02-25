@@ -4,6 +4,7 @@ import spyctl.config.configs as cfg
 import spyctl.merge_lib.merge_object_helper as _m_obj_h
 import spyctl.resources.api_filters as _af
 import spyctl.spyctl_lib as lib
+from spyctl.api.athena_search import search_athena
 from spyctl.api.source_query_resources import get_deviations
 
 
@@ -48,12 +49,15 @@ def get_deviations_stream(
     emit_processed = {}  # tracks if we should emit a deviation
     unique_deviations = {}  # For unique deviations (not raw)
     dev_list = []  # For all deviations (not raw)
-    for deviation in get_deviations(
+    query = lib.query_builder("event_deviation", None, **{})
+    for deviation in search_athena(
         *ctx.get_api_data(),
-        sources,
-        time,
-        pipeline,
-        limit_mem,
+        "event_deviation",
+        query,
+        start_time=time[0],
+        end_time=time[1],
+        desc="Retrieving Deviations",
+        limit_mem=limit_mem,
         disable_pbar_on_first=disable_pbar_on_first,
     ):
         __set_checksum(deviation)
