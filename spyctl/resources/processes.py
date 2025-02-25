@@ -71,61 +71,6 @@ class ProcessGroup:
         return rv
 
 
-PROPERTY_MAP = {
-    "uid": "uid",
-    "machine_uid": "muid",
-    "pid_equals": "pid",
-    "pid_above": "pid",
-    "pid_below": "pid",
-    "ppuid": "ppuid",
-}
-
-
-def processes_query(name_or_uid: str, **filters) -> Dict:
-    def make_query_value(key, value):
-        if isinstance(value, int) or (isinstance(value, str) and value.isdigit()):
-            return int(value)
-
-        return f'"{value}"'
-
-    def find_op(key, value):
-        if key == "pid_equals":
-            return "="
-        if key == "pid_above":
-            return ">="
-        if key == "pid_below":
-            return "<="
-        if isinstance(value, str) and "*" in value:
-            return "~="
-        return "="
-
-    query = ""
-
-    query_kv = {
-        PROPERTY_MAP[k]: (k, make_query_value(k, v))
-        for k, v in filters.items()
-        if k in PROPERTY_MAP
-    }
-
-    if name_or_uid:
-        if query:  # Only add 'AND' if there is already content in the query
-            query += " AND "
-        if name_or_uid.__contains__("proc:"):
-            query += f'(id ~= "{name_or_uid}")'
-        else:
-            query += f'(name ~= "{name_or_uid}")'
-
-    for key, value_tup in query_kv.items():
-        filter_key, value = value_tup
-        if not query:
-            query = f"{key} {find_op(filter_key, value)} {value}"
-        else:
-            query += f" AND {key} {find_op(filter_key, value)} {value}"
-    if len(query) == 0:
-        query = "*"
-    return query
-
-
 def processes_stream_output_summary(
     processes: List[Dict],
     wide: bool,
