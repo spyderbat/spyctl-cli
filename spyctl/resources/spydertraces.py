@@ -109,6 +109,7 @@ class TraceSummaryRow:
         ]
         if self.include_linkback:
             rv.append(self.linkback)
+        return rv
 
 
 def spydertraces_stream_summary_output(
@@ -153,47 +154,3 @@ def spydertraces_stream_summary_output(
         )
     )
     return "\n".join(rv)
-
-
-PROPERTY_MAP = {
-    "score_above": "score",
-    "machine_uid": "muid",
-    "trigger_name": "trigger_short_name",
-    "root_proc_name": "root_proc_name",
-    "is_interactive": "interactive",
-    "not_interactive": "interactive",
-}
-
-
-def spydertraces_query(name_or_uid: str, **filters) -> Dict:
-    def make_query_value(key, value):
-        if key == "is_interactive":
-            return "True"
-        if key == "not_interactive":
-            return "False"
-        if isinstance(value, int):
-            return value
-        return f'"{value}"'
-
-    def find_op(key, value):
-        if key == "score_above":
-            return ">"
-        if isinstance(value, str) and "*" in value:
-            return "~="
-        return "="
-
-    query = "overtaken = False AND score > 0 AND suppressed = False"
-    query_kv = {
-        PROPERTY_MAP[k]: (k, make_query_value(k, v))
-        for k, v in filters.items()
-        if k in PROPERTY_MAP
-    }
-    if name_or_uid:
-        query += (
-            f' AND (trigger_short_name ~= "{name_or_uid}"'
-            f' OR root_proc_name ~= "{name_or_uid}")'
-        )
-    for key, value_tup in query_kv.items():
-        filter_key, value = value_tup
-        query += f" AND {key} {find_op(filter_key, value)} {value}"
-    return query
