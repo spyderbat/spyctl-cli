@@ -362,7 +362,6 @@ def policy_summary_data(
 def get_policy_by_uid(
     uid: str, policies: Optional[List[Dict]] = None
 ) -> Optional[Dict]:
-
     ctx = get_current_context()
     if not policies:
         policies = api.get_policies(*ctx.get_api_data())

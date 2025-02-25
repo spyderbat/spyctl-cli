@@ -1,25 +1,17 @@
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 from tabulate import tabulate
 
-import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
-from spyctl.api.source_query_resources import get_clusterrole
 
 SUMMARY_HEADERS = ["NAME", "CREATED_AT", "STATUS", "AGE", "CLUSTER"]
 
 
 def clusterrole_output_summary(
-    ctx: cfg.Context,
-    clusters: List[str],
-    time: Tuple[float, float],
-    pipeline=None,
-    limit_mem=False,
+    clusterroles: List[dict],
 ) -> str:
     data = []
-    for clusterrole in get_clusterrole(
-        *ctx.get_api_data(), clusters, time, pipeline, limit_mem
-    ):
+    for clusterrole in clusterroles:
         data.append(clusterrole_summary_data(clusterrole))
     rv = tabulate(
         sorted(data, key=lambda x: [x[0], x[3]]),

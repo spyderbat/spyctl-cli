@@ -19,7 +19,6 @@ PROPERTY_MAP = {
 
 
 def linux_svc_query(name_or_id: str, **kwargs):
-
     def make_query_key(key):
         if key == "service_name":
             return "cgroup"

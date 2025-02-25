@@ -1,10 +1,8 @@
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 from tabulate import tabulate
 
-import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
-from spyctl.api.source_query_resources import get_connection_bundles
 
 SUMMARY_HEADERS = [
     "SERVER",
@@ -60,17 +58,9 @@ class ConnBunGroup:
         return names[0]
 
 
-def conn_bun_summary_output(
-    ctx: cfg.Context,
-    muids: List[str],
-    time: Tuple[float, float],
-    pipeline=None,
-    limit_mem=False,
-):
+def conn_bun_summary_output(conn_buns: List[dict]):
     groups: Dict[tuple, ConnBunGroup] = {}
-    for conn_bun in get_connection_bundles(
-        *ctx.get_api_data(), muids, time, pipeline, limit_mem
-    ):
+    for conn_bun in conn_buns:
         key = __make_key(conn_bun)
         if key not in groups:
             groups[key] = ConnBunGroup()
