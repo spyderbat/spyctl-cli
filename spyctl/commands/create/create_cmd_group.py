@@ -48,13 +48,9 @@ create.add_command(notification_template.notification_template)
 create.add_command(agent_health.create_agent_health_notification_settings)
 
 
-@create.command(
-    "notification-config", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG
-)
+@create.command("notification-config", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)
 @click.help_option("-h", "--help", hidden=True)
-@click.option(
-    "-n", "--name", help="A name for the config.", metavar="", required=True
-)
+@click.option("-n", "--name", help="A name for the config.", metavar="", required=True)
 @click.option(
     "-T",
     "--target",
@@ -127,8 +123,7 @@ def create_notif_route(name, target, template, output):
 )
 @click.option(
     "--include-imageid",
-    help="Include the image id in the container selector when creating the"
-    " policy.",
+    help="Include the image id in the container selector when creating the" " policy.",
     metavar="",
     is_flag=True,
 )
@@ -181,9 +176,7 @@ def create_policy(
     )
 
 
-@create.command(
-    "cluster-ruleset", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG
-)
+@create.command("cluster-ruleset", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)
 @click.help_option("-h", "--help", hidden=True)
 @click.option(
     "-o",
@@ -246,12 +239,8 @@ def create_policy(
 )
 def create_policy_ruleset(output, name, generate_rules, st, et, **filters):
     """Create a Policy Rule to be used in cluster policies."""
-    filters = {
-        key: value for key, value in filters.items() if value is not None
-    }
-    handle_create_cluster_ruleset(
-        output, name, generate_rules, (st, et), **filters
-    )
+    filters = {key: value for key, value in filters.items() if value is not None}
+    handle_create_cluster_ruleset(output, name, generate_rules, (st, et), **filters)
 
 
 # ----------------------------------------------------------------- #
@@ -289,9 +278,7 @@ def handle_create_guardian_policy(
     if do_api:
         ctx = cfg.get_current_context()
         resrc_data = lib.load_file_for_api_test(file)
-        policy = api_create_guardian_policy(
-            *ctx.get_api_data(), name, mode, resrc_data
-        )
+        policy = api_create_guardian_policy(*ctx.get_api_data(), name, mode, resrc_data)
         cli.show(policy, lib.OUTPUT_RAW)
     else:
         policy = create_guardian_policy_from_file(
@@ -393,9 +380,7 @@ def handle_create_cluster_ruleset(
     cli.show(ruleset.as_dict(), output)
 
 
-def handle_create_notif_config(
-    name: str, target: str, template: str, output: str
-):
+def handle_create_notif_config(name: str, target: str, template: str, output: str):
     """
     Create a notification configuration.
 

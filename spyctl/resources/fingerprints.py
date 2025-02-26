@@ -50,14 +50,10 @@ class Fingerprint:
 
     def __init__(self, fprint: Dict) -> None:
         if not isinstance(fprint, dict):
-            raise InvalidFingerprintError(
-                "Fingerprint should be a dictionary."
-            )
+            raise InvalidFingerprintError("Fingerprint should be a dictionary.")
         for key in self.required_keys:
             if key not in fprint:
-                raise InvalidFingerprintError(
-                    f"Fingerprint missing {key} field."
-                )
+                raise InvalidFingerprintError(f"Fingerprint missing {key} field.")
         if not lib.valid_api_version(fprint[lib.API_FIELD]):
             raise InvalidFingerprintError(f"Invalid {lib.API_FIELD}.")
         if not lib.valid_kind(fprint[lib.KIND_FIELD], FPRINT_KIND):
@@ -83,15 +79,11 @@ class Fingerprint:
                     f" fingerprint."
                 )
         self.selectors = {
-            key: value
-            for key, value in self.spec.items()
-            if key.endswith("Selector")
+            key: value for key, value in self.spec.items() if key.endswith("Selector")
         }
         for selector_name, selector in self.selectors.items():
             if not isinstance(selector, dict):
-                raise InvalidFingerprintError(
-                    f"{selector_name} must be a dictionary."
-                )
+                raise InvalidFingerprintError(f"{selector_name} must be a dictionary.")
 
     def as_dict(self) -> Dict:
         rv = {
@@ -128,9 +120,7 @@ class FingerprintGroup:
         if (
             fprint_id not in self.fingerprints
             or LATEST_TIMESTAMP_FIELD
-            not in self.fingerprints.get(fprint_id, {}).get(
-                lib.METADATA_FIELD, {}
-            )
+            not in self.fingerprints.get(fprint_id, {}).get(lib.METADATA_FIELD, {})
         ):
             self.fingerprints[fprint_id] = {
                 lib.API_FIELD: fingerprint[lib.API_FIELD],
@@ -151,10 +141,7 @@ class FingerprintGroup:
     def __update_first_timestamp(self, timestamp):
         if timestamp is None:
             return
-        if (
-            self.first_timestamp is None
-            or self.first_timestamp == NOT_AVAILABLE
-        ):
+        if self.first_timestamp is None or self.first_timestamp == NOT_AVAILABLE:
             self.first_timestamp = timestamp
         elif timestamp < self.first_timestamp:
             self.first_timestamp = timestamp
@@ -162,10 +149,7 @@ class FingerprintGroup:
     def __update_latest_timestamp(self, timestamp):
         if timestamp is None:
             return
-        if (
-            self.latest_timestamp is None
-            or self.latest_timestamp == NOT_AVAILABLE
-        ):
+        if self.latest_timestamp is None or self.latest_timestamp == NOT_AVAILABLE:
             self.latest_timestamp = timestamp
         elif timestamp > self.latest_timestamp:
             self.latest_timestamp = timestamp
@@ -196,16 +180,12 @@ class ContainerFingerprintGroup(FingerprintGroup):
             raise InvalidFprintGroup(
                 "Container fprint group must all have the same image ID"
             )
-        image = fingerprint[lib.SPEC_FIELD][lib.CONT_SELECTOR_FIELD][
-            lib.IMAGE_FIELD
-        ]
+        image = fingerprint[lib.SPEC_FIELD][lib.CONT_SELECTOR_FIELD][lib.IMAGE_FIELD]
         if image != self.image:
             raise InvalidFprintGroup(
                 "Container fprint group must all have the same image"
             )
-        container_name = fingerprint[lib.METADATA_FIELD].get(
-            lib.CONT_NAME_FIELD
-        )
+        container_name = fingerprint[lib.METADATA_FIELD].get(lib.CONT_NAME_FIELD)
         if container_name:
             self.container_names.add(container_name)
         container_id = fingerprint[lib.METADATA_FIELD].get(lib.CONT_ID_FIELD)
@@ -242,9 +222,7 @@ class ServiceFingerprintGroup(FingerprintGroup):
 
     def add_fingerprint(self, fingerprint: Dict):
         super().add_fingerprint(fingerprint)
-        cgroup = fingerprint[lib.SPEC_FIELD][lib.SVC_SELECTOR_FIELD][
-            lib.CGROUP_FIELD
-        ]
+        cgroup = fingerprint[lib.SPEC_FIELD][lib.SVC_SELECTOR_FIELD][lib.CGROUP_FIELD]
         if cgroup != self.cgroup:
             raise InvalidFprintGroup(
                 "Linux service fprint group must all have the same cgroup"
@@ -340,9 +318,7 @@ class ContainerSumData:
         return headers
 
     @classmethod
-    def get_wide_headers(
-        cls, group_by: Optional[List[str]] = None
-    ) -> List[str]:
+    def get_wide_headers(cls, group_by: Optional[List[str]] = None) -> List[str]:
         if group_by is None:
             group_by = []
         headers = [
@@ -407,9 +383,7 @@ class ServiceSumData:
         return headers
 
     @classmethod
-    def get_wide_headers(
-        cls, group_by: Optional[List[str]] = None
-    ) -> List[str]:
+    def get_wide_headers(cls, group_by: Optional[List[str]] = None) -> List[str]:
         if group_by is None:
             group_by = []
         headers = [
@@ -463,8 +437,7 @@ def __cont_fprint_summary(
         if col not in container_headers:
             avail_headers = "\n\t".join(container_headers)
             cli.err_exit(
-                f"Invalid sort by field: {col}. Options are: \n\t"
-                f"{avail_headers}"
+                f"Invalid sort by field: {col}. Options are: \n\t" f"{avail_headers}"
             )
     container_data: Dict[Tuple, ContainerSumData] = {}
     for fprint in fingerprints:
@@ -476,10 +449,7 @@ def __cont_fprint_summary(
         for f in group_by:
             key.append(filt.get_field_value(f, fprint))
         key = tuple(key)
-        if (
-            fprint[lib.METADATA_FIELD][lib.METADATA_TYPE_FIELD]
-            == FPRINT_TYPE_CONT
-        ):
+        if fprint[lib.METADATA_FIELD][lib.METADATA_TYPE_FIELD] == FPRINT_TYPE_CONT:
             if key not in container_data:
                 container_data[key] = ContainerSumData(
                     image_name_and_tag,
@@ -488,8 +458,7 @@ def __cont_fprint_summary(
                     1 if fprint.get("covered_by_policy") else 0,
                     1,
                     additional_fields={
-                        field: filt.get_field_value(field, fprint)
-                        for field in group_by
+                        field: filt.get_field_value(field, fprint) for field in group_by
                     },
                 )
                 container_data[key].update_image(fprint[lib.IMAGE_FIELD])
@@ -550,8 +519,7 @@ def __svc_fprint_summary(
         if col not in service_headers:
             avail_headers = "\n\t".join(service_headers)
             cli.err_exit(
-                f"Invalid sort by field: {col}. Options are: \n\t"
-                f"{avail_headers}"
+                f"Invalid sort by field: {col}. Options are: \n\t" f"{avail_headers}"
             )
 
     service_data: Dict[Tuple, ServiceSumData] = {}
@@ -565,10 +533,7 @@ def __svc_fprint_summary(
                 fprint["time"],
                 1 if fprint.get("covered_by_policy") else 0,
                 1,
-                {
-                    field: filt.get_field_value(field, fprint)
-                    for field in group_by
-                },
+                {field: filt.get_field_value(field, fprint) for field in group_by},
             )
         else:
             service_data[key].update_latest_timestamp(fprint["time"])
@@ -582,9 +547,7 @@ def __svc_fprint_summary(
         row_data = [data.get_data() for data in service_data.values()]
     if sort_by:
         row_data.sort(
-            key=lambda row: [
-                row[service_headers.index(col)] for col in sort_by
-            ]
+            key=lambda row: [row[service_headers.index(col)] for col in sort_by]
         )
     else:
         row_data.sort(key=lambda x: [x[0]])
@@ -605,9 +568,7 @@ def fprint_grp_output_wide(
     output_list = []
     if coverage:
         percentage = round(coverage_percentage * 100)
-        output_list.append(
-            f"Policy coverage for queried fingerprints: {percentage}%"
-        )
+        output_list.append(f"Policy coverage for queried fingerprints: {percentage}%")
         if len(cont_fprint_grps) + len(svc_fprint_grps) > 0:
             output_list.append(
                 f"{lib.WARNING_COLOR}The fingerprints below are not covered by"
@@ -627,9 +588,7 @@ def fprint_grp_output_wide(
         for fprint_grp in cont_fprint_grps:
             container_data.append(cont_grp_output_data_wide(fprint_grp))
         container_data.sort(key=lambda x: [x[0]])
-        container_tbl = tabulate(
-            container_data, container_headers, tablefmt="plain"
-        )
+        container_tbl = tabulate(container_data, container_headers, tablefmt="plain")
         output_list.append(container_tbl)
     if len(svc_fprint_grps) > 0:
         service_headers = [
@@ -669,15 +628,10 @@ def prepare_image_name(image: str, patterns: List[re.Pattern]):
 
 
 def cont_grp_output_data(grp: Dict) -> List[str]:
-    first_timestamp = grp[lib.METADATA_FIELD].get(
-        FIRST_TIMESTAMP_FIELD, NOT_AVAILABLE
-    )
+    first_timestamp = grp[lib.METADATA_FIELD].get(FIRST_TIMESTAMP_FIELD, NOT_AVAILABLE)
     try:
         first_timestamp = (
-            zulu.Zulu.fromtimestamp(first_timestamp).format(
-                "YYYY-MM-ddTHH:mm:ss"
-            )
-            + "Z"
+            zulu.Zulu.fromtimestamp(first_timestamp).format("YYYY-MM-ddTHH:mm:ss") + "Z"
         )
     except Exception:
         pass
@@ -686,9 +640,7 @@ def cont_grp_output_data(grp: Dict) -> List[str]:
     )
     try:
         latest_timestamp = (
-            zulu.Zulu.fromtimestamp(latest_timestamp).format(
-                "YYYY-MM-ddTHH:mm:ss"
-            )
+            zulu.Zulu.fromtimestamp(latest_timestamp).format("YYYY-MM-ddTHH:mm:ss")
             + "Z"
         )
     except Exception:
@@ -707,15 +659,10 @@ def cont_grp_output_data(grp: Dict) -> List[str]:
 
 
 def svc_grp_output_data(grp: Dict) -> List[str]:
-    first_timestamp = grp[lib.METADATA_FIELD].get(
-        FIRST_TIMESTAMP_FIELD, NOT_AVAILABLE
-    )
+    first_timestamp = grp[lib.METADATA_FIELD].get(FIRST_TIMESTAMP_FIELD, NOT_AVAILABLE)
     try:
         first_timestamp = (
-            zulu.Zulu.fromtimestamp(first_timestamp).format(
-                "YYYY-MM-ddTHH:mm:ss"
-            )
-            + "Z"
+            zulu.Zulu.fromtimestamp(first_timestamp).format("YYYY-MM-ddTHH:mm:ss") + "Z"
         )
     except Exception:
         pass
@@ -724,9 +671,7 @@ def svc_grp_output_data(grp: Dict) -> List[str]:
     )
     try:
         latest_timestamp = (
-            zulu.Zulu.fromtimestamp(latest_timestamp).format(
-                "YYYY-MM-ddTHH:mm:ss"
-            )
+            zulu.Zulu.fromtimestamp(latest_timestamp).format("YYYY-MM-ddTHH:mm:ss")
             + "Z"
         )
     except Exception:
@@ -740,15 +685,10 @@ def svc_grp_output_data(grp: Dict) -> List[str]:
 
 
 def cont_grp_output_data_wide(grp: Dict) -> List[str]:
-    first_timestamp = grp[lib.METADATA_FIELD].get(
-        FIRST_TIMESTAMP_FIELD, NOT_AVAILABLE
-    )
+    first_timestamp = grp[lib.METADATA_FIELD].get(FIRST_TIMESTAMP_FIELD, NOT_AVAILABLE)
     try:
         first_timestamp = (
-            zulu.Zulu.fromtimestamp(first_timestamp).format(
-                "YYYY-MM-ddTHH:mm:ss"
-            )
-            + "Z"
+            zulu.Zulu.fromtimestamp(first_timestamp).format("YYYY-MM-ddTHH:mm:ss") + "Z"
         )
     except Exception:
         pass
@@ -757,9 +697,7 @@ def cont_grp_output_data_wide(grp: Dict) -> List[str]:
     )
     try:
         latest_timestamp = (
-            zulu.Zulu.fromtimestamp(latest_timestamp).format(
-                "YYYY-MM-ddTHH:mm:ss"
-            )
+            zulu.Zulu.fromtimestamp(latest_timestamp).format("YYYY-MM-ddTHH:mm:ss")
             + "Z"
         )
     except Exception:
@@ -777,15 +715,10 @@ def cont_grp_output_data_wide(grp: Dict) -> List[str]:
 
 
 def svc_grp_output_data_wide(grp: Dict) -> List[str]:
-    first_timestamp = grp[lib.METADATA_FIELD].get(
-        FIRST_TIMESTAMP_FIELD, NOT_AVAILABLE
-    )
+    first_timestamp = grp[lib.METADATA_FIELD].get(FIRST_TIMESTAMP_FIELD, NOT_AVAILABLE)
     try:
         first_timestamp = (
-            zulu.Zulu.fromtimestamp(first_timestamp).format(
-                "YYYY-MM-ddTHH:mm:ss"
-            )
-            + "Z"
+            zulu.Zulu.fromtimestamp(first_timestamp).format("YYYY-MM-ddTHH:mm:ss") + "Z"
         )
     except Exception:
         pass
@@ -794,9 +727,7 @@ def svc_grp_output_data_wide(grp: Dict) -> List[str]:
     )
     try:
         latest_timestamp = (
-            zulu.Zulu.fromtimestamp(latest_timestamp).format(
-                "YYYY-MM-ddTHH:mm:ss"
-            )
+            zulu.Zulu.fromtimestamp(latest_timestamp).format("YYYY-MM-ddTHH:mm:ss")
             + "Z"
         )
     except Exception:
@@ -852,9 +783,7 @@ def make_fingerprint_groups(
     for fprint in fingerprints:
         type_ = fprint[lib.METADATA_FIELD][lib.METADATA_TYPE_FIELD]
         if type_ == FPRINT_TYPE_CONT:
-            image = fprint[lib.SPEC_FIELD][lib.CONT_SELECTOR_FIELD][
-                lib.IMAGE_FIELD
-            ]
+            image = fprint[lib.SPEC_FIELD][lib.CONT_SELECTOR_FIELD][lib.IMAGE_FIELD]
             if not image:
                 continue
             image_id = fprint[lib.SPEC_FIELD][lib.CONT_SELECTOR_FIELD][
@@ -868,37 +797,31 @@ def make_fingerprint_groups(
                     cont_fprint_grps[key] = ContainerFingerprintGroup(fprint)
                 except Exception as e:
                     cli.try_log(
-                        "Unable to create fingerprint group."
-                        f" {' '.join(e.args)}"
+                        "Unable to create fingerprint group." f" {' '.join(e.args)}"
                     )
             else:
                 try:
                     cont_fprint_grps[key].add_fingerprint(fprint)
                 except Exception as e:
                     cli.try_log(
-                        "Unable to add fingerprint to group."
-                        f" {' '.join(e.args)}"
+                        "Unable to add fingerprint to group." f" {' '.join(e.args)}"
                     )
         elif type_ == FPRINT_TYPE_SVC:
-            cgroup = fprint[lib.SPEC_FIELD][lib.SVC_SELECTOR_FIELD][
-                lib.CGROUP_FIELD
-            ]
+            cgroup = fprint[lib.SPEC_FIELD][lib.SVC_SELECTOR_FIELD][lib.CGROUP_FIELD]
             key = cgroup
             if key not in svc_fprint_grps:
                 try:
                     svc_fprint_grps[key] = ServiceFingerprintGroup(fprint)
                 except Exception as e:
                     cli.try_log(
-                        "Unable to create fingerprint group."
-                        f" {' '.join(e.args)}"
+                        "Unable to create fingerprint group." f" {' '.join(e.args)}"
                     )
             else:
                 try:
                     svc_fprint_grps[key].add_fingerprint(fprint)
                 except Exception as e:
                     cli.try_log(
-                        "Unable to add fingerprint to group."
-                        f" {' '.join(e.args)}"
+                        "Unable to add fingerprint to group." f" {' '.join(e.args)}"
                     )
     return (
         [grp.as_dict() for grp in cont_fprint_grps.values()],

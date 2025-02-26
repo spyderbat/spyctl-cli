@@ -257,9 +257,7 @@ def policies_summary_output(
             include_irrelevant=include_irrelevant,
         )
     for policy in policies:
-        data.append(
-            policy_summary_data(policy, deviation_counts, get_deviations_count)
-        )
+        data.append(policy_summary_data(policy, deviation_counts, get_deviations_count))
     data.sort(key=lambda x: [x[3], x[1]])
     output_list.append(tabulate(data, headers, tablefmt="plain"))
     return "\n".join(output_list)
@@ -288,9 +286,7 @@ def policy_summary_data(
     create_time = policy[lib.METADATA_FIELD].get(lib.METADATA_CREATE_TIME)
     if create_time:
         try:
-            create_time = (
-                zulu.parse(create_time).format("YYYY-MM-ddTHH:mm:ss") + "Z"
-            )
+            create_time = zulu.parse(create_time).format("YYYY-MM-ddTHH:mm:ss") + "Z"
         except Exception:
             pass
     else:
