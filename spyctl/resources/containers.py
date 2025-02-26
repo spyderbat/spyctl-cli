@@ -1,10 +1,8 @@
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 from tabulate import tabulate
 
-import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
-from spyctl.api.source_query_resources import get_containers
 
 SUMMARY_HEADERS = [
     "IMAGE",
@@ -54,21 +52,9 @@ class ContainerGroup:
             self.latest_timestamp = timestamp
 
 
-def cont_summary_output(
-    ctx: cfg.Context,
-    muids: List[str],
-    time: Tuple[float, float],
-    pipeline=None,
-    limit_mem=False,
-):
+def cont_summary_output(containers: list[dict]):
     cont_groups: Dict[str, ContainerGroup] = {}
-    for container in get_containers(
-        *ctx.get_api_data(),
-        muids,
-        time,
-        pipeline=pipeline,
-        limit_mem=limit_mem,
-    ):
+    for container in containers:
         key = __key(container)
         if key not in cont_groups:
             cont_groups[key] = ContainerGroup()

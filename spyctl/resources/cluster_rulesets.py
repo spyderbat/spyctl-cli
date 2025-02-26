@@ -3,10 +3,9 @@
 from typing import Dict, List, Optional, Tuple
 
 import spyctl.config.configs as cfg
-import spyctl.resources.api_filters as af
 import spyctl.schemas_v2 as schemas
 import spyctl.spyctl_lib as lib
-from spyctl.api.source_query_resources import get_containers
+from spyctl.api.athena_search import search_athena
 
 NS_LABEL = "kubernetes.io/metadata.name"
 
@@ -68,10 +67,11 @@ class ContainerRules(RulesObject):
         namespaces_labels: Dict = container.get("pod_namespace_labels", {})
         namespace = namespaces_labels.get(NS_LABEL, container.get("pod_namespace"))
         if not namespace:
-            lib.try_log(
-                f"Container {container['container_name']} with from {image} has no namespace.. skipping",  # noqa: E501
-                is_warning=True,
-            )
+            if "pause" not in image:
+                lib.try_log(
+                    f"Container {container['container_name']} with from {image} has no namespace.. skipping",  # noqa: E501
+                    is_warning=True,
+                )
             return
         self.__add_image(image, namespace)
 
@@ -232,13 +232,15 @@ def generate_container_rules(ruleset: ClusterRuleset, time, **filters):
             # We don't need to filter for specific namespaces at this point
             filters.pop(lib.NAMESPACE_OPTION)
     ctx = cfg.get_current_context()
-    sources, filters = af.Containers.build_sources_and_filters(**filters)
-    pipeline = af.Containers.generate_pipeline(filters=filters)
-    lib.try_log("Generating container rules...")
+    query = lib.query_builder("model_container", show_hint=False, **filters)
     container_rules: ContainerRules = ruleset.add_rules(
         "allow", lib.RULES_TYPE_CONTAINER, include_namespaces
     )
-    for container in get_containers(
-        *ctx.get_api_data(), sources, time, pipeline, limit_mem=True
+    for container in search_athena(
+        *ctx.get_api_data(),
+        "model_container",
+        query,
+        start_time=time[0],
+        end_time=time[1],
     ):
         container_rules.add_container(container)

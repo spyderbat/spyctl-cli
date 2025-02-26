@@ -1,15 +1,17 @@
+"""Library for handling fingerprint resources."""
+
+# pylint: disable=broad-exception-caught
+
 import re
 from dataclasses import dataclass, field
-from typing import Dict, Generator, List, Set, Tuple
+from typing import Dict, Generator, List, Optional, Set, Tuple
 
 import zulu
 from tabulate import tabulate
 
-import spyctl.config.configs as cfg
 import spyctl.filter_resource as filt
 import spyctl.spyctl_lib as lib
 from spyctl import cli
-from spyctl.api.source_query_resources import get_guardian_fingerprints
 
 FPRINT_KIND = lib.FPRINT_KIND
 FPRINT_TYPE_CONT = lib.POL_TYPE_CONT
@@ -94,7 +96,7 @@ class Fingerprint:
 
 
 class FingerprintGroup:
-    def __init__(self, fingerprint: Dict) -> None:
+    def __init__(self, _fingerprint: Dict) -> None:
         self.fingerprints = {}
         self.first_timestamp = NOT_AVAILABLE
         self.latest_timestamp = NOT_AVAILABLE
@@ -301,7 +303,9 @@ class ContainerSumData:
         return name_and_tag
 
     @classmethod
-    def get_headers(cls, group_by: List[str] = []) -> List[str]:
+    def get_headers(cls, group_by: Optional[List[str]] = None) -> List[str]:
+        if group_by is None:
+            group_by = []
         headers = [
             "IMAGE_NAME:TAG",
             "IMAGEID",
@@ -314,7 +318,9 @@ class ContainerSumData:
         return headers
 
     @classmethod
-    def get_wide_headers(cls, group_by: List[str] = []) -> List[str]:
+    def get_wide_headers(cls, group_by: Optional[List[str]] = None) -> List[str]:
+        if group_by is None:
+            group_by = []
         headers = [
             "IMAGE_NAME:TAG",
             "IMAGEID",
@@ -363,7 +369,9 @@ class ServiceSumData:
         ]
 
     @classmethod
-    def get_headers(cls, group_by: List[str] = []) -> List[str]:
+    def get_headers(cls, group_by: Optional[List[str]] = None) -> List[str]:
+        if group_by is None:
+            group_by = []
         headers = [
             "SERVICE_NAME",
             "CGROUP",
@@ -375,7 +383,9 @@ class ServiceSumData:
         return headers
 
     @classmethod
-    def get_wide_headers(cls, group_by: List[str] = []) -> List[str]:
+    def get_wide_headers(cls, group_by: Optional[List[str]] = None) -> List[str]:
+        if group_by is None:
+            group_by = []
         headers = [
             "SERVICE_NAME",
             "CGROUP",
@@ -388,27 +398,17 @@ class ServiceSumData:
 
 
 def fprint_output_summary(
-    ctx: cfg.Context,
     fprint_type: str,
-    sources,
-    filters,
-    st,
-    et,
-    name_or_id_expr,
-    group_by: List[str] = [],
-    sort_by: List[str] = [],
+    fingerprints: List[dict],
+    group_by: Optional[List[str]] = None,
+    sort_by: Optional[List[str]] = None,
     wide=False,
 ) -> str:
-    fingerprints = get_guardian_fingerprints(
-        *ctx.get_api_data(),
-        sources,
-        (st, et),
-        fprint_type,
-        unique=True,
-        limit_mem=True,
-        expr=name_or_id_expr,
-        **filters,
-    )
+    summary = None
+    if group_by is None:
+        group_by = []
+    if sort_by is None:
+        sort_by = []
     if fprint_type == FPRINT_TYPE_CONT:
         summary = __cont_fprint_summary(fingerprints, wide, group_by, sort_by)
     elif fprint_type == FPRINT_TYPE_SVC:
@@ -421,9 +421,13 @@ def fprint_output_summary(
 def __cont_fprint_summary(
     fingerprints: Generator[Dict, None, None],
     wide: bool,
-    group_by: List[str],
-    sort_by: List[str] = [],
+    group_by: Optional[List[str]] = None,
+    sort_by: Optional[List[str]] = None,
 ) -> str:
+    if group_by is None:
+        group_by = []
+    if sort_by is None:
+        sort_by = []
     if wide:
         container_headers = ContainerSumData.get_wide_headers(group_by)
     else:
@@ -494,9 +498,13 @@ def __cont_fprint_summary(
 def __svc_fprint_summary(
     fingerprints: Generator[Dict, None, None],
     wide: bool,
-    group_by: List[str],
-    sort_by: List[str] = [],
+    group_by: Optional[List[str]] = None,
+    sort_by: Optional[List[str]] = None,
 ) -> str:
+    if group_by is None:
+        group_by = []
+    if sort_by is None:
+        sort_by = []
     service_headers = [
         "CGROUP",
         "MACHINES",
@@ -773,8 +781,8 @@ def make_fingerprint_groups(
     cont_fprint_grps: Dict[Tuple[str, str], ContainerFingerprintGroup] = {}
     svc_fprint_grps: Dict[str, ServiceFingerprintGroup] = {}
     for fprint in fingerprints:
-        type = fprint[lib.METADATA_FIELD][lib.METADATA_TYPE_FIELD]
-        if type == FPRINT_TYPE_CONT:
+        type_ = fprint[lib.METADATA_FIELD][lib.METADATA_TYPE_FIELD]
+        if type_ == FPRINT_TYPE_CONT:
             image = fprint[lib.SPEC_FIELD][lib.CONT_SELECTOR_FIELD][lib.IMAGE_FIELD]
             if not image:
                 continue
@@ -798,7 +806,7 @@ def make_fingerprint_groups(
                     cli.try_log(
                         "Unable to add fingerprint to group." f" {' '.join(e.args)}"
                     )
-        elif type == FPRINT_TYPE_SVC:
+        elif type_ == FPRINT_TYPE_SVC:
             cgroup = fprint[lib.SPEC_FIELD][lib.SVC_SELECTOR_FIELD][lib.CGROUP_FIELD]
             key = cgroup
             if key not in svc_fprint_grps:
