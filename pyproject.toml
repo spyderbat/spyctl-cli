@@ -7,11 +7,11 @@ build-backend = "setuptools.build_meta"
 packages = ["spyctl"]
 
 [tool.setuptools.package-data]
-"commands.get" = ["resource_schemas.json"]
+"spyctl.commands.get" = ["resource_schemas.json"]
 
 [project]
 name = "spyctl"
-version = "0.22.1"
+version = "0.22.2"
 
 description = "A command line tool for viewing and managing Spyderbat Resources"
 readme = "README.md"
