@@ -2,17 +2,22 @@ from typing import Dict, List
 
 import spyctl.config.configs as cfg
 import spyctl.merge_lib.merge_object_helper as _m_obj_h
-import spyctl.resources.api_filters as _af
 import spyctl.spyctl_lib as lib
-from spyctl.api.source_query_resources import get_deviations
+from spyctl.api.athena_search import search_athena
 
 
 def get_unique_deviations(uid, st, et, full_rec=False) -> List[Dict]:
-    pipeline = _af.Deviations.generate_pipeline()
     rv = {}
     ctx = cfg.get_current_context()
-    for deviation in get_deviations(
-        *ctx.get_api_data(), [uid], (st, et), pipeline, True
+    query = lib.query_builder(
+        "event_deviation", None, show_hint=False, **{"policy_uid_equals": uid}
+    )
+    for deviation in search_athena(
+        *ctx.get_api_data(),
+        "event_deviation",
+        query,
+        start_time=st,
+        end_time=et,
     ):
         checksum = deviation.get(lib.CHECKSUM_FIELD)
         if not checksum:
@@ -27,15 +32,14 @@ def get_unique_deviations(uid, st, et, full_rec=False) -> List[Dict]:
 
 def get_deviations_stream(
     ctx: cfg.Context,
-    sources,
     time,
-    pipeline,
     disable_pbar_on_first,
     unique=False,
     raw_data=False,
     include_irrelevant=False,
     policies=None,
     limit_mem=True,
+    dev_name_or_uid=None,
 ):
     if policies is None:
         policies = {}
@@ -48,12 +52,15 @@ def get_deviations_stream(
     emit_processed = {}  # tracks if we should emit a deviation
     unique_deviations = {}  # For unique deviations (not raw)
     dev_list = []  # For all deviations (not raw)
-    for deviation in get_deviations(
+    query = lib.query_builder("event_deviation", dev_name_or_uid, show_hint=False, **{})
+    for deviation in search_athena(
         *ctx.get_api_data(),
-        sources,
-        time,
-        pipeline,
-        limit_mem,
+        "event_deviation",
+        query,
+        start_time=time[0],
+        end_time=time[1],
+        desc="Retrieving Deviations",
+        limit_mem=limit_mem,
         disable_pbar_on_first=disable_pbar_on_first,
     ):
         __set_checksum(deviation)
