@@ -107,64 +107,6 @@ class ConnectionGroup:
         return rv
 
 
-PROPERTY_MAP = {
-    "uid": "uid",
-    "machine_uid": "muid",
-    "direction": "direction",
-    "cgroup": "cgroup",
-    "container_uid": "container_uid",
-    "remote_port": "remote_port",
-    "remote_port_above": "remote_port",
-    "remote_port_below": "remote_port",
-    "remote-ip": "remote-ip",
-    "local_port": "local_port",
-    "local_port_above": "local_port",
-    "local_port_below": "local_port",
-    "local_ip": "local_ip",
-}
-
-
-def connection_query(name_or_uid: str, **filters) -> Dict:
-    def make_query_value(key, value):
-        if isinstance(value, int) or (isinstance(value, str) and value.isdigit()):
-            return int(value)
-
-        return f'"{value}"'
-
-    def find_op(key, value):
-        if key.endswith("above"):
-            return ">="
-        if key.endswith("below"):
-            return "<="
-        if isinstance(value, str) and "*" in value:
-            return "~="
-        return "="
-
-    query = ""
-
-    query_kv = {
-        PROPERTY_MAP[k]: (k, make_query_value(k, v))
-        for k, v in filters.items()
-        if k in PROPERTY_MAP
-    }
-
-    if name_or_uid:
-        if query:  # Only add 'AND' if there is already content in the query
-            query += " AND "
-        if name_or_uid.__contains__("conn:"):
-            query += f'(id ~= "{name_or_uid}")'
-
-    for key, value_tup in query_kv.items():
-        filter_key, value = value_tup
-        if not query:
-            query = f"{key} {find_op(filter_key, value)} {value}"
-        else:
-            query += f" AND {key} {find_op(filter_key, value)} {value}"
-    if len(query) == 0:
-        query = "*"
-    return query
-
-
 def _loose_abbrev_ips(ip1, ip2):
     if ip1 == ip2:
         return ip1

@@ -1349,7 +1349,7 @@ OUTPUT_DEST_PAGER = "pager"
 
 # spyctl Options
 CLUSTER_OPTION = "cluster"
-NAMESPACE_OPTION = "namespace"
+NAMESPACE_OPTION = "pod_namespace_equals"
 
 # deviations
 DEVIATION_FIELD = "deviation"
@@ -2680,14 +2680,30 @@ VARIANT_TO_OP = {
 }
 
 NAME_OR_UID_FIELDS = {
-    "model_machine": ["hostname"],
-    "model_k8s_namespace": ["metadata.name"],
-    "model_k8s_node": ["metadata.name"],
+    "event_deviation": ["policy_name", "policy_uid"],
+    "event_fingerprint": [
+        "image",
+        "image_id",
+        "container_name",
+        "container_id",
+        "service_name",
+    ],
     "event_opsflag": ["short_name"],
     "event_redflag": ["short_name"],
-    "model_k8s_pod": ["metadata.name"],
-    "model_k8s_replicaset": ["metadata.name"],
-    "event_k8s_rolebinding": ["metadata.name"],
+    # "model_agent": ["hostname"], filtering done elsewhere
+    "model_bundled_connection": [],
+    "model_container": ["image", "image_id", "container_name", "container_id"],
+    "model_k8s_clusterrole": ["metadata.name", "metadata.uid"],
+    "model_k8s_clusterrolebinding": ["metadata.name", "metadata.uid"],
+    "model_k8s_daemonset": ["metadata.name", "metadata.uid"],
+    "model_k8s_deployment": ["metadata.name", "metadata.uid"],
+    "model_k8s_namespace": ["metadata.name"],
+    "model_k8s_node": ["metadata.name", "metadata.uid"],
+    "model_k8s_pod": ["metadata.name", "metadata.uid"],
+    "model_k8s_replicaset": ["metadata.name", "metadata.uid"],
+    "model_k8s_role": ["metadata.name", "metadata.uid"],
+    "model_k8s_rolebinding": ["metadata.name", "metadata.uid"],
+    "model_machine": ["hostname"],
 }
 
 
@@ -2721,6 +2737,8 @@ def query_builder(
             continue
         # The same option may be specified multiple times, so we need to
         # iterate over the values.
+        if isinstance(v_tup, str):
+            v_tup = [v_tup]
         for v in v_tup:
             so: SchemaOption = schema_opts[k]
             op = VARIANT_TO_OP[so.option_variant]

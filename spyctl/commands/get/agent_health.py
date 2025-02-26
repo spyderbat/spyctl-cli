@@ -54,10 +54,11 @@ def handle_get_agent_health_notification_settings(name_or_id, output, **kwargs):
     ctx = cfg.get_current_context()
     if name_or_id:
         kwargs["name_or_uid_contains"] = name_or_id
-    agent_health_notification_settings, total_pages = (
-        ahn_api.get_agent_health_notification_settings_list(
-            *ctx.get_api_data(), **kwargs
-        )
+    (
+        agent_health_notification_settings,
+        total_pages,
+    ) = ahn_api.get_agent_health_notification_settings_list(
+        *ctx.get_api_data(), **kwargs
     )
     if kwargs.get("raw_data"):
         data_parser = None

@@ -11,31 +11,8 @@ from spyctl.commands.get import get_lib
 
 
 @click.command("processes", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)
-@_so.name_or_id_arg
-@_so.output_option
-@_so.exact_match_option
-@_so.help_option
-@_so.time_options
-@click.option(
-    "--machine-uid",
-    help="Filter by machine.",
-)
-@click.option(
-    "--pid_equals",
-    help="Filter by PID.",
-)
-@click.option(
-    "--pid_above",
-    help="Filter by PID.",
-)
-@click.option(
-    "--pid_below",
-    help="Filter by PID.",
-)
-@click.option(
-    "--ppuid",
-    help="Filter by Parent Process UID.",
-)
+@_so.athena_query_options
+@_so.schema_options("model_process")
 def get_processes_cmd(name_or_id, output, st, et, **filters):
     """Get processes by name or id."""
     exact = filters.pop("exact")
@@ -48,8 +25,7 @@ def get_processes_cmd(name_or_id, output, st, et, **filters):
 def handle_get_processes(name_or_id, output, st, et, **filters):
     """Output processes by name or id."""
     ctx = cfg.get_current_context()
-    query = _r.processes.processes_query(name_or_id, **filters)
-
+    query = lib.query_builder("model_process", name_or_id, **filters)
     processes = search_athena(
         *ctx.get_api_data(),
         "model_process",
