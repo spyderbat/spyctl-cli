@@ -67,7 +67,6 @@ def handle_export(
     rtype: Optional[str],
     output: str = lib.OUTPUT_YAML,
 ) -> None:
-
     if name_or_id and not exact:
         name_or_id = name_or_id + "*" if name_or_id[-1] != "*" else name_or_id
         name_or_id = "*" + name_or_id if name_or_id[0] != "*" else name_or_id
@@ -108,7 +107,6 @@ def handle_export_suppression_policies(name_or_id: Optional[str]) -> None:
 def handle_export_policies(
     name_or_id: Optional[str], output: str, rtype: Optional[str]
 ):
-
     ctx = cfg.get_current_context()
     params = {
         "name_or_uid_contains": (name_or_id.strip("*") if name_or_id else None),
