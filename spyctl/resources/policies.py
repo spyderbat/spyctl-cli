@@ -10,15 +10,12 @@ import spyctl.api.policies as api
 import spyctl.config.configs as cfg
 import spyctl.filter_resource as filt
 import spyctl.merge_lib.merge_object as m_obj
-import spyctl.merge_lib.merge_object_helper as _m_obj_h
 import spyctl.merge_lib.merge_schema as _ms
-import spyctl.resources.api_filters as _af
 import spyctl.resources.fingerprints as spyctl_fprints
 import spyctl.resources.resources_lib as r_lib
 import spyctl.schemas_v2 as schemas
 import spyctl.spyctl_lib as lib
 from spyctl import cli
-from spyctl.api.source_query_resources import get_fingerprints
 from spyctl.config.configs import get_current_context
 from spyctl.filter_resource import filter_obj
 
@@ -224,54 +221,6 @@ def policies_output(policies: List[Dict]):
         return {}
 
 
-def matching_fingerprints_summary(
-    ctx: cfg.Context,
-    policies: List[Dict],
-    time: Tuple[float, float],
-    limit_mem,
-):
-    has_matching = []
-    no_matching = []
-    sources, filters = _af.Fingerprints.build_sources_and_filters()
-    pipeline = _af.Fingerprints.generate_pipeline(filters=filters)
-    fingerprints = list(
-        get_fingerprints(
-            *ctx.get_api_data(),
-            sources,
-            time,
-            pipeline=pipeline,
-            limit_mem=limit_mem,
-        )
-    )
-    for policy in policies:
-        filters = lib.selectors_to_filters(policy)
-        if filt.filter_fingerprints(
-            fingerprints,
-            use_context_filters=False,
-            suppress_warning=True,
-            **filters,
-        ):
-            has_matching.append(policy)
-        else:
-            no_matching.append(policy)
-    output_list = []
-    headers = ["UID", "NAME", "STATUS", "TYPE", "CREATE_TIME"]
-    if len(no_matching) > 0:
-        output_list.append("Policies WITH NO matching fingerprints in last query:")
-        no_match_data = []
-        for pol in no_matching:
-            no_match_data.append(policy_summary_data(pol))
-        output_list.append(tabulate(no_match_data, headers, tablefmt="plain"))
-    if len(has_matching) > 0:
-        output_list.append("\nPolicies WITH matching fingerprints in last query:")
-        data = []
-        for pol in has_matching:
-            data.append(policy_summary_data(pol))
-        data.sort(key=lambda x: [x[3], x[1]])
-        output_list.append(tabulate(data, headers, tablefmt="plain"))
-    return "\n".join(output_list)
-
-
 def policies_summary_output(
     policies: List[Dict],
     time: Tuple[float, float] = None,
@@ -362,7 +311,6 @@ def policy_summary_data(
 def get_policy_by_uid(
     uid: str, policies: Optional[List[Dict]] = None
 ) -> Optional[Dict]:
-
     ctx = get_current_context()
     if not policies:
         policies = api.get_policies(*ctx.get_api_data())
@@ -397,22 +345,14 @@ def get_deviation_counts(
         )
     rv: Dict[str, List[Set, int]] = {}
     ctx = cfg.get_current_context()
-    policy_uids = {
-        policy[lib.METADATA_FIELD].get(
-            lib.METADATA_UID_FIELD
-        ): _m_obj_h.get_merge_object(lib.POL_KIND, policy, True, "check_deviations")
-        for policy in policies
-    }  # policy uid -> merge object
-    pipeline = _af.Deviations.generate_pipeline(dev_name_or_uid, filters=dev_filters)
     for deviation in spyctl_dev.get_deviations_stream(
         ctx,
-        list(policy_uids),
         time,
-        pipeline,
         disable_pbar_on_first=not lib.is_redirected(),
         raw_data=True,
         policies=policies,
         include_irrelevant=include_irrelevant,
+        dev_name_or_uid=dev_name_or_uid,
     ):
         checksum = deviation[lib.CHECKSUM_FIELD]
         pol_uid = deviation["policy_uid"]

@@ -225,6 +225,7 @@ def create_policy(
 @click.option(
     "-N",
     "--namespace",
+    lib.NAMESPACE_OPTION,
     is_flag=False,
     flag_value="__all__",
     default=None,

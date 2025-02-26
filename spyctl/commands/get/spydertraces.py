@@ -11,38 +11,8 @@ from spyctl.commands.get import get_lib
 
 
 @click.command("spydertraces", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)
-@_so.name_or_id_arg
-@_so.output_option
-@_so.exact_match_option
-@_so.help_option
-@_so.time_options
-@click.option(
-    "--score_above",
-    type=click.IntRange(min=0),
-    help="Filter by score above.",
-)
-@click.option(
-    "--machine-uid",
-    help="Filter by machine.",
-)
-@click.option(
-    "--trigger-name",
-    help="Filter by trigger name.",
-)
-@click.option(
-    "--root-proc-name",
-    help="Filter by root process name.",
-)
-@click.option(
-    "--is-interactive",
-    is_flag=True,
-    help="Filter by interactive.",
-)
-@click.option(
-    "--not-interactive",
-    is_flag=True,
-    help="Filter by not interactive.",
-)
+@_so.athena_query_options
+@_so.schema_options("model_spydertrace")
 @click.option(
     "--include-linkback",
     is_flag=True,
@@ -60,8 +30,8 @@ def get_spydertraces_cmd(name_or_id, output, st, et, **filters):
 def handle_get_spydertraces(name_or_id, output, st, et, **filters):
     """Output spydertraces by name or id."""
     ctx = cfg.get_current_context()
-    query = _r.spydertraces.spydertraces_query(name_or_id, **filters)
-    include_linkback = filters.pop("include_linkback")
+    query = lib.query_builder("model_spydertrace", name_or_id, **filters)
+    include_linkback = filters.pop("include_linkback", False)
     spydertraces = search_athena(
         *ctx.get_api_data(),
         "model_spydertrace",

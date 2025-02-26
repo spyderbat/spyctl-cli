@@ -105,9 +105,10 @@ def __build_rulesets(
             continue
         filters = {
             "cluster": clus,
+            "clustername_equals": clus,
         }
         if namespace:
-            filters["namespace"] = namespace
+            filters["pod_namespace_equals"] = namespace
         lib.try_log(f"Creating ruleset for cluster {clus}")
         rulesets.append(
             crs.create_ruleset(f"{clus}_ruleset", True, (st, et), **filters)

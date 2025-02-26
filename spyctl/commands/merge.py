@@ -437,8 +437,7 @@ def handle_merge(
                 list(targets.values()),
                 key=lambda x: x[lib.METADATA_FIELD][lib.METADATA_NAME_FIELD],
             )
-            if len(targets) > 0:
-                pager = True
+            pager = len(targets) > 0
             for target in targets:
                 t_name = lib.get_metadata_name(target)
                 t_uid = target.get(lib.METADATA_FIELD, {}).get(lib.METADATA_UID_FIELD)
@@ -487,7 +486,7 @@ def handle_merge(
 def get_with_obj(
     target: Dict,
     target_name: str,
-    with_file: IO,
+    with_file: Optional[IO],
     with_policy: str,
     st,
     et,
@@ -569,6 +568,7 @@ def get_latest_timestamp(target: Dict) -> float:
     latest_timestamp = target.get(lib.METADATA_FIELD, {}).get(
         lib.LATEST_TIMESTAMP_FIELD
     )
+    st = None
     if latest_timestamp is not None:
         st = lib.time_inp(latest_timestamp)
     else:
@@ -605,8 +605,6 @@ def merge_resource(
     latest=False,
     check_irrelevant=False,
 ) -> Optional[List[MergeObject]]:
-    tgt_meta = target.get(lib.METADATA_FIELD, {})
-    tgt_uid = tgt_meta.get(lib.METADATA_UID_FIELD)
     if target == with_obj:
         cli.try_log(f"{src_cmd} target and with-object are the same.. skipping")
         return None
@@ -614,12 +612,10 @@ def merge_resource(
         ctx = cfgs.get_current_context()
     merge_with_objects = []
     if isinstance(with_obj, Dict):
-        merge_with_objects = r_lib.handle_input_data(with_obj, ctx, tgt_uid)
+        merge_with_objects = r_lib.handle_input_data(with_obj, ctx)
     else:
         for obj in with_obj:
-            merge_with_objects.extend(
-                r_lib.handle_input_data(data=obj, ctx=ctx, deviation_src=tgt_uid)
-            )
+            merge_with_objects.extend(r_lib.handle_input_data(data=obj, ctx=ctx))
     resrc_kind = target.get(lib.KIND_FIELD)
     merge_obj = m_obj_h.get_merge_object(resrc_kind, target, merge_network, src_cmd)
     if isinstance(merge_with_objects, list):
