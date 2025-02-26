@@ -4,7 +4,6 @@ import click
 
 import spyctl.commands.get.shared_options as _so
 import spyctl.config.configs as cfg
-import spyctl.resources.api_filters as _af
 import spyctl.spyctl_lib as lib
 from spyctl import cli
 from spyctl.api.athena_search import search_athena
@@ -19,7 +18,9 @@ def get_top_data_cmd(name_or_id, output, st, et, **filters):
     exact = filters.pop("exact")
     get_lib.output_time_log(lib.TOP_DATA_RESOURCE.name_plural, st, et)
     name_or_id = get_lib.wildcard_name_or_id(name_or_id, exact)
-    filters = {key: value for key, value in filters.items() if value is not None}
+    filters = {
+        key: value for key, value in filters.items() if value is not None
+    }
     handle_get_top_data(name_or_id, output, st, et, **filters)
 
 

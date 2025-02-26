@@ -71,7 +71,9 @@ def create_cluster_policy(
     return rv
 
 
-def __add_cluster_selector(clusters: List[str], spec: schemas.ClusterPolicySpecModel):
+def __add_cluster_selector(
+    clusters: List[str], spec: schemas.ClusterPolicySpecModel
+):
     if len(clusters) == 1:
         key = "uid" if clusters[0].startswith("clus:") else "name"
         spec.cluster_selector.match_fields = {
@@ -105,9 +107,10 @@ def __build_rulesets(
             continue
         filters = {
             "cluster": clus,
+            "clustername_equals": clus,
         }
         if namespace:
-            filters["namespace"] = namespace
+            filters["pod_namespace_equals"] = namespace
         lib.try_log(f"Creating ruleset for cluster {clus}")
         rulesets.append(
             crs.create_ruleset(f"{clus}_ruleset", True, (st, et), **filters)

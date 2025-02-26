@@ -1,14 +1,11 @@
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import spyctl.config.configs as cfg
-import spyctl.resources.api_filters as _af
 import spyctl.spyctl_lib as lib
-from spyctl.api.source_query_resources import get_deviations, get_fingerprints
+from spyctl.api.athena_search import search_athena
 
 
-def handle_input_data(
-    data: Dict, ctx: cfg.Context = None, deviation_src=None
-) -> List[Dict]:
+def handle_input_data(data: Dict, ctx: cfg.Context = None) -> List[Dict]:
     obj_kind = data.get(lib.KIND_FIELD)
     schema = data.get(lib.SCHEMA_FIELD)
     rv = []
@@ -28,7 +25,7 @@ def handle_input_data(
     elif obj_kind == lib.FPRINT_GROUP_KIND:
         rv.extend(__handle_fprint_group_input(data))
     elif obj_kind == lib.UID_LIST_KIND:
-        rv.extend(__handle_uid_list_input(data, ctx, deviation_src=deviation_src))
+        rv.extend(__handle_uid_list_input(data, ctx))
     elif lib.ITEMS_FIELD in data:
         rv.extend(__handle_spyctl_items_input(data))
     return rv
@@ -38,22 +35,35 @@ def __handle_fprint_group_input(data: Dict):
     return data[lib.DATA_FIELD][lib.FPRINT_GRP_FINGERPRINTS_FIELD]
 
 
-def __handle_uid_list_input(data: Dict, ctx: cfg.Context = None, deviation_src=None):
+def __handle_uid_list_input(data: Dict, ctx: Optional[cfg.Context] = None):
     if not ctx:
         ctx = cfg.get_current_context()
     time = (
         data[lib.METADATA_FIELD][lib.METADATA_START_TIME_FIELD],
         data[lib.METADATA_FIELD][lib.METADATA_END_TIME_FIELD],
     )
-    src = ctx.global_source
     fprint_uids = [
-        uid for uid in data[lib.DATA_FIELD][lib.UIDS_FIELD] if uid.startswith("fprint")
+        uid
+        for uid in data[lib.DATA_FIELD][lib.UIDS_FIELD]
+        if uid.startswith("fprint")
     ]
     fprints = []
     if fprint_uids:
-        fprint_pipeline = _af.UID_List.generate_pipeline(fprint_uids)
+        query = lib.query_builder(
+            "model_fingerprint",
+            None,
+            show_hint=False,
+            **{"id_equals": fprint_uids},
+        )
         fprints = list(
-            get_fingerprints(*ctx.get_api_data(), [src], time, pipeline=fprint_pipeline)
+            search_athena(
+                *ctx.get_api_data(),
+                "model_fingerprint",
+                query,
+                start_time=time[0],
+                end_time=time[1],
+                use_pbar=False,
+            )
         )
     deviation_uids = [
         uid
@@ -62,10 +72,19 @@ def __handle_uid_list_input(data: Dict, ctx: cfg.Context = None, deviation_src=N
     ]
     deviations = []
     if deviation_uids:
-        dev_src = deviation_src or src
-        dev_pipeline = _af.UID_List.generate_pipeline(deviation_uids)
-        for deviation in get_deviations(
-            *ctx.get_api_data(), [dev_src], time, pipeline=dev_pipeline
+        query = lib.query_builder(
+            "event_deviation",
+            None,
+            show_hint=False,
+            **{"id_equals": deviation_uids},
+        )
+        for deviation in search_athena(
+            *ctx.get_api_data(),
+            "event_deviation",
+            query,
+            start_time=time[0],
+            end_time=time[1],
+            use_pbar=False,
         ):
             deviations.append(deviation["deviation"])
     return fprints + deviations

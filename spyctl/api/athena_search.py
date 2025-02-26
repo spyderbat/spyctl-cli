@@ -44,7 +44,7 @@ def search_athena(
         use_pbar (bool): Whether to use a progress bar (default: True).
         desc (str): Description for the progress bar.
         quiet (bool): Suppress cli output during search (default: False).
-
+        limit (int): The limit of results to return.
     Returns:
         List[Dict]: The search results.
     """
@@ -58,7 +58,9 @@ def search_athena(
         cli.try_log(f"Creating new search job{desc}...")
     kwargs["start_time"] = int(kwargs["start_time"])
     kwargs["end_time"] = int(kwargs["end_time"])
-    search_id = post_new_search(api_url, api_key, org_uid, schema, query, **kwargs)
+    search_id = post_new_search(
+        api_url, api_key, org_uid, schema, query, **kwargs
+    )
     if search_id == "FAILED":
         return []
     token = None
@@ -121,6 +123,7 @@ def post_new_search(
     Keyword Args:
         start_time (bool): starting epoch time of query.
         end_time (bool): ending epoch time of the query.
+        limit (int): The limit of results to return.
 
     Returns:
         str: The search's job ID.
@@ -197,7 +200,9 @@ def retrieve_search_data(
     return "FAILED", rv_token, result_count
 
 
-def validate_search_query(api_url, api_key, org_uid, schema_type: str, query: str):
+def validate_search_query(
+    api_url, api_key, org_uid, schema_type: str, query: str
+):
     """
     Validates a search query against a specified schema.
 

@@ -129,7 +129,7 @@ def athena_query_options(f):
     return f
 
 
-SKIP_FIELDS = ["id", "time", "valid_from", "valid_to"]
+SKIP_FIELDS = ["time", "valid_from", "valid_to"]
 
 
 def schema_options(schema):
@@ -142,15 +142,23 @@ def schema_options(schema):
             schemas = json.load(file)
             schema_data = schemas[schema]
             title = schema_data["title"]
-            for field, type_str in schema_data["projection"].items():
+            for field, type_str in sorted(
+                schema_data["projection"].items(),
+                key=lambda x: x[0],
+                reverse=True,
+            ):
                 if field in SKIP_FIELDS:
                     continue
                 schema_opts = lib.TYPE_STR_TO_CLICK_TYPE[type_str]
                 field_title = (
-                    schema_data["descriptions"].get(field, {}).get("title", field)
+                    schema_data["descriptions"]
+                    .get(field, {})
+                    .get("title", field)
                 )
                 if schema_opts.click_type == click.BOOL:
-                    option_name = f"is-{field.removeprefix('is-')}".replace("_", "-")
+                    option_name = f"is-{field.removeprefix('is-')}".replace(
+                        "_", "-"
+                    )
                     lib.BUILT_QUERY_OPTIONS.setdefault(schema, {})[
                         option_name.replace("-", "_").replace(".", "_")
                     ] = lib.SchemaOption(
@@ -224,7 +232,9 @@ output_option = click.option(
     "-o",
     "--output",
     default=lib.OUTPUT_DEFAULT,
-    type=click.Choice(lib.OUTPUT_CHOICES + [lib.OUTPUT_WIDE], case_sensitive=False),
+    type=click.Choice(
+        lib.OUTPUT_CHOICES + [lib.OUTPUT_WIDE], case_sensitive=False
+    ),
 )
 
 page_option = click.option(
