@@ -4,10 +4,6 @@ import json
 from typing import Dict, List
 
 import spyctl.spyctl_lib as lib
-from spyctl.api.source_queries import (
-    get_filtered_data,
-    threadpool_progress_bar_time_blocks,
-)
 
 
 def get_audit_events(
@@ -42,30 +38,11 @@ def get_audit_events(
 
     """
     audit_events = []
-    if msg_type:
-        schema = f"{lib.EVENT_LOG_PREFIX}:" f"{lib.EVENT_LOG_SUBTYPE_MAP[msg_type]}"
-    else:
-        schema = lib.EVENT_LOG_PREFIX
-    url = f"api/v1/org/{org_uid}/analyticspolicy/logs"
-    for resp in threadpool_progress_bar_time_blocks(
-        [src_uid],
-        time,
-        lambda uid, time_tup: get_filtered_data(
-            api_url,
-            api_key,
-            org_uid,
-            uid,
-            "audit",
-            schema,
-            time_tup,
-            pipeline=None,
-            url=url,
-        ),
-        disable_pbar=disable_pbar,
-    ):
-        for event_json in resp.iter_lines():
-            event = json.loads(event_json)
-            audit_events.append(event)
+    # TODO: Add guardian logs to athena search
+    return []
+    for event_json in []:
+        event = json.loads(event_json)
+        audit_events.append(event)
     audit_events.sort(key=lambda event: event["time"])
     if since_id:
         for i, rec in enumerate(audit_events):

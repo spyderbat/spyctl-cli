@@ -129,7 +129,7 @@ def athena_query_options(f):
     return f
 
 
-SKIP_FIELDS = ["id", "time", "valid_from", "valid_to"]
+SKIP_FIELDS = ["time", "valid_from", "valid_to"]
 
 
 def schema_options(schema):
@@ -142,7 +142,11 @@ def schema_options(schema):
             schemas = json.load(file)
             schema_data = schemas[schema]
             title = schema_data["title"]
-            for field, type_str in schema_data["projection"].items():
+            for field, type_str in sorted(
+                schema_data["projection"].items(),
+                key=lambda x: x[0],
+                reverse=True,
+            ):
                 if field in SKIP_FIELDS:
                     continue
                 schema_opts = lib.TYPE_STR_TO_CLICK_TYPE[type_str]
