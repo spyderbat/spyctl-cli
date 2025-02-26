@@ -5,7 +5,6 @@ import click
 import spyctl.commands.get.shared_options as _so
 import spyctl.config.configs as cfg
 import spyctl.resources as _r
-import spyctl.resources.api_filters as _af
 import spyctl.spyctl_lib as lib
 from spyctl import cli
 from spyctl.api.athena_search import search_athena
@@ -60,26 +59,23 @@ def get_fingerprints_cmd(name_or_id, output, st, et, **filters):
 
     get_lib.output_time_log(lib.FINGERPRINTS_RESOURCE.name_plural, st, et)
     name_or_id = get_lib.wildcard_name_or_id(name_or_id, exact)
-    filters = {key: value for key, value in filters.items() if value is not None}
+    filters = {
+        key: value for key, value in filters.items() if value is not None
+    }
 
     handle_get_fingerprints(name_or_id, output, st, et, fprint_type, **filters)
 
 
-def handle_get_fingerprints(name_or_id, output, st, et, fprint_type, **filters):
+def handle_get_fingerprints(
+    name_or_id, output, st, et, fprint_type, **filters
+):
     """Output fingerprints by name or id."""
     ctx = cfg.get_current_context()
     # Pop any extra options
     raw = filters.pop("raw_data", False)
     group_by = filters.pop("group_by", [])
     sort_by = filters.pop("sort_by", [])
-    # Hacky -- need to fix this in the API code
-    if "image" in filters:
-        value = filters.pop("image")
-        filters["image_name"] = value
-    name_or_id_expr = None
-    if name_or_id:
-        name_or_id_expr = _af.Fingerprints.generate_name_or_uid_expr(name_or_id)
-    query = lib.query_builder("model_fingerprint", name_or_id_expr, **filters)
+    query = lib.query_builder("model_fingerprint", name_or_id, **filters)
     # Output in desired format
     if output == lib.OUTPUT_DEFAULT:
         fingerprints = search_athena(
