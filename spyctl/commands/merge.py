@@ -360,9 +360,7 @@ def handle_merge(
             elif with_obj is False:
                 continue
             else:
-                merge_obj = __nothing_to_merge_with(
-                    target_name, target, latest
-                )
+                merge_obj = __nothing_to_merge_with(target_name, target, latest)
                 if merge_obj:
                     handle_output(
                         output, output_dest, [merge_obj], _full_diff=full_diff
@@ -406,9 +404,7 @@ def handle_merge(
                 elif with_obj is False:
                     continue
                 else:
-                    merge_obj = __nothing_to_merge_with(
-                        target_name, target, latest
-                    )
+                    merge_obj = __nothing_to_merge_with(target_name, target, latest)
                     if merge_obj:
                         handle_output(
                             output,
@@ -435,9 +431,7 @@ def handle_merge(
                     )
                     continue
                 for policy in policies:
-                    pol_uid = policy[lib.METADATA_FIELD][
-                        lib.METADATA_UID_FIELD
-                    ]
+                    pol_uid = policy[lib.METADATA_FIELD][lib.METADATA_UID_FIELD]
                     targets[pol_uid] = policy
             targets = sorted(
                 list(targets.values()),
@@ -446,9 +440,7 @@ def handle_merge(
             pager = len(targets) > 0
             for target in targets:
                 t_name = lib.get_metadata_name(target)
-                t_uid = target.get(lib.METADATA_FIELD, {}).get(
-                    lib.METADATA_UID_FIELD
-                )
+                t_uid = target.get(lib.METADATA_FIELD, {}).get(lib.METADATA_UID_FIELD)
                 target_name = f"applied policy '{t_name} - {t_uid}'"
                 with_obj = get_with_obj(
                     target,
@@ -478,9 +470,7 @@ def handle_merge(
                 elif with_obj is False:
                     continue
                 else:
-                    merge_obj = __nothing_to_merge_with(
-                        target_name, target, latest
-                    )
+                    merge_obj = __nothing_to_merge_with(target_name, target, latest)
                     if merge_obj:
                         handle_output(
                             output,
@@ -529,9 +519,7 @@ def get_with_obj(
         with_obj = get_with_policy(target_uid, POLICIES)
         if with_obj:
             pol_name = lib.get_metadata_name(with_obj)
-            pol_uid = with_obj.get(lib.METADATA_FIELD, {}).get(
-                lib.METADATA_UID_FIELD
-            )
+            pol_uid = with_obj.get(lib.METADATA_FIELD, {}).get(lib.METADATA_UID_FIELD)
             if not cli.query_yes_no(
                 f"Merge {target_name} with data from applied policy "
                 f"'{pol_name} - {pol_uid}'?{apply_disclaimer}"
@@ -541,9 +529,7 @@ def get_with_obj(
         with_obj = get_with_policy(with_policy, POLICIES)
         if with_obj:
             pol_name = lib.get_metadata_name(with_obj)
-            pol_uid = with_obj.get(lib.METADATA_FIELD, {}).get(
-                lib.METADATA_UID_FIELD
-            )
+            pol_uid = with_obj.get(lib.METADATA_FIELD, {}).get(lib.METADATA_UID_FIELD)
             if not cli.query_yes_no(
                 f"Merge {target_name} with data from applied policy"
                 f" '{pol_name} - {pol_uid}'?{apply_disclaimer}"
@@ -601,9 +587,7 @@ def get_with_deviations(uid: str, st, et) -> List[Dict]:
 
 def filter_fingerprints(target, fingerprints) -> List[Dict]:
     filters = lib.selectors_to_filters(target)
-    rv = filt.filter_fingerprints(
-        fingerprints, **filters, use_context_filters=False
-    )
+    rv = filt.filter_fingerprints(fingerprints, **filters, use_context_filters=False)
     return rv
 
 
@@ -622,9 +606,7 @@ def merge_resource(
     check_irrelevant=False,
 ) -> Optional[List[MergeObject]]:
     if target == with_obj:
-        cli.try_log(
-            f"{src_cmd} target and with-object are the same.. skipping"
-        )
+        cli.try_log(f"{src_cmd} target and with-object are the same.. skipping")
         return None
     if not ctx:
         ctx = cfgs.get_current_context()
@@ -633,13 +615,9 @@ def merge_resource(
         merge_with_objects = r_lib.handle_input_data(with_obj, ctx)
     else:
         for obj in with_obj:
-            merge_with_objects.extend(
-                r_lib.handle_input_data(data=obj, ctx=ctx)
-            )
+            merge_with_objects.extend(r_lib.handle_input_data(data=obj, ctx=ctx))
     resrc_kind = target.get(lib.KIND_FIELD)
-    merge_obj = m_obj_h.get_merge_object(
-        resrc_kind, target, merge_network, src_cmd
-    )
+    merge_obj = m_obj_h.get_merge_object(resrc_kind, target, merge_network, src_cmd)
     if isinstance(merge_with_objects, list):
         for w_obj in merge_with_objects:
             if is_type_mismatch(target, target_name, src_cmd, w_obj):
@@ -652,9 +630,7 @@ def merge_resource(
                     *e.args,
                 )
     else:
-        raise ValueError(
-            f"Bug found, attempting to {src_cmd} with invalid object"
-        )
+        raise ValueError(f"Bug found, attempting to {src_cmd} with invalid object")
     if target[lib.SPEC_FIELD] == merge_obj.get_obj_data().get(
         lib.SPEC_FIELD
     ) and not isinstance(merge_obj, _rmo.RulesetPolicyMergeObject):
@@ -697,17 +673,14 @@ def merge_ruleset_policy(
         )
     pol_uid = target[lib.METADATA_FIELD].get(lib.METADATA_UID_FIELD)
     if not pol_uid:
-        cli.try_log(
-            f"Policy '{target_name}' has no uid, unable to merge rulesets."
-        )
+        cli.try_log(f"Policy '{target_name}' has no uid, unable to merge rulesets.")
         return
     if not ctx:
         ctx = cfgs.get_current_context()
     rulesets = get_rulesets(*ctx.get_api_data(), params={"in_policy": pol_uid})
     if not rulesets:
         cli.try_log(
-            f"No rulesets found for policy '{target_name}' with uid"
-            f" '{pol_uid}'"
+            f"No rulesets found for policy '{target_name}' with uid" f" '{pol_uid}'"
         )
         return
     merge_with_objects = []
@@ -715,16 +688,12 @@ def merge_ruleset_policy(
         merge_with_objects = r_lib.handle_input_data(with_obj, ctx)
     else:
         for obj in with_obj:
-            merge_with_objects.extend(
-                r_lib.handle_input_data(data=obj, ctx=ctx)
-            )
+            merge_with_objects.extend(r_lib.handle_input_data(data=obj, ctx=ctx))
     for rs in rulesets:
         cli.try_log(
             f"{src_cmd.title()} ruleset '{rs[lib.METADATA_FIELD][lib.NAME_FIELD]}'"  # noqa
         )
-        merge_obj = m_obj_h.get_merge_object(
-            lib.RULESET_KIND, rs, True, src_cmd
-        )
+        merge_obj = m_obj_h.get_merge_object(lib.RULESET_KIND, rs, True, src_cmd)
         for w_obj in merge_with_objects:
             merge_obj.asymmetric_merge(w_obj, check_irrelevant)
         yield merge_obj
@@ -824,9 +793,7 @@ def save_merge_to_file(merge_obj: MergeObject, output_format):
         default="no",
         ignore_yes_option=YES_EXCEPT,
     ):
-        cli.show(
-            merge_obj.get_diff(), lib.OUTPUT_RAW, dest=lib.OUTPUT_DEST_PAGER
-        )
+        cli.show(merge_obj.get_diff(), lib.OUTPUT_RAW, dest=lib.OUTPUT_DEST_PAGER)
     if not cli.query_yes_no(
         f"Apply merge changes to '{pol_name}-{pol_uid}'?",
         default=None,
@@ -851,7 +818,5 @@ def __nothing_to_merge_with(
         )
         merge_object.update_latest_timestamp()
         return merge_object
-    cli.try_log(
-        f"{name.capitalize()} has nothing to {src_cmd} with... skipping."
-    )
+    cli.try_log(f"{name.capitalize()} has nothing to {src_cmd} with... skipping.")
     return None
