@@ -39,23 +39,17 @@ def __handle_uid_list_input(data: Dict, ctx: Optional[cfg.Context] = None):
     if not ctx:
         ctx = cfg.get_current_context()
     fprint_uids = [
-        uid
-        for uid in data[lib.DATA_FIELD][lib.UIDS_FIELD]
-        if uid.startswith("fprint")
+        uid for uid in data[lib.DATA_FIELD][lib.UIDS_FIELD] if uid.startswith("fprint")
     ]
     fprints = []
     if fprint_uids:
         fprints = get_objects(*ctx.get_api_data(), fprint_uids, use_pbar=False)
     deviation_uids = [
-        uid
-        for uid in data[lib.DATA_FIELD][lib.UIDS_FIELD]
-        if uid.startswith("dev")
+        uid for uid in data[lib.DATA_FIELD][lib.UIDS_FIELD] if uid.startswith("dev")
     ]
     deviations = []
     if deviation_uids:
-        deviations = get_objects(
-            *ctx.get_api_data(), deviation_uids, use_pbar=False
-        )
+        deviations = get_objects(*ctx.get_api_data(), deviation_uids, use_pbar=False)
     return fprints + deviations
 
 
