@@ -59,16 +59,12 @@ def get_fingerprints_cmd(name_or_id, output, st, et, **filters):
 
     get_lib.output_time_log(lib.FINGERPRINTS_RESOURCE.name_plural, st, et)
     name_or_id = get_lib.wildcard_name_or_id(name_or_id, exact)
-    filters = {
-        key: value for key, value in filters.items() if value is not None
-    }
+    filters = {key: value for key, value in filters.items() if value is not None}
 
     handle_get_fingerprints(name_or_id, output, st, et, fprint_type, **filters)
 
 
-def handle_get_fingerprints(
-    name_or_id, output, st, et, fprint_type, **filters
-):
+def handle_get_fingerprints(name_or_id, output, st, et, fprint_type, **filters):
     """Output fingerprints by name or id."""
     ctx = cfg.get_current_context()
     # Pop any extra options

@@ -121,11 +121,7 @@ def handle_search(schema, query, output, st, et, **kwargs):
     sq_name_or_uid = kwargs.get("use_query")
     skip_results = kwargs.get("skip_results")
     description = kwargs.get("description")
-    if (
-        list_schemas
-        or describe
-        or (not any([schema, query]) and not sq_name_or_uid)
-    ):
+    if list_schemas or describe or (not any([schema, query]) and not sq_name_or_uid):
         # If we're here we're outputting schema information
         # not running a query
         handle_search_schema(output, schema)
@@ -162,9 +158,7 @@ def handle_search(schema, query, output, st, et, **kwargs):
         __save_query(schema, query, kwargs["save_query"], description)
 
 
-def __save_query(
-    schema, query, query_name: str = None, description: str = None
-):
+def __save_query(schema, query, query_name: str = None, description: str = None):
     """
     Save a query to the database.
 
@@ -177,9 +171,7 @@ def __save_query(
     """
     description = description or ""
     if query_name in [None, "__save__"]:
-        query_name = (
-            f"{schema} - {zulu.now().format('YYYY-MM-ddTHH:mm:ss')} UTC"
-        )
+        query_name = f"{schema} - {zulu.now().format('YYYY-MM-ddTHH:mm:ss')} UTC"
     yaml_dict = _r.saved_queries.data_to_yaml(
         {
             "name": query_name,
@@ -208,9 +200,7 @@ def handle_search_schema(output: str, schema: str = None):
         handle_specific_schema(output, schema)
         return
     if lib.OUTPUT_DEFAULT:
-        schemas_lines = [
-            [f"  {v['title']}", f"({k})"] for k, v in SCHEMAS.items()
-        ]
+        schemas_lines = [[f"  {v['title']}", f"({k})"] for k, v in SCHEMAS.items()]
         schemas_lines.sort()
         output = lib.OUTPUT_RAW
         lines = ["Available Schemas:"]
@@ -253,9 +243,7 @@ class RetrievedQuery:
     uid: str
 
 
-def __retrieve_saved_query(
-    ctx: cfg.Context, saved_query_name_or_uid
-) -> RetrievedQuery:
+def __retrieve_saved_query(ctx: cfg.Context, saved_query_name_or_uid) -> RetrievedQuery:
     """Retrieve a saved query by name or uid."""
     cli.try_log("Retrieving saved query...")
     saved_queries, _ = get_saved_queries(

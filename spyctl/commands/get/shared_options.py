@@ -138,9 +138,7 @@ def schema_options(schema):
 
     def _add_options(f):
         file = (
-            files("spyctl.commands.get")
-            .joinpath("resource_schemas.json")
-            .read_text()
+            files("spyctl.commands.get").joinpath("resource_schemas.json").read_text()
         )
         schemas = json.loads(file)
         schema_data = schemas[schema]
@@ -160,13 +158,9 @@ def schema_options(schema):
             )
             if omit:
                 continue
-            field_title = (
-                schema_data["descriptions"].get(field, {}).get("title", field)
-            )
+            field_title = schema_data["descriptions"].get(field, {}).get("title", field)
             if schema_opts.click_type == click.BOOL:
-                option_name = f"is-{field.removeprefix('is-')}".replace(
-                    "_", "-"
-                )
+                option_name = f"is-{field.removeprefix('is-')}".replace("_", "-")
                 lib.BUILT_QUERY_OPTIONS.setdefault(schema, {})[
                     option_name.replace("-", "_").replace(".", "_")
                 ] = lib.SchemaOption(
@@ -185,9 +179,9 @@ def schema_options(schema):
                 f = x(f)
             else:
                 for option_variant in schema_opts.option_variants:
-                    option_name = f"{field}-{option_variant}".replace(
-                        "_", "-"
-                    ).replace(".", "_")
+                    option_name = f"{field}-{option_variant}".replace("_", "-").replace(
+                        ".", "_"
+                    )
                     lib.BUILT_QUERY_OPTIONS.setdefault(schema, {})[
                         option_name.replace("-", "_")
                     ] = lib.SchemaOption(
@@ -240,9 +234,7 @@ output_option = click.option(
     "-o",
     "--output",
     default=lib.OUTPUT_DEFAULT,
-    type=click.Choice(
-        lib.OUTPUT_CHOICES + [lib.OUTPUT_WIDE], case_sensitive=False
-    ),
+    type=click.Choice(lib.OUTPUT_CHOICES + [lib.OUTPUT_WIDE], case_sensitive=False),
 )
 
 page_option = click.option(

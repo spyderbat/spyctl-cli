@@ -34,9 +34,7 @@ def linux_svc_query(name_or_id: str, **kwargs):
             value = value if value.endswith(".service") else f"{value}.service"
         return value
 
-    kwargs = {
-        PROPERTY_MAP[k]: v for k, v in kwargs.items() if k in PROPERTY_MAP
-    }
+    kwargs = {PROPERTY_MAP[k]: v for k, v in kwargs.items() if k in PROPERTY_MAP}
     query = 'cgroup ~= "*/system.slice/*.service"'
     if name_or_id:
         query += f' and cgroup ~= "*{name_or_id.strip("*")}*"'

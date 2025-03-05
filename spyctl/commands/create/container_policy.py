@@ -163,9 +163,7 @@ CONTAINER_FIELDS = {
 MACHINE_FIELDS = {"hostname"}
 
 
-def handle_create_container_policy(
-    output: str, st: float, et: float, **kwargs
-):
+def handle_create_container_policy(output: str, st: float, et: float, **kwargs):
     """
     Handle the creation of a container policy.
 

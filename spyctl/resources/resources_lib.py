@@ -43,9 +43,7 @@ def __handle_uid_list_input(data: Dict, ctx: Optional[cfg.Context] = None):
         data[lib.METADATA_FIELD][lib.METADATA_END_TIME_FIELD],
     )
     fprint_uids = [
-        uid
-        for uid in data[lib.DATA_FIELD][lib.UIDS_FIELD]
-        if uid.startswith("fprint")
+        uid for uid in data[lib.DATA_FIELD][lib.UIDS_FIELD] if uid.startswith("fprint")
     ]
     fprints = []
     if fprint_uids:

@@ -133,9 +133,7 @@ def create_container_ruleset(output: str, st: float, et: float, **kwargs):
     handle_create_container_ruleset(output, st, et, **kwargs)
 
 
-def handle_create_container_ruleset(
-    output: str, st: float, et: float, **kwargs
-):
+def handle_create_container_ruleset(output: str, st: float, et: float, **kwargs):
     """
     Handle the creation of a container policy.
 
