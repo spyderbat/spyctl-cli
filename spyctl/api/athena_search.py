@@ -1,5 +1,6 @@
 """Contains the logic for making API calls to the Athena Search API"""
 
+import json
 import math
 import sys
 import time
@@ -16,6 +17,43 @@ from spyctl.api.primitives import post
 # Athena Search
 SEARCH_RESULT_LIMIT = 10000
 SEARCH_PAGE_LIMIT = 999
+
+
+def search_full_json(
+    api_url: str, api_key: str, org_uid: str, schema: str, query: str, **kwargs
+) -> List[Dict]:
+    """
+    Sends a POST request to create a new search.
+
+    Args:
+        api_url (str): The URL of the API.
+        api_key (str): The API key for authentication.
+        org_uid (str): The unique identifier of the organization.
+        schema (str): The schema for the search.
+        query (str): The query for the search.
+        **kwargs: Additional keyword arguments.
+
+    Keyword Args:
+        start_time (int): starting epoch time of query.
+        end_time (int): ending epoch time of the query.
+        order_by (list[dict]): The field and ordering to order the results by.
+            Example:[{"name":"pid", "ascending": true}],
+        group_by (list[dict]): The field to group the results by, with optional bins to group in.
+            Example: [{"name": "time","bins": [1727714225, 1727714325, 1727714425]}, {"name": "exe"}],
+        use_pbar (bool): Whether to use a progress bar (default: True).
+        desc (str): Description for the progress bar.
+        quiet (bool): Suppress cli output during search (default: False).
+        limit (int): The limit of results to return.
+    """
+    kwargs["output_fields"] = ["full_json"]
+    results = search_athena(api_url, api_key, org_uid, schema, query, **kwargs)
+    rv = []
+    for result in results:
+        if "full_json" in result and isinstance(result["full_json"], str):
+            rv.append(json.loads(result["full_json"]))
+        elif "full_json" in result:
+            rv.append(result["full_json"])
+    return rv
 
 
 def search_athena(
@@ -122,6 +160,7 @@ def post_new_search(
         start_time (bool): starting epoch time of query.
         end_time (bool): ending epoch time of the query.
         limit (int): The limit of results to return.
+        full_json (bool): Whether to return the full JSON from athena.
 
     Returns:
         str: The search's job ID.

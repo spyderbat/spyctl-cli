@@ -5,7 +5,7 @@ from typing import Dict, List, Optional, Tuple
 import spyctl.config.configs as cfg
 import spyctl.schemas_v2 as schemas
 import spyctl.spyctl_lib as lib
-from spyctl.api.athena_search import search_athena
+from spyctl.api.athena_search import search_full_json
 
 NS_LABEL = "kubernetes.io/metadata.name"
 
@@ -236,7 +236,7 @@ def generate_container_rules(ruleset: ClusterRuleset, time, **filters):
     container_rules: ContainerRules = ruleset.add_rules(
         "allow", lib.RULES_TYPE_CONTAINER, include_namespaces
     )
-    for container in search_athena(
+    for container in search_full_json(
         *ctx.get_api_data(),
         "model_container",
         query,

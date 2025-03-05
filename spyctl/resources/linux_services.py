@@ -6,7 +6,7 @@ from tabulate import tabulate
 import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
 from spyctl import cli
-from spyctl.api.athena_search import search_athena
+from spyctl.api.athena_search import search_full_json
 from spyctl.api.objects import get_objects
 
 MACHINE_FIELDS = {"hostname"}
@@ -112,7 +112,7 @@ def linux_svc_summary_output(
         return service_name
 
     query = linux_svc_query(name_or_id, **filters)
-    procs = search_athena(
+    procs = search_full_json(
         *ctx.get_api_data(),
         "model_process",
         query,
@@ -150,7 +150,7 @@ def get_linux_services(
         return service_name
 
     query = linux_svc_query(name_or_id, **filters)
-    procs = search_athena(
+    procs = search_full_json(
         *ctx.get_api_data(),
         "model_process",
         query,

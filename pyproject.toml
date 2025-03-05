@@ -2,12 +2,16 @@
 requires = ["setuptools>=64", "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
+
 [tool.setuptools]
 packages = ["spyctl"]
 
+[tool.setuptools.package-data]
+"spyctl.commands.get" = ["resource_schemas.json"]
+
 [project]
 name = "spyctl"
-version = "0.22.0"
+version = "0.22.3"
 
 description = "A command line tool for viewing and managing Spyderbat Resources"
 readme = "README.md"

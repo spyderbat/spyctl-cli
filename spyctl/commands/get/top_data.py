@@ -6,7 +6,7 @@ import spyctl.commands.get.shared_options as _so
 import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
 from spyctl import cli
-from spyctl.api.athena_search import search_athena
+from spyctl.api.athena_search import search_full_json
 from spyctl.commands.get import get_lib
 
 
@@ -31,7 +31,7 @@ def handle_get_top_data(name_or_id, output, st, et, **filters):
             "Provide an option with the machine uid of the machine you want top data for.\n"  # noqa
             "'spyctl get machines' will provide a list."
         )
-    top_data = search_athena(
+    top_data = search_full_json(
         *ctx.get_api_data(),
         "event_top_data",
         query,

@@ -49,5 +49,19 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         repository-url: https://test.pypi.org/legacy/
+    - name: Notify Slack
+      run: |
+        curl -request POST \
+          --header 'Content-type: application/json' \
+          --url ${{ secrets.RELEASE_CHANNEL_WEBHOOK }} \
+          --data '{"text": "*Spyctl CLI ${{github.event.release.tag_name}}* released to *Test Pypi*. *Author*: ${{ github.actor }} "}'
+    - name: Failure
+      if: failure()
+      run: |
+        echo "Notify Slack of failure"
+        curl -request POST \
+          --header 'Content-type: application/json' \
+          --url ${{ secrets.RELEASE_CHANNEL_WEBHOOK }} \
+          --data '{"text": "*Spyctl CLI ${{github.event.release.tag_name}}* released to *Test Pypi* failed."}'
 
 
