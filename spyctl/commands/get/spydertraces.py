@@ -6,7 +6,7 @@ import spyctl.commands.get.shared_options as _so
 import spyctl.config.configs as cfg
 import spyctl.resources as _r
 import spyctl.spyctl_lib as lib
-from spyctl.api.athena_search import search_athena
+from spyctl.api.athena_search import search_full_json
 from spyctl.commands.get import get_lib
 
 
@@ -32,7 +32,7 @@ def handle_get_spydertraces(name_or_id, output, st, et, **filters):
     ctx = cfg.get_current_context()
     query = lib.query_builder("model_spydertrace", name_or_id, **filters)
     include_linkback = filters.pop("include_linkback", False)
-    spydertraces = search_athena(
+    spydertraces = search_full_json(
         *ctx.get_api_data(),
         "model_spydertrace",
         query,

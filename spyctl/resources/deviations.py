@@ -3,7 +3,7 @@ from typing import Dict, List
 import spyctl.config.configs as cfg
 import spyctl.merge_lib.merge_object_helper as _m_obj_h
 import spyctl.spyctl_lib as lib
-from spyctl.api.athena_search import search_athena
+from spyctl.api.athena_search import search_full_json
 
 
 def get_unique_deviations(uid, st, et, full_rec=False) -> List[Dict]:
@@ -12,7 +12,7 @@ def get_unique_deviations(uid, st, et, full_rec=False) -> List[Dict]:
     query = lib.query_builder(
         "event_deviation", None, show_hint=False, **{"policy_uid_equals": uid}
     )
-    for deviation in search_athena(
+    for deviation in search_full_json(
         *ctx.get_api_data(),
         "event_deviation",
         query,
@@ -53,7 +53,7 @@ def get_deviations_stream(
     unique_deviations = {}  # For unique deviations (not raw)
     dev_list = []  # For all deviations (not raw)
     query = lib.query_builder("event_deviation", dev_name_or_uid, show_hint=False, **{})
-    for deviation in search_athena(
+    for deviation in search_full_json(
         *ctx.get_api_data(),
         "event_deviation",
         query,

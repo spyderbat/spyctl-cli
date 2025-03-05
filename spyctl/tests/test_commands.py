@@ -57,7 +57,7 @@ def test_help():
 
 
 @mock.patch(
-    "spyctl.commands.get.namespaces.search_athena",
+    "spyctl.commands.get.namespaces.search_full_json",
     mock_func.mock_get_namespaces,
 )
 def test_get_namespaces():

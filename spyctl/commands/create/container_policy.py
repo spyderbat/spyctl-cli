@@ -8,7 +8,7 @@ import spyctl.config.configs as cfg
 import spyctl.resources as _r
 import spyctl.spyctl_lib as lib
 from spyctl import cli
-from spyctl.api.athena_search import search_athena
+from spyctl.api.athena_search import search_full_json
 
 
 @click.command(
@@ -178,7 +178,7 @@ def handle_create_container_policy(output: str, st: float, et: float, **kwargs):
     """
     ctx = cfg.get_current_context()
     mode = kwargs.pop("mode")
-    procs = search_athena(
+    procs = search_full_json(
         *ctx.get_api_data(),
         schema="model_process",
         query=__proc_conn_query(**kwargs),
@@ -187,7 +187,7 @@ def handle_create_container_policy(output: str, st: float, et: float, **kwargs):
         desc="Retrieving Policy Processes",
     )
     conns = []
-    conns = search_athena(
+    conns = search_full_json(
         *ctx.get_api_data(),
         schema="model_connection",
         query=__proc_conn_query(**kwargs),
@@ -195,7 +195,7 @@ def handle_create_container_policy(output: str, st: float, et: float, **kwargs):
         end_time=et,
         desc="Retrieving Policy Connections",
     )
-    conts = search_athena(
+    conts = search_full_json(
         *ctx.get_api_data(),
         schema="model_container",
         query=__cont_query(**kwargs),

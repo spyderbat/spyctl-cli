@@ -6,7 +6,7 @@ import spyctl.commands.get.shared_options as _so
 import spyctl.config.configs as cfg
 import spyctl.resources as _r
 import spyctl.spyctl_lib as lib
-from spyctl.api.athena_search import search_athena
+from spyctl.api.athena_search import search_full_json
 from spyctl.commands.get import get_lib
 
 
@@ -30,7 +30,7 @@ def handle_get_machines(name_or_id, output, st, et, **filters):
     """Output machines by name or id."""
     ctx = cfg.get_current_context()
     query = lib.query_builder("model_machine", name_or_id, **filters)
-    machines = search_athena(
+    machines = search_full_json(
         *ctx.get_api_data(),
         "model_machine",
         query,

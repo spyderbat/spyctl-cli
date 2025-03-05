@@ -7,7 +7,7 @@ import spyctl.config.configs as cfg
 import spyctl.resources as _r
 import spyctl.spyctl_lib as lib
 from spyctl import cli
-from spyctl.api.athena_search import search_athena
+from spyctl.api.athena_search import search_full_json
 from spyctl.commands.get import get_lib
 
 
@@ -74,7 +74,7 @@ def handle_get_fingerprints(name_or_id, output, st, et, fprint_type, **filters):
     query = lib.query_builder("model_fingerprint", name_or_id, **filters)
     # Output in desired format
     if output == lib.OUTPUT_DEFAULT:
-        fingerprints = search_athena(
+        fingerprints = search_full_json(
             *ctx.get_api_data(),
             "model_fingerprint",
             query,

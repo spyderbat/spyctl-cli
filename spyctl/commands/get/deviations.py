@@ -8,7 +8,7 @@ import spyctl.config.configs as cfg
 import spyctl.resources as _r
 import spyctl.spyctl_lib as lib
 from spyctl import cli
-from spyctl.api.athena_search import search_athena
+from spyctl.api.athena_search import search_full_json
 from spyctl.commands.get import get_lib
 
 
@@ -68,7 +68,7 @@ def handle_get_deviations(name_or_id, output, st, et, **filters):
         cli.show(summary, lib.OUTPUT_RAW)
     else:
         query = lib.query_builder("event_deviation", name_or_id, **filters)
-        deviations = search_athena(
+        deviations = search_full_json(
             *ctx.get_api_data(),
             "event_deviation",
             query,

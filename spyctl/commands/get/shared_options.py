@@ -151,6 +151,13 @@ def schema_options(schema):
             if field in SKIP_FIELDS:
                 continue
             schema_opts = lib.TYPE_STR_TO_CLICK_TYPE[type_str]
+            omit = (
+                schema_data["descriptions"]
+                .get(field, {})
+                .get("omit_from_console", False)
+            )
+            if omit:
+                continue
             field_title = schema_data["descriptions"].get(field, {}).get("title", field)
             if schema_opts.click_type == click.BOOL:
                 option_name = f"is-{field.removeprefix('is-')}".replace("_", "-")

@@ -12,7 +12,7 @@ import spyctl.config.configs as cfg
 import spyctl.resources as _r
 import spyctl.spyctl_lib as lib
 from spyctl import cli
-from spyctl.api.athena_search import search_athena, validate_search_query
+from spyctl.api.athena_search import search_full_json, validate_search_query
 from spyctl.api.primitives import get
 from spyctl.api.saved_queries import get_saved_queries, put_update_last_used
 from spyctl.commands.apply_cmd.apply import handle_apply_saved_query
@@ -138,7 +138,7 @@ def handle_search(schema, query, output, st, et, **kwargs):
             "Use --describe to view available search fields, or provide a query."  # noqa
         )
     if not skip_results:
-        results = search_athena(
+        results = search_full_json(
             *ctx.get_api_data(), schema, query, start_time=st, end_time=et
         )
         if rsq:

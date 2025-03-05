@@ -6,7 +6,7 @@ import spyctl.commands.get.shared_options as _so
 import spyctl.config.configs as cfg
 import spyctl.resources as _r
 import spyctl.spyctl_lib as lib
-from spyctl.api.athena_search import search_athena
+from spyctl.api.athena_search import search_full_json
 from spyctl.commands.get import get_lib
 
 
@@ -26,7 +26,7 @@ def handle_get_conn_buns(name_or_id, output, st, et, **filters):
     """Output connection bundles by name or id."""
     ctx = cfg.get_current_context()
     query = lib.query_builder("model_bundled_connection", name_or_id, **filters)
-    cb = search_athena(
+    cb = search_full_json(
         *ctx.get_api_data(),
         "model_bundled_connection",
         query,
