@@ -2717,8 +2717,12 @@ def query_builder(
             return f'"{value}"'
         return value
 
-    def prefix(q: str):
+    def prefix(q: str, or_clause: bool = False, first: bool = False):
         if q:
+            if first and or_clause:
+                return ""
+            if or_clause:
+                return " OR "
             return " AND "
         return ""
 
@@ -2739,41 +2743,59 @@ def query_builder(
         # iterate over the values.
         if isinstance(v_tup, str):
             v_tup = [v_tup]
+        or_clause = False
+        if len(v_tup) > 1:
+            query += " (" if query else "("
+            or_clause = True
+        first = True
         for v in v_tup:
             so: SchemaOption = schema_opts[k]
             op = VARIANT_TO_OP[so.option_variant]
             if so.option_variant == NOT_CONTAINS_VARIANT:
-                query += f"{prefix(query)}NOT {so.query_field} {op} '*{v}*'"
+                query += f"{prefix(query, or_clause, first)}NOT {so.query_field} {op} '*{v}*'"
             elif so.option_variant == STARTS_WITH_VARIANT:
-                query += f"{prefix(query)}{so.query_field} {op} '{v}*'"
-            elif so.option_variant == ENDS_WITH_VARIANT:
-                query += f"{prefix(query)}{so.query_field} {op} '*{v}'"
-            elif so.option_variant == CONTAINS_VARIANT:
-                query += f"{prefix(query)}{so.query_field} {op} '*{v}*'"
-            elif so.option_variant == ANY_ITEM_EQUALS_VARIANT:
-                query += f"{prefix(query)}{so.query_field}[*] {op} '{v}'"
-            elif so.option_variant == ANY_ITEM_CONTAINS_VARIANT:
-                query += f"{prefix(query)}{so.query_field}[*] {op} '*{v}*'"
-            elif so.option_variant == ALL_ITEMS_NOT_EQUALS_VARIANT:
-                query += f"{prefix(query)}NOT {so.query_field}[*] {op} '{v}'"
-            elif so.option_variant == ALL_ITEMS_NOT_CONTAINS_VARIANT:
-                query += f"{prefix(query)}NOT {so.query_field}[*] {op} '*{v}*'"
-            elif so.option_variant == ANY_KEY_EQUALS_VARIANT:
-                query += f"{prefix(query)}{so.query_field}:keys[*] {op} '{v}'"
-            elif so.option_variant == ANY_KEY_CONTAINS_VARIANT:
-                query += f"{prefix(query)}{so.query_field}:keys[*] {op} '*{v}*'"
-            elif so.option_variant == ANY_VALUE_EQUALS_VARIANT:
-                query += f"{prefix(query)}{so.query_field}:vals[*] {op} '{v}'"
-            elif so.option_variant == ANY_VALUE_CONTAINS_VARIANT:
-                query += f"{prefix(query)}{so.query_field}:vals[*] {op} '*{v}*'"
-            elif so.option_variant == IN_SUBNET_VARIANT:
-                query += f"{prefix(query)}{so.query_field} {op} '{v}'"
-            elif so.option_variant == NOT_IN_SUBNET_VARIANT:
-                query += f"{prefix(query)}NOT {so.query_field} {op} '{v}'"
-            else:
                 query += (
-                    f"{prefix(query)}{so.query_field} {op} {make_query_value(so, v)}"
+                    f"{prefix(query, or_clause, first)}{so.query_field} {op} '{v}*'"
                 )
+            elif so.option_variant == ENDS_WITH_VARIANT:
+                query += (
+                    f"{prefix(query, or_clause, first)}{so.query_field} {op} '*{v}'"
+                )
+            elif so.option_variant == CONTAINS_VARIANT:
+                query += (
+                    f"{prefix(query, or_clause, first)}{so.query_field} {op} '*{v}*'"
+                )
+            elif so.option_variant == ANY_ITEM_EQUALS_VARIANT:
+                query += (
+                    f"{prefix(query, or_clause, first)}{so.query_field}[*] {op} '{v}'"
+                )
+            elif so.option_variant == ANY_ITEM_CONTAINS_VARIANT:
+                query += (
+                    f"{prefix(query, or_clause, first)}{so.query_field}[*] {op} '*{v}*'"
+                )
+            elif so.option_variant == ALL_ITEMS_NOT_EQUALS_VARIANT:
+                query += f"{prefix(query, or_clause, first)}NOT {so.query_field}[*] {op} '{v}'"
+            elif so.option_variant == ALL_ITEMS_NOT_CONTAINS_VARIANT:
+                query += f"{prefix(query, or_clause, first)}NOT {so.query_field}[*] {op} '*{v}*'"
+            elif so.option_variant == ANY_KEY_EQUALS_VARIANT:
+                query += f"{prefix(query, or_clause, first)}{so.query_field}:keys[*] {op} '{v}'"
+            elif so.option_variant == ANY_KEY_CONTAINS_VARIANT:
+                query += f"{prefix(query, or_clause, first)}{so.query_field}:keys[*] {op} '*{v}*'"
+            elif so.option_variant == ANY_VALUE_EQUALS_VARIANT:
+                query += f"{prefix(query, or_clause, first)}{so.query_field}:vals[*] {op} '{v}'"
+            elif so.option_variant == ANY_VALUE_CONTAINS_VARIANT:
+                query += f"{prefix(query, or_clause, first)}{so.query_field}:vals[*] {op} '*{v}*'"
+            elif so.option_variant == IN_SUBNET_VARIANT:
+                query += f"{prefix(query, or_clause, first)}{so.query_field} {op} '{v}'"
+            elif so.option_variant == NOT_IN_SUBNET_VARIANT:
+                query += (
+                    f"{prefix(query, or_clause, first)}NOT {so.query_field} {op} '{v}'"
+                )
+            else:
+                query += f"{prefix(query, or_clause, first)}{so.query_field} {op} {make_query_value(so, v)}"
+            first = False
+        if len(v_tup) > 1:
+            query += ")"
     query = "*" if not query else query  # If no filters, return all
     if show_hint:
         try_log(
