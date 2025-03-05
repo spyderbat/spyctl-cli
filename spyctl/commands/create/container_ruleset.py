@@ -9,7 +9,7 @@ import spyctl.resources as _r
 import spyctl.schemas_v2 as schemas
 import spyctl.spyctl_lib as lib
 from spyctl import cli
-from spyctl.api.athena_search import search_athena
+from spyctl.api.athena_search import search_full_json
 
 # from typing import List
 
@@ -133,7 +133,9 @@ def create_container_ruleset(output: str, st: float, et: float, **kwargs):
     handle_create_container_ruleset(output, st, et, **kwargs)
 
 
-def handle_create_container_ruleset(output: str, st: float, et: float, **kwargs):
+def handle_create_container_ruleset(
+    output: str, st: float, et: float, **kwargs
+):
     """
     Handle the creation of a container policy.
 
@@ -167,7 +169,7 @@ def handle_create_container_ruleset(output: str, st: float, et: float, **kwargs)
         ).model_dump(by_alias=True, exclude_none=True)
         cli.show(rs, output)
         return
-    procs = search_athena(
+    procs = search_full_json(
         *ctx.get_api_data(),
         schema="model_process",
         query=__proc_conn_query(**kwargs),
@@ -184,7 +186,7 @@ def handle_create_container_ruleset(output: str, st: float, et: float, **kwargs)
     #     end_time=et,
     #     desc="Retrieving Policy Connections",
     # )
-    conts = search_athena(
+    conts = search_full_json(
         *ctx.get_api_data(),
         schema="model_container",
         query=__cont_query(**kwargs),

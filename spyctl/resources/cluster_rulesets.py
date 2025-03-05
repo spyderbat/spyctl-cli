@@ -5,7 +5,7 @@ from typing import Dict, List, Optional, Tuple
 import spyctl.config.configs as cfg
 import spyctl.schemas_v2 as schemas
 import spyctl.spyctl_lib as lib
-from spyctl.api.athena_search import search_athena
+from spyctl.api.athena_search import search_full_json
 
 NS_LABEL = "kubernetes.io/metadata.name"
 
@@ -65,7 +65,9 @@ class ContainerRules(RulesObject):
     def add_container(self, container: Dict):
         image = container["image"]
         namespaces_labels: Dict = container.get("pod_namespace_labels", {})
-        namespace = namespaces_labels.get(NS_LABEL, container.get("pod_namespace"))
+        namespace = namespaces_labels.get(
+            NS_LABEL, container.get("pod_namespace")
+        )
         if not namespace:
             if "pause" not in image:
                 lib.try_log(
@@ -129,7 +131,9 @@ class ContainerRules(RulesObject):
             )
 
         def sort_key(item: Dict):
-            labels = item[lib.NAMESPACE_SELECTOR_FIELD].get(lib.MATCH_LABELS_FIELD)
+            labels = item[lib.NAMESPACE_SELECTOR_FIELD].get(
+                lib.MATCH_LABELS_FIELD
+            )
             if labels:
                 namespace = labels.get(NS_LABEL)
                 return namespace
@@ -201,7 +205,9 @@ def create_blank_ruleset(_name: str):
     pass
 
 
-def create_ruleset(name: str, generate_rules: bool, time, **filters) -> ClusterRuleset:
+def create_ruleset(
+    name: str, generate_rules: bool, time, **filters
+) -> ClusterRuleset:
     ruleset = ClusterRuleset(name, filters.get(lib.CLUSTER_OPTION))
     if generate_rules:
         generate_cluster_ruleset(
@@ -210,7 +216,9 @@ def create_ruleset(name: str, generate_rules: bool, time, **filters) -> ClusterR
     return ruleset
 
 
-def generate_cluster_ruleset(ruleset: ClusterRuleset, rule_types, time, **filters):
+def generate_cluster_ruleset(
+    ruleset: ClusterRuleset, rule_types, time, **filters
+):
     cluster = filters.get(lib.CLUSTER_OPTION)
     if not cluster:
         lib.err_exit("Cluster name or UID is required for cluster ruleset")
@@ -236,7 +244,7 @@ def generate_container_rules(ruleset: ClusterRuleset, time, **filters):
     container_rules: ContainerRules = ruleset.add_rules(
         "allow", lib.RULES_TYPE_CONTAINER, include_namespaces
     )
-    for container in search_athena(
+    for container in search_full_json(
         *ctx.get_api_data(),
         "model_container",
         query,

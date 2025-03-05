@@ -2,7 +2,7 @@ from typing import Dict, List, Optional
 
 import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
-from spyctl.api.athena_search import search_athena
+from spyctl.api.athena_search import search_full_json
 
 
 def handle_input_data(data: Dict, ctx: cfg.Context = None) -> List[Dict]:
@@ -43,7 +43,9 @@ def __handle_uid_list_input(data: Dict, ctx: Optional[cfg.Context] = None):
         data[lib.METADATA_FIELD][lib.METADATA_END_TIME_FIELD],
     )
     fprint_uids = [
-        uid for uid in data[lib.DATA_FIELD][lib.UIDS_FIELD] if uid.startswith("fprint")
+        uid
+        for uid in data[lib.DATA_FIELD][lib.UIDS_FIELD]
+        if uid.startswith("fprint")
     ]
     fprints = []
     if fprint_uids:
@@ -54,7 +56,7 @@ def __handle_uid_list_input(data: Dict, ctx: Optional[cfg.Context] = None):
             **{"id_equals": fprint_uids},
         )
         fprints = list(
-            search_athena(
+            search_full_json(
                 *ctx.get_api_data(),
                 "model_fingerprint",
                 query,
@@ -76,7 +78,7 @@ def __handle_uid_list_input(data: Dict, ctx: Optional[cfg.Context] = None):
             show_hint=False,
             **{"id_equals": deviation_uids},
         )
-        for deviation in search_athena(
+        for deviation in search_full_json(
             *ctx.get_api_data(),
             "event_deviation",
             query,
