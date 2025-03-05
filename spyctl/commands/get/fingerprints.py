@@ -59,12 +59,16 @@ def get_fingerprints_cmd(name_or_id, output, st, et, **filters):
 
     get_lib.output_time_log(lib.FINGERPRINTS_RESOURCE.name_plural, st, et)
     name_or_id = get_lib.wildcard_name_or_id(name_or_id, exact)
-    filters = {key: value for key, value in filters.items() if value is not None}
+    filters = {
+        key: value for key, value in filters.items() if value is not None
+    }
 
     handle_get_fingerprints(name_or_id, output, st, et, fprint_type, **filters)
 
 
-def handle_get_fingerprints(name_or_id, output, st, et, fprint_type, **filters):
+def handle_get_fingerprints(
+    name_or_id, output, st, et, fprint_type, **filters
+):
     """Output fingerprints by name or id."""
     ctx = cfg.get_current_context()
     # Pop any extra options
@@ -91,7 +95,7 @@ def handle_get_fingerprints(name_or_id, output, st, et, fprint_type, **filters):
         )
         cli.show(summary, lib.OUTPUT_RAW)
     elif output == lib.OUTPUT_WIDE:
-        fingerprints = search_athena(
+        fingerprints = search_full_json(
             *ctx.get_api_data(),
             "model_fingerprint",
             query,
@@ -109,7 +113,7 @@ def handle_get_fingerprints(name_or_id, output, st, et, fprint_type, **filters):
         cli.show(summary, lib.OUTPUT_RAW)
     else:
         if raw:
-            fprints = search_athena(
+            fprints = search_full_json(
                 *ctx.get_api_data(),
                 "model_fingerprint",
                 query,
@@ -120,7 +124,7 @@ def handle_get_fingerprints(name_or_id, output, st, et, fprint_type, **filters):
             for fprint in fprints:
                 cli.show(fprint, output)
         else:
-            fprints = search_athena(
+            fprints = search_full_json(
                 *ctx.get_api_data(),
                 "model_fingerprint",
                 query,

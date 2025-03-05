@@ -2,7 +2,7 @@ from typing import Dict, List, Optional
 
 import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
-from spyctl.api.athena_search import search_full_json
+from spyctl.api.objects import get_objects
 
 
 def handle_input_data(data: Dict, ctx: cfg.Context = None) -> List[Dict]:
@@ -38,53 +38,24 @@ def __handle_fprint_group_input(data: Dict):
 def __handle_uid_list_input(data: Dict, ctx: Optional[cfg.Context] = None):
     if not ctx:
         ctx = cfg.get_current_context()
-    time = (
-        data[lib.METADATA_FIELD][lib.METADATA_START_TIME_FIELD],
-        data[lib.METADATA_FIELD][lib.METADATA_END_TIME_FIELD],
-    )
     fprint_uids = [
-        uid for uid in data[lib.DATA_FIELD][lib.UIDS_FIELD] if uid.startswith("fprint")
+        uid
+        for uid in data[lib.DATA_FIELD][lib.UIDS_FIELD]
+        if uid.startswith("fprint")
     ]
     fprints = []
     if fprint_uids:
-        query = lib.query_builder(
-            "model_fingerprint",
-            None,
-            show_hint=False,
-            **{"id_equals": fprint_uids},
-        )
-        fprints = list(
-            search_full_json(
-                *ctx.get_api_data(),
-                "model_fingerprint",
-                query,
-                start_time=time[0],
-                end_time=time[1],
-                use_pbar=False,
-            )
-        )
+        fprints = get_objects(*ctx.get_api_data(), fprint_uids, use_pbar=False)
     deviation_uids = [
         uid
         for uid in data[lib.DATA_FIELD][lib.UIDS_FIELD]
-        if not uid.startswith("fprint")
+        if uid.startswith("dev")
     ]
     deviations = []
     if deviation_uids:
-        query = lib.query_builder(
-            "event_deviation",
-            None,
-            show_hint=False,
-            **{"id_equals": deviation_uids},
+        deviations = get_objects(
+            *ctx.get_api_data(), deviation_uids, use_pbar=False
         )
-        for deviation in search_full_json(
-            *ctx.get_api_data(),
-            "event_deviation",
-            query,
-            start_time=time[0],
-            end_time=time[1],
-            use_pbar=False,
-        ):
-            deviations.append(deviation["deviation"])
     return fprints + deviations
 
 
