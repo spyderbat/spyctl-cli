@@ -91,7 +91,7 @@ def handle_get_fingerprints(name_or_id, output, st, et, fprint_type, **filters):
         )
         cli.show(summary, lib.OUTPUT_RAW)
     elif output == lib.OUTPUT_WIDE:
-        fingerprints = search_athena(
+        fingerprints = search_full_json(
             *ctx.get_api_data(),
             "model_fingerprint",
             query,
@@ -109,7 +109,7 @@ def handle_get_fingerprints(name_or_id, output, st, et, fprint_type, **filters):
         cli.show(summary, lib.OUTPUT_RAW)
     else:
         if raw:
-            fprints = search_athena(
+            fprints = search_full_json(
                 *ctx.get_api_data(),
                 "model_fingerprint",
                 query,
@@ -120,7 +120,7 @@ def handle_get_fingerprints(name_or_id, output, st, et, fprint_type, **filters):
             for fprint in fprints:
                 cli.show(fprint, output)
         else:
-            fprints = search_athena(
+            fprints = search_full_json(
                 *ctx.get_api_data(),
                 "model_fingerprint",
                 query,
