@@ -17,6 +17,7 @@ import spyctl.config.configs as cfgs
 import spyctl.spyctl_lib as lib
 from spyctl import cli
 from spyctl.api.pypi import get_pypi_version
+import spyctl.api.primitives as api_primitives
 from spyctl.commands.notifications.notifications_cmd_group import notifications
 
 MAIN_EPILOG = (
@@ -35,12 +36,15 @@ MAIN_EPILOG = (
 @click.help_option("-h", "--help", hidden=True)
 @click.version_option(None, "-v", "--version", prog_name="Spyctl", hidden=True)
 @click.option("--debug", is_flag=True, hidden=True)
-def main(debug=False):
+@click.option("--log-request-times", is_flag=True, hidden=True)
+def main(debug=False, log_request_times=False):
     """spyctl displays and controls resources within your Spyderbat
     environment
     """
     if debug:
         lib.set_debug()
+    if log_request_times:
+        api_primitives.LOG_REQUEST_TIMES = True
     cfgs.load_config()
     version_check()
 
