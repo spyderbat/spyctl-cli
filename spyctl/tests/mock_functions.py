@@ -291,7 +291,7 @@ def mock_get_nodes(
         },
         "muid": "mach:FomNj5G1TJc",
     }
-    yield mock_node
+    return mock_node
 
 
 def mock_get_pods(
@@ -355,7 +355,7 @@ def mock_get_pods(
         "node_uid": "node:xxxxxxxxxxx:xxxxxxxxxx",
         "muid": "mach:xxxxxxxxxx",
     }
-    yield mock_pod
+    return mock_pod
 
 
 def mock_get_redflags(
@@ -416,7 +416,7 @@ def mock_get_redflags(
         "traces": ["trace:xxxxxxxxxxx:xxxxxxxxxxx:xxxxx:suspicious_command"],
         "traces_suppressed": False,
     }
-    yield mock_redflag
+    return mock_redflag
 
 
 def mock_get_opsflags(
@@ -443,7 +443,7 @@ def mock_get_opsflags(
         "linkback": "https://mock.mock",
         "muid": "mach:xxxxxxxxxx",
     }
-    yield mock_opsflag
+    return mock_opsflag
 
 
 def mock_get_fingerprints(
