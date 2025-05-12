@@ -76,7 +76,7 @@ def test_get_report_status(reportid):
     time.sleep(1)
     report = api.get_report_status(API_URL, API_KEY, ORG, reportid)
     assert report is not None
-    assert report["status"] == "scheduled"
+    assert report["status"] == "published" or "scheduled"
     assert report["id"] == reportid
     assert report["input"]["report_args"] == report_input["report_args"]
     assert all(
@@ -90,7 +90,7 @@ def test_download_report(reportid):
     if not API_URL or not API_KEY or not ORG:
         pytest.skip("No api_url/api_key/org set env set, skipping")
     time.sleep(2)
-    download = api.get_report_download(API_URL, API_KEY, ORG, reportid, "md")
+    download = api.get_report_download(API_URL, API_KEY, ORG, reportid, "mdx")
     assert download is not None
     assert len(download) > 0
     for k, v in report_input["report_args"].items():

@@ -1,4 +1,6 @@
 # pylint: disable=broad-except
+
+import contextlib
 import io
 import json
 import sys
@@ -531,38 +533,38 @@ class TestGetResources(unittest.TestCase):
 
     @mock.patch("spyctl.commands.get.agents.search_athena")
     @mock.patch("spyctl.config.configs.get_current_context")
-    def test_handle_get_agents(self, mock_get_current_context, mock_search_athena):
-
+    @mock.patch("spyctl.commands.get.agents.ag_api.get_sources_data_for_agents")
+    def test_handle_get_agents(
+        self,
+        mock_get_sources_data_for_agents,
+        mock_get_current_context,
+        mock_search_athena,
+    ):
         mock_agent_data = [mock_data["Agent"]]
+        mock_source_data = mock_data["Source"]
 
-        def mocked_search_athena(_api_key, _org_id, _model, _query, *args, **kwargs):
-            return mock_agent_data
-
-        mock_search_athena.side_effect = mocked_search_athena
+        mock_search_athena.return_value = mock_agent_data
+        mock_get_sources_data_for_agents.return_value = (
+            mock_agent_data,
+            mock_source_data,
+        )
         mock_get_current_context.return_value = self.mock_context
 
         captured_output = io.StringIO()
-        sys.stdout = captured_output  # Redirect stdout
-
-        try:
+        with contextlib.redirect_stdout(captured_output):
             handle_get_agents(name_or_id=None, output="default", st=None, et=None)
-        except Exception as e:
-            print(f"Exception occurred: {e}")
 
-        self.assertTrue(mock_search_athena.called)
-
-        sys.stdout = sys.__stdout__  # Reset stdout
-
-        output = captured_output.getvalue().strip()  # Remove extra spaces
-
+        output = captured_output.getvalue().strip()
         lines = output.split("\n")
         if len(lines) > 1:
-            name = lines[1].split()[0]  # Extract first column (NAME)
+            name = lines[1].split()[0]
 
-        self.assertEqual(name, "vault-discovery-rolebinding")
-
+        self.assertTrue(mock_search_athena.called)
         mock_get_current_context.assert_called_once()
         mock_search_athena.assert_called_once()
+        mock_get_sources_data_for_agents.assert_called_once()
+
+        self.assertEqual("ip-XXXXX.us-west-2.compute.internal", name)
 
     # ----------------Spydertrace-------------------------------------
 
@@ -592,83 +594,50 @@ class TestGetResources(unittest.TestCase):
 
         sys.stdout = sys.__stdout__  # Reset stdout
 
-        output = captured_output.getvalue().strip()  # Remove extra spaces
+        output = captured_output.getvalue().strip()
 
         lines = output.split("\n")
         if len(lines) > 1:
-            name = lines[1].split()[0]  # Extract first column (NAME)
+            name = lines[2].split()[1]
 
-        self.assertEqual(name, "vault-discovery-rolebinding")
+        self.assertEqual(name, "command_id")
 
         mock_get_current_context.assert_called_once()
         mock_search_athena.assert_called_once()
 
-    # --------------------Deviation-------------------------------------
+    # # --------------------Deviation-------------------------------------
 
     @mock.patch("spyctl.commands.get.deviations.pol_api.get_policies")
     @mock.patch("spyctl.config.configs.get_current_context")
     @mock.patch("spyctl.commands.get.deviations.search_athena")
     def test_handle_get_deviations(
-        self, mock_get_current_context, mock_get_policies, mock_search_athena
+        self, mock_search_athena, mock_get_current_context, mock_get_policies
     ):
-        # Mock data to be returned by `get_policies()`
-        mock_policy_data = [
-            {
-                "apiVersion": "spyderbat/v1",
-                "kind": "SpyderbatPolicy",
-                "metadata": {
-                    "name": "supress_command_airflow_data-prod",
-                    "type": "trace",
-                    "uid": "pol:AKFXXXXXXXXXXX",
-                    "version": 1,
-                },
-                "spec": {
-                    "allowedFlags": [
-                        {
-                            "class": "redflag/proc/command/high_severity/hidden/python",
-                            "display_name": "command_python",
-                            "display_severity": "high",
-                        },
-                    ]
-                },
-            }
-        ]
-
-        # Mock `get_current_context()` to return a mocked context object
-        mock_context = mock.Mock()
-        mock_context.get_api_data.return_value = (
-            "api_key",
-            "org_id",
-            "model",
-        )
-        mock_get_current_context.return_value = mock_context
-
-        # Mock `get_policies` to return the mock data
-        mock_get_policies.return_value = mock.Mock(
-            json=mock.Mock(return_value=mock_policy_data)
-        )
-
+        # --- Setup ---
+        mock_policy_data = mock_data["Policy"]
         mock_dev_data = [mock_data["Deviation"]]
 
-        def mocked_search_athena(_api_key, _org_id, _model, _query, *args, **kwargs):
-            return mock_dev_data  # Returning mock Deviation data
+        mock_context = mock.Mock()
+        mock_context.get_api_data.return_value = ("api_key", "org_id", "model")
+        mock_get_current_context.return_value = mock_context
+
+        mock_get_policies.return_value.json.return_value = mock_policy_data
+
+        # Match the real function signature
+        def mocked_search_athena(api_key, org_id, model, query, *args, **kwargs):
+            return mock_dev_data
 
         mock_search_athena.side_effect = mocked_search_athena
 
         captured_output = io.StringIO()
-        sys.stdout = captured_output  # Redirect stdout
+        with contextlib.redirect_stdout(captured_output):
+            handle_get_deviations(name_or_id=None, output="raw", st=None, et=None)
 
-        try:
-            handle_get_deviations(name_or_id=None, output="wide", st=None, et=None)
-        except Exception as e:
-            print(f"Exception occurred: {e}")
-
-        self.assertTrue(mock_get_policies.called)
-
-        sys.stdout = sys.__stdout__  # Reset stdout
-
+        # --- Assertions ---
         output = captured_output.getvalue().strip()
-        print("Captured Output:", output)
+        self.assertTrue(mock_get_policies.called)
+        self.assertTrue(mock_search_athena.called)
+        self.assertIn("045d6xxxxxxxx", output)
 
     # --------------------Fingerprints------------------------------------
 
@@ -710,7 +679,7 @@ class TestGetResources(unittest.TestCase):
         if len(lines) > 1:
             name = lines[1].split()[0]  # Extract first column (NAME)
 
-        self.assertEqual(name, "vault-discovery-rolebinding")
+        self.assertEqual(name, "systemd-gssproxy.service")
 
         mock_get_current_context.assert_called_once()
         mock_search_athena.assert_called_once()
@@ -719,12 +688,15 @@ class TestGetResources(unittest.TestCase):
 
     @mock.patch("spyctl.commands.get.top_data.search_athena")
     @mock.patch("spyctl.config.configs.get_current_context")
-    def test_handle_get_top_data(self, mock_get_current_context, mock_search_athena):
-
+    def test_handle_get_top_data(
+        self,
+        mock_get_current_context,
+        mock_search_athena,
+    ):
         mock_top_data = [mock_data["Top-Data"]]
 
-        def mocked_search_athena(_api_key, _org_id, _model, _query, *args, **kwargs):
-            return mock_top_data
+        def mocked_search_athena(api_key, org_id, model, query, *args, **kwargs):
+            return mock_top_data  # Returning mock top data
 
         mock_search_athena.side_effect = mocked_search_athena
         mock_get_current_context.return_value = self.mock_context
@@ -732,28 +704,20 @@ class TestGetResources(unittest.TestCase):
         captured_output = io.StringIO()
         sys.stdout = captured_output  # Redirect stdout
 
-        try:
-            handle_get_top_data(
-                name_or_id=None,
-                output="default",
-                st=None,
-                et=None,
-                muid_equals="mach:abc",
-            )
-        except Exception as e:
-            print(f"Exception occurred: {e}")
-
-        self.assertTrue(mock_search_athena.called)
+        handle_get_top_data(
+            name_or_id="top:mach:abc",
+            output="json",
+            st=None,
+            et=None,
+            muid_equals="mach:abc",
+        )
 
         sys.stdout = sys.__stdout__  # Reset stdout
 
-        output = captured_output.getvalue().strip()  # Remove extra spaces
-
-        lines = output.split("\n")
-        if len(lines) > 1:
-            name = lines[1].split()[0]  # Extract first column (NAME)
-
-        self.assertEqual(name, "vault-discovery-rolebinding")
+        output = captured_output.getvalue()
+        self.assertIn("mach:abc", output)
+        
+        self.assertTrue(mock_search_athena.called)
 
         mock_get_current_context.assert_called_once()
         mock_search_athena.assert_called_once()
@@ -788,9 +752,9 @@ class TestGetResources(unittest.TestCase):
 
         lines = output.split("\n")
         if len(lines) > 1:
-            name = lines[1].split()[0]  # Extract first column (NAME)
+            uid = lines[1].split()[0]  # Extract first column (NAME)
 
-        self.assertEqual(name, "vault-discovery-rolebinding")
+        self.assertEqual(uid, "bash:GGXXXXXXXXX:Z-AUiw:572041.1:0")
 
         mock_get_current_context.assert_called_once()
         mock_search_athena.assert_called_once()
@@ -799,7 +763,7 @@ class TestGetResources(unittest.TestCase):
 
     @mock.patch("spyctl.commands.get.connection_bundles.search_athena")
     @mock.patch("spyctl.config.configs.get_current_context")
-    def test_handle_get_bash_cmds(self, mock_get_current_context, mock_search_athena):
+    def test_handle_get_cb(self, mock_get_current_context, mock_search_athena):
 
         mock_cb_data = [mock_data["CBUN"]]
 
@@ -825,9 +789,9 @@ class TestGetResources(unittest.TestCase):
 
         lines = output.split("\n")
         if len(lines) > 1:
-            name = lines[1].split()[0]  # Extract first column (NAME)
+            server = lines[1].split()[0]  # Extract first column (NAME)
 
-        self.assertEqual(name, "vault-discovery-rolebinding")
+        self.assertEqual(server, "134.122.20.0")
 
         mock_get_current_context.assert_called_once()
         mock_search_athena.assert_called_once()
@@ -864,7 +828,7 @@ class TestGetResources(unittest.TestCase):
         if len(lines) > 1:
             name = lines[1].split()[0]  # Extract first column (NAME)
 
-        self.assertEqual(name, "vault-discovery-rolebinding")
+        self.assertEqual(name, "uh.test.lab")
 
         mock_get_current_context.assert_called_once()
         mock_search_athena.assert_called_once()
@@ -892,14 +856,6 @@ class TestGetResources(unittest.TestCase):
 
         sys.stdout = sys.__stdout__
 
-        # mock_get_custom_flags.assert_called_once_with(
-        #     "fake_api_key",
-        #     "fake_org_id",
-        #     name_or_uid_contains="mock",
-        #     page=1,
-        #     page_size=5,
-        # )
-
         mock_show_get_data.assert_called_once()
 
         self.assertIn("mock_flag", str(mock_show_get_data.call_args))
@@ -925,13 +881,9 @@ class TestGetResources(unittest.TestCase):
 
         handle_get_saved_queries(name_or_id=None, output="default")
 
-        sys.stdout = sys.__stdout__
-
-        # output = captured_output.getvalue()
-        # print("Captured Output:\n", output)
-
         self.assertIn("mock-query", str(mock_show_get_data.call_args))
 
 
 if __name__ == "__main__":
     unittest.main()
+

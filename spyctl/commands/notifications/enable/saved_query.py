@@ -20,6 +20,7 @@ def enable_saved_query(name_or_uid):
     saved_queries, _ = get_saved_queries(*ctx.get_api_data(), **sq_params)
     if not saved_queries:
         lib.err_exit(f"Saved query '{name_or_uid}' not found")
+        return
     if len(saved_queries) > 1:
         lib.err_exit(f"Saved query '{name_or_uid}' is ambiguous, use full name or UID")
     saved_query = saved_queries[0]
