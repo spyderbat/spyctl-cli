@@ -30,7 +30,7 @@ from spyctl.commands.get.saved_queries import handle_get_saved_queries
 from spyctl.config.configs import Context
 
 
-with open("spyctl/tests/testdata_resources.json", "r") as file:
+with open("spyctl/tests/testdata_resource.json", "r") as file:
     mock_data = json.load(file)
 
 
@@ -484,7 +484,7 @@ class TestGetResources(unittest.TestCase):
         if len(lines) > 1:
             name = lines[1].split()[0]  # Extract first column (NAME)
 
-        self.assertEqual(name, "pomerium-gen-secrets")
+        self.assertEqual(name, "po-crb")
 
         mock_get_current_context.assert_called_once()
         mock_search_athena.assert_called_once()
