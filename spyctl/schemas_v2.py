@@ -1006,9 +1006,9 @@ class GuardianBaselineSpecModel(GuardianSelectorsModel, GuardianSpecOptionsModel
 
 
 class GuardianDeviationSpecModel(GuardianSelectorsModel, GuardianSpecOptionsModel):
-    process_policy: Optional[List[Union[ProcessNodeModel, GuardDeviationNodeModel]]] = (
-        Field(None, alias=lib.PROC_POLICY_FIELD)
-    )
+    process_policy: Optional[
+        List[Union[ProcessNodeModel, GuardDeviationNodeModel]]
+    ] = Field(None, alias=lib.PROC_POLICY_FIELD)
     network_policy: Optional[DeviationNetworkPolicyModel] = Field(
         None, alias=lib.NET_POLICY_FIELD
     )

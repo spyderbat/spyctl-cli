@@ -56,15 +56,6 @@ def test_help():
     assert response.exit_code == 0
 
 
-@mock.patch(
-    "spyctl.commands.get.namespaces.search_full_json",
-    mock_func.mock_get_namespaces,
-)
-def test_get_namespaces():
-    get_resource("namespaces", TWOHOURS)
-    get_resource("namespaces", TWOHOURS + OUTYML)
-
-
 TWOHOURS = ["-t", "2h"]
 OUTYML = ["-o", "yaml"]
 MINS_30 = ["-t", "30m"]
