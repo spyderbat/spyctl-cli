@@ -55,7 +55,7 @@
         "apiVersion": "spyderbat/v1",
         "kind": "SpyderbatPolicy",
         "metadata": {
-            "name": "supress_command_airflow_data",
+            "name": "supress_command_airflow",
             "type": "trace",
             "uid": "pol:AKFXXXXXXXXXXX",
             "version": 1
