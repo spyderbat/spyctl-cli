@@ -7,3 +7,4 @@ sphinx-copybutton
 sphinx-tabs
 sphinx-click
 spyctl
+pytest-mock
