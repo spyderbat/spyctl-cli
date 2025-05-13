@@ -363,7 +363,7 @@ def build_ingress_model(
         protocol=conn["proto"],
     )
     from_obj = schemas.IpBlockModel(
-        ipBlock=schemas.CIDRModel(cidr=f'{conn["remote_ip"]}/32')
+        ipBlock=schemas.CIDRModel(cidr=f"{conn['remote_ip']}/32")
     )
     conn_model = pol_inp.ingress.get(proc_model.key)
     if not conn_model:
@@ -439,7 +439,7 @@ def build_egress_model(
         to_obj = schemas.DnsBlockModel(dnsSelector=conn["remote_hostname"].split(","))
     else:
         to_obj = schemas.IpBlockModel(
-            ipBlock=schemas.CIDRModel(cidr=f'{conn["remote_ip"]}/32')
+            ipBlock=schemas.CIDRModel(cidr=f"{conn['remote_ip']}/32")
         )
     conn_model = pol_inp.egress.get(proc_model.key)
     if not conn_model:

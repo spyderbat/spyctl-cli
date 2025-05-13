@@ -1,5 +1,4 @@
 import spyctl.api.notification_targets as nt
-from spyctl.api.notification_targets import create_slack_notification_target
 
 
 def test_get_notification_target(mocker):

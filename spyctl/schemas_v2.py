@@ -6,7 +6,6 @@
 # pylint: disable=raise-missing-from, too-few-public-methods
 # pylint: disable=super-init-not-called
 
-
 from __future__ import annotations
 
 import ipaddress
@@ -135,13 +134,13 @@ def encode_expr(key, operator, values=None) -> str:
     if operator in ["Exists", "DoesNotExist"]:
         if values:
             raise ValueError(
-                f"'{operator}' operator does not accept values. Found '{values}'"  # noqa
+                f"'{operator}' operator does not accept values. Found '{values}'"
             )
     else:
         if not values:
             raise ValueError(f"'{operator}' operator requires values.")
     values_ = "[" + ", ".join(f"{ns}" for ns in values) + "]"
-    expr = "{ " + f"key: {key}, operator: {operator}, values: {values_}" + " }"  # noqa
+    expr = "{ " + f"key: {key}, operator: {operator}, values: {values_}" + " }"
     return expr
 
 
@@ -206,7 +205,7 @@ class MatchFieldsExpressionsModel(MatchFieldsModel):
         for expr in exprs:
             if expr.key not in valid_fields:
                 raise ValueError(
-                    f"Invalid key in expr '{expr.key}'. Valid fields are {valid_fields}"  # noqa
+                    f"Invalid key in expr '{expr.key}'. Valid fields are {valid_fields}"
                 )
         return values
 
@@ -485,7 +484,7 @@ class RulesetPolicySpecModel(BaseModel):
 
 class RulesetModel(BaseModel):
     api_version: str = Field(alias=lib.API_FIELD)
-    kind: Literal[lib.RULESET_KIND] = Field(alias=lib.KIND_FIELD)  # type: ignore  # noqa: E501
+    kind: Literal[lib.RULESET_KIND] = Field(alias=lib.KIND_FIELD)  # type: ignore
     metadata: RulesetMetadataModel = Field(alias=lib.METADATA_FIELD)
     spec: RulesetPolicySpecModel = Field(alias=lib.SPEC_FIELD)
     model_config = ConfigDict(extra="ignore")
@@ -607,7 +606,7 @@ class CIDRModel(BaseModel):
         except ipaddress.AddressValueError:
             cidr_net = ipaddress.IPv6Network(cidr)
         net_type = type(cidr_net)
-        if "except_cidr" in values and values["except_cidr"]:
+        if values.get("except_cidr"):
             for e_cidr in values["except_cidr"]:
                 try:
                     e_net = ipaddress.IPv4Network(e_cidr)
@@ -638,8 +637,7 @@ class PortsModel(BaseModel):
         endport = values.get("endport")
         if endport is not None and endport < values["port"]:
             raise ValueError(
-                f"{lib.ENDPORT_FIELD} must be greater than or equal to"
-                f" {lib.PORT_FIELD}"
+                f"{lib.ENDPORT_FIELD} must be greater than or equal to {lib.PORT_FIELD}"
             )
         return self
 
@@ -1006,9 +1004,9 @@ class GuardianBaselineSpecModel(GuardianSelectorsModel, GuardianSpecOptionsModel
 
 
 class GuardianDeviationSpecModel(GuardianSelectorsModel, GuardianSpecOptionsModel):
-    process_policy: Optional[
-        List[Union[ProcessNodeModel, GuardDeviationNodeModel]]
-    ] = Field(None, alias=lib.PROC_POLICY_FIELD)
+    process_policy: Optional[List[Union[ProcessNodeModel, GuardDeviationNodeModel]]] = (
+        Field(None, alias=lib.PROC_POLICY_FIELD)
+    )
     network_policy: Optional[DeviationNetworkPolicyModel] = Field(
         None, alias=lib.NET_POLICY_FIELD
     )

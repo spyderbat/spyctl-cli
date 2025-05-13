@@ -38,7 +38,7 @@ def test_merge_ruleset_policy_full_command(rulesets, updated_ruleset_string):
     def get_rulesets(*_args, **_kwargs):
         return rulesets
 
-    runner = CliRunner(mix_stderr=False)
+    runner = CliRunner()
     with (
         mock.patch("spyctl.commands.merge.get_rulesets", get_rulesets),
         mock.patch("spyctl.merge_lib.ruleset_merge_object.get_rulesets", get_rulesets),

@@ -1,6 +1,4 @@
-from unittest.mock import MagicMock, patch
-
-import pytest
+from unittest.mock import patch
 
 from spyctl.commands.apply_cmd.agent_health import (
     handle_apply_agent_health_notification,

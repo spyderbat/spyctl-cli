@@ -3,8 +3,6 @@
 import json
 from typing import Dict, List
 
-import spyctl.spyctl_lib as lib
-
 
 def get_audit_events(
     api_url,

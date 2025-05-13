@@ -1,6 +1,5 @@
 from unittest.mock import patch
 
-import pytest
 from click.testing import CliRunner
 
 from spyctl.commands.create.notification_target import email, pagerduty, slack, webhook

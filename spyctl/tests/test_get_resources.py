@@ -7,18 +7,13 @@ import sys
 import unittest
 from unittest import mock
 
-from click.testing import CliRunner
-
 from spyctl.commands.get.agents import handle_get_agents
-from spyctl.commands.get.bash_cmds import handle_get_bash_cmds
 from spyctl.commands.get.clusterrolebindings import handle_get_clusterrolebindings
 from spyctl.commands.get.clusterroles import handle_get_clusterroles
-from spyctl.commands.get.connection_bundles import handle_get_conn_buns
 from spyctl.commands.get.custom_flags import handle_get_custom_flags
 from spyctl.commands.get.deployments import handle_get_deployments
 from spyctl.commands.get.deviations import handle_get_deviations
 from spyctl.commands.get.fingerprints import handle_get_fingerprints
-from spyctl.commands.get.machines import handle_get_machines
 from spyctl.commands.get.namespaces import handle_get_namespaces
 from spyctl.commands.get.nodes import handle_get_nodes
 from spyctl.commands.get.opsflags import handle_get_opsflags

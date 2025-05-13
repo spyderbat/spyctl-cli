@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock, call, patch
+from unittest.mock import MagicMock, patch
 
 from spyctl.commands.create.agent_health import (
     handle_create_agent_health_notification_settings,

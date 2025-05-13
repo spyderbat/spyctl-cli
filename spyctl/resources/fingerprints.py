@@ -75,8 +75,7 @@ class Fingerprint:
         ):
             if key not in self.spec:
                 raise InvalidFingerprintError(
-                    f"Missing {key} from {lib.SPEC_FIELD} for {self.type}"
-                    f" fingerprint."
+                    f"Missing {key} from {lib.SPEC_FIELD} for {self.type} fingerprint."
                 )
         self.selectors = {
             key: value for key, value in self.spec.items() if key.endswith("Selector")
@@ -437,7 +436,7 @@ def __cont_fprint_summary(
         if col not in container_headers:
             avail_headers = "\n\t".join(container_headers)
             cli.err_exit(
-                f"Invalid sort by field: {col}. Options are: \n\t" f"{avail_headers}"
+                f"Invalid sort by field: {col}. Options are: \n\t{avail_headers}"
             )
     container_data: Dict[Tuple, ContainerSumData] = {}
     for fprint in fingerprints:
@@ -519,7 +518,7 @@ def __svc_fprint_summary(
         if col not in service_headers:
             avail_headers = "\n\t".join(service_headers)
             cli.err_exit(
-                f"Invalid sort by field: {col}. Options are: \n\t" f"{avail_headers}"
+                f"Invalid sort by field: {col}. Options are: \n\t{avail_headers}"
             )
 
     service_data: Dict[Tuple, ServiceSumData] = {}
@@ -797,14 +796,14 @@ def make_fingerprint_groups(
                     cont_fprint_grps[key] = ContainerFingerprintGroup(fprint)
                 except Exception as e:
                     cli.try_log(
-                        "Unable to create fingerprint group." f" {' '.join(e.args)}"
+                        f"Unable to create fingerprint group. {' '.join(e.args)}"
                     )
             else:
                 try:
                     cont_fprint_grps[key].add_fingerprint(fprint)
                 except Exception as e:
                     cli.try_log(
-                        "Unable to add fingerprint to group." f" {' '.join(e.args)}"
+                        f"Unable to add fingerprint to group. {' '.join(e.args)}"
                     )
         elif type_ == FPRINT_TYPE_SVC:
             cgroup = fprint[lib.SPEC_FIELD][lib.SVC_SELECTOR_FIELD][lib.CGROUP_FIELD]
@@ -814,14 +813,14 @@ def make_fingerprint_groups(
                     svc_fprint_grps[key] = ServiceFingerprintGroup(fprint)
                 except Exception as e:
                     cli.try_log(
-                        "Unable to create fingerprint group." f" {' '.join(e.args)}"
+                        f"Unable to create fingerprint group. {' '.join(e.args)}"
                     )
             else:
                 try:
                     svc_fprint_grps[key].add_fingerprint(fprint)
                 except Exception as e:
                     cli.try_log(
-                        "Unable to add fingerprint to group." f" {' '.join(e.args)}"
+                        f"Unable to add fingerprint to group. {' '.join(e.args)}"
                     )
     return (
         [grp.as_dict() for grp in cont_fprint_grps.values()],

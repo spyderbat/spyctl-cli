@@ -1,6 +1,4 @@
-from unittest.mock import MagicMock, patch
-
-import pytest
+from unittest.mock import patch
 
 from spyctl.commands.create.saved_query import handle_create_saved_query
 

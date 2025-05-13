@@ -711,7 +711,7 @@ class FileList(click.File):
                     if fnmatch(file.name, tail):
                         rv.append(str(file))
             except Exception:
-                self.fail(f"Unable to list files in {str(path)}")
+                self.fail(f"Unable to list files in {path!s}")
         if not rv:
             self.fail(f"No files matching {fnmatch_str}.", param, ctx)
         return rv
@@ -1479,12 +1479,11 @@ def load_file(path: Path):
                     file_data = json.load(f)
                 except Exception:
                     try_log(
-                        f"Unable to load file at {str(path)}."
-                        f" Is it valid yaml or json?"
+                        f"Unable to load file at {path!s}. Is it valid yaml or json?"
                     )
                 return None
     except IOError:
-        try_log(f"Unable to read file at {str(path)}. Check permissions.")
+        try_log(f"Unable to read file at {path!s}. Check permissions.")
     return file_data
 
 
@@ -1739,7 +1738,7 @@ class ArgumentParametersCommand(CustomCommand):
                 for options, num in specific_index.items():
                     with formatter.section(f"Options for {options}"):
                         formatter.write_dl(
-                            specif_opts[index : index + num]  # noqa E203
+                            specif_opts[index : index + num]
                         )
                     index = index + num
             else:
@@ -1772,7 +1771,7 @@ class MutuallyExclusiveOption(click.Option):
 
 
 class OptionEatAll(click.Option):
-    # https://stackoverflow.com/questions/48391777/nargs-equivalent-for-options-in-click  # noqa E501
+    # https://stackoverflow.com/questions/48391777/nargs-equivalent-for-options-in-click
 
     def __init__(self, *args, **kwargs):
         self.save_other_options = kwargs.pop("save_other_options", True)
@@ -2151,13 +2150,10 @@ def __validate_data_structure_on_load(resrc_data: Any, validate_cmd=False):
     if not isinstance(resrc_data, dict) and not isinstance(resrc_data, list):
         if validate_cmd:
             try_log(
-                "Resource file does not contain a dictionary or list of"
-                " dictionaries."
+                "Resource file does not contain a dictionary or list of dictionaries."
             )
             sys.exit(0)
-        err_exit(
-            "Resource file does not contain a dictionary or list of" " dictionaries."
-        )
+        err_exit("Resource file does not contain a dictionary or list of dictionaries.")
 
 
 def __validate_resource_on_load(resrc_data: Dict, name, validate_cmd=False, index=None):
@@ -2399,7 +2395,7 @@ def calc_age(time_float: float):
         age = f"{age_delta.seconds // 3600}h"
         return age
     else:
-        age = f"{age_delta.seconds//60}m"
+        age = f"{age_delta.seconds // 60}m"
         return age
 
 

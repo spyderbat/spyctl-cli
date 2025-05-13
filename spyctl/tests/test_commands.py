@@ -1,4 +1,3 @@
-import json
 import os
 import shutil
 from fnmatch import fnmatch
@@ -19,7 +18,7 @@ from spyctl.tests.backups import backup_secrets, restore_secrets
 API_KEY = os.environ.get("API_KEY")
 API_URL = os.environ.get("API_URL")
 ORG = os.environ.get("ORG")
-TEST_SECRET = "__test_secret__"
+TEST_SECRET = "__test_secret__"  # noqa: S105
 TEST_CONTEXT = "__test_context__"
 CURR_PATH = Path.cwd()
 WORKSPACE_DIR_NAME = "test_workspace__"
@@ -181,7 +180,7 @@ def test_create_api():
     get_policies=mock_func.mock_get_policies,
     delete_policy=mock_func.mock_delete_policy,
 )
-def test_update_policy():
+def test_update_policy() -> None:
     runner = CliRunner()
     response = runner.invoke(
         spyctl.main, ["apply", "-f", resources_dir / "test_policy.yaml"]
@@ -194,14 +193,14 @@ def test_update_policy():
     assert response.exit_code == 0
     assert "spyderbat-test" in response.output
     lines = response.stdout.splitlines()
-    uid = lines[2].split(" ")[0]
-    get_runner = CliRunner(mix_stderr=False)
+    uid = lines[1].split(" ")[0]
+    get_runner = CliRunner()
     response = get_runner.invoke(spyctl.main, ["get", "policies", uid, "-o", "yaml"])
     assert response.exit_code == 0
-    assert "spyderbat-test" in response.output
+    assert "spyderbat-test" in response.stdout
     policy_with_uid = "uid_pol.yaml"
-    with open(policy_with_uid, "w") as f:
-        f.write(response.output)
+    with open(policy_with_uid, "w", encoding="utf-8") as f:
+        f.write(response.stdout)
     response = runner.invoke(spyctl.main, ["apply", "-f", policy_with_uid])
     assert response.exit_code == 0
     assert response.output.startswith("Successfully updated policy")

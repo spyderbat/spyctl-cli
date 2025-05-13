@@ -133,7 +133,7 @@ def handle_generate_report(from_file: Optional[IO[str]], save_input: str):
         click.secho("Available Report Types", fg="green")
         for nr, report_type in enumerate(inventory):
             click.echo(
-                f"{nr+1: 2}. {report_type['short']+':':<30} {report_type['description']}"
+                f"{nr + 1: 2}. {report_type['short'] + ':':<30} {report_type['description']}"
             )
         report_nr = -1
         while report_nr < 0 or report_nr >= len(inventory):
@@ -219,7 +219,7 @@ def handle_delete_report(rid: str):
 
 def __collect_report_arg(nr: int, arg: Dict) -> Any:
     required = arg.get("required", False)
-    arg_descr = f"\n{nr+1}. {arg['name']}: {arg['description']}, type: {arg['type']}"
+    arg_descr = f"\n{nr + 1}. {arg['name']}: {arg['description']}, type: {arg['type']}"
     if required:
         arg_descr += " (required)"
     click.echo(arg_descr)

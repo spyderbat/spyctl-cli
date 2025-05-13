@@ -1,6 +1,4 @@
-from unittest.mock import MagicMock
 
-import pytest
 
 import spyctl.commands.delete.custom_flag as custom_flag
 

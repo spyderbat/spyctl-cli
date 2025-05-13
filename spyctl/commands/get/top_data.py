@@ -28,7 +28,7 @@ def handle_get_top_data(name_or_id, output, st, et, **filters):
     query = lib.query_builder("event_top_data", name_or_id, **filters)
     if "muid" not in query:
         cli.err_exit(
-            "Provide an option with the machine uid of the machine you want top data for.\n"  # noqa
+            "Provide an option with the machine uid of the machine you want top data for.\n"
             "'spyctl get machines' will provide a list."
         )
     top_data = search_full_json(

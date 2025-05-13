@@ -1,8 +1,5 @@
 from unittest.mock import patch
 
-import pytest
-from click.testing import CliRunner
-
 from spyctl.commands.create.custom_flag import handle_create_custom_flag
 
 

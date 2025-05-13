@@ -1,6 +1,4 @@
-from unittest.mock import MagicMock
 
-import pytest
 
 import spyctl.commands.delete.agent_health as agent_health
 

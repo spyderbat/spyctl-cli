@@ -1,6 +1,4 @@
-from unittest.mock import MagicMock, patch
-
-import pytest
+from unittest.mock import patch
 
 from spyctl.commands.apply_cmd.notification_target import (
     handle_apply_email_notification_target,

@@ -6,6 +6,6 @@ from . import (
 )
 
 __all__ = [
-    "create_cmd_group",
     "cluster_policy",
+    "create_cmd_group",
 ]

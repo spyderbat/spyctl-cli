@@ -5,7 +5,6 @@ merge and diff objects.
 
 # pylint: disable=comparison-with-callable
 
-
 import difflib
 import time
 from copy import deepcopy

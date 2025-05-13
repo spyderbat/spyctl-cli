@@ -341,7 +341,7 @@ class DiffDumper(yaml.Dumper):
     def list_representer(dumper: yaml.Dumper, data: Union[IfAllEqList, WildcardList]):
         objs, appearances = data.get_for_diff()
         seq = []
-        for obj, appear in zip(objs, appearances):
+        for obj, appear in zip(objs, appearances, strict=False):
             seq.append(DiffDumper.ListItem(appear, obj))
         return dumper.represent_data(seq)
 

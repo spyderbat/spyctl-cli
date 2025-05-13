@@ -34,7 +34,7 @@ from spyctl.commands.get import get_lib
     "--group-by",
     type=lib.ListParam(),
     metavar="",
-    help="Group by fields in the fingerprint, comma delimited. Such as"  # noqa: E501
+    help="Group by fields in the fingerprint, comma delimited. Such as"
     " cluster_name,namespace. At a basic level"
     " fingerprints are always grouped by image + image_id."
     " This option allows you to group by additional fields.",
@@ -43,7 +43,7 @@ from spyctl.commands.get import get_lib
     "--sort-by",
     metavar="",
     type=lib.ListParam(),
-    help="Group by fields in the fingerprint, comma delimited. Such as"  # noqa: E501
+    help="Group by fields in the fingerprint, comma delimited. Such as"
     " cluster_name,namespace. At a basic level"
     " fingerprints are always grouped by image + image_id."
     " This option allows you to group by additional fields.",

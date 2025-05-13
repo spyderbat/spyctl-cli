@@ -9,25 +9,22 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ["3.9", "3.13"]
+        python-version: ["3.10", "3.13"]
     environment: pr-tests
     steps:
     - uses: actions/checkout@v4
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install pytest
-    - name: Build Spyctl
-      run: |
-        make test_build
+    - name: Install the project
+      working-directory: worker
+      run: uv sync --locked --all-extras --dev
     - name: Test with pytest
       env:
         API_KEY: ${{ secrets.API_KEY }}
         API_URL: ${{ secrets.API_URL }}
         ORG: ${{ secrets.ORG }}
-      run: |
-        pytest ./spyctl
+      run: uv run pytest ./spyctl

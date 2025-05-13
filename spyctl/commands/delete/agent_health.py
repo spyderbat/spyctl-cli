@@ -10,7 +10,6 @@ from spyctl.api.agent_health import (
     delete_agent_health_notification_settings,
     get_agent_health_notification_settings_list,
 )
-from spyctl.commands.delete import saved_query
 
 
 @click.command(

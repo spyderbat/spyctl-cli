@@ -84,7 +84,7 @@ def get_saved_query_dependents(
     Returns:
         List[Dict]: A list of dependents of the saved query.
     """
-    url = f"{api_url}/api/v1/org/{org_uid}/savedquery/{saved_query_uid}/dependents"  # noqa
+    url = f"{api_url}/api/v1/org/{org_uid}/savedquery/{saved_query_uid}/dependents"
     resp = get(url, api_key)
     return resp.json()
 
@@ -156,7 +156,7 @@ def put_update_last_used(api_url, api_key, org_uid, saved_query_uid) -> Response
     Returns:
         Dict: The updated saved query.
     """
-    url = f"{api_url}/api/v1/org/{org_uid}/savedquery/{saved_query_uid}/updatelastused"  # noqa
+    url = f"{api_url}/api/v1/org/{org_uid}/savedquery/{saved_query_uid}/updatelastused"
     return put(url, None, api_key)
 
 
