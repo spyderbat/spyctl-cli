@@ -32,9 +32,6 @@ view_coverage_wsl:
 	explorer.exe "htmlcov\index.html" ||:
 
 test-coverage:
-	coverage run -m pytest .
-
-test-coverage-app-only:
 	coverage run --omit="test_*.py" -m pytest
 
 test-coverage-report: test-coverage

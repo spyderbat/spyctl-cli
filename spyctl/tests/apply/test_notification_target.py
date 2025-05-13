@@ -4,9 +4,9 @@ import pytest
 
 from spyctl.commands.apply_cmd.notification_target import (
     handle_apply_email_notification_target,
+    handle_apply_pagerduty_notification_target,
     handle_apply_slack_notification_target,
     handle_apply_webhook_notification_target,
-    handle_apply_pagerduty_notification_target,
 )
 
 # -------------------EMAIL------------------------
