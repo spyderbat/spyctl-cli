@@ -29,6 +29,18 @@ rebuild:
 
 test_coverage:
 	coverage run --omit="test_*.py" -m pytest
+	
+test-coverage:
+	coverage run -m pytest .
+
+test-coverage-report: test-coverage
+	coverage report -m
+
+test-coverage-html: test-coverage
+	coverage html
+
+test-coverage-xml:
+	pytest --cov=src --cov-report=xml
 
 view_coverage_wsl:
 	coverage html

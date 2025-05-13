@@ -1,0 +1,1489 @@
+{
+    "Pod": {
+        "schema": "model_k8s_pod::1.0.0",
+        "id": "pod:xxxxxxxxxxx:xxxxxxxxxx",
+        "status": "active",
+        "version": 1689422366,
+        "time": 1689422464.61505,
+        "valid_from": 1689166501.0163338,
+        "expire_at": 1689425999.999999,
+        "cluster_uid": "clus:xxxxxxxxxxx",
+        "clusterid": "abcd-xxxx",
+        "cluster_name": "mock_cluster",
+        "kind": "Pod",
+        "metadata": {
+            "annotations": {},
+            "creationTimestamp": "2023-06-30T15:29:49Z",
+            "labels": {
+                "app": "mock"
+            },
+            "name": "mock_pod",
+            "namespace": "mock",
+            "ownerReferences": [],
+            "resourceVersion": "21281954",
+            "uid": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        },
+        "kuid": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "spec": {
+            "containers": [],
+            "dnsPolicy": "ClusterFirst",
+            "enableServiceLinks": true,
+            "nodeName": "mock_node",
+            "preemptionPolicy": "PreemptLowerPriority",
+            "priority": 0,
+            "restartPolicy": "Always",
+            "schedulerName": "default-scheduler",
+            "securityContext": {},
+            "serviceAccount": "xxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "serviceAccountName": "xxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "terminationGracePeriodSeconds": 30,
+            "tolerations": [],
+            "volumes": []
+        },
+        "k8s_status": {
+            "phase": "Running"
+        },
+        "owner_uid": "replicaset:xxxxxxxxxxxxxxxxxxxxxx",
+        "owner_kind": "ReplicaSet",
+        "owner_name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "deployment_uid": "deployment:xxxxxxxxxxxxxxxxxxxxxx",
+        "deployment_name": "mock_deployment",
+        "node_uid": "node:xxxxxxxxxxx:xxxxxxxxxx",
+        "muid": "mach:xxxxxxxxxx"
+    },
+    "Policy": {
+        "apiVersion": "spyderbat/v1",
+        "kind": "SpyderbatPolicy",
+        "metadata": {
+            "name": "supress_command_airflow_data",
+            "type": "trace",
+            "uid": "pol:AKFXXXXXXXXXXX",
+            "version": 1
+        },
+        "spec": {
+            "allowedFlags": [
+                {
+                    "class": "redflag/proc/command/high_severity/hidden/python",
+                    "display_name": "command_python",
+                    "display_severity": "high"
+                }
+            ]
+        }
+    },
+    "Node": {
+        "schema": "model_k8s_node::1.0.0",
+        "id": "node:xxxxxxxxxxxxxxxxxxxxxx",
+        "status": "active",
+        "version": 1689425045,
+        "time": 1689425066.5426638,
+        "valid_from": 1689166499.9791923,
+        "expire_at": 1689425999.999999,
+        "cluster_uid": "clus:xxxxxxxxxxx",
+        "clusterid": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "cluster_name": "mock_cluster",
+        "kind": "Node",
+        "metadata": {
+            "annotations": {},
+            "creationTimestamp": "2023-02-08T18:01:53Z",
+            "labels": {
+                "app": "mock"
+            },
+            "name": "mock_node",
+            "resourceVersion": "45556759",
+            "uid": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        },
+        "kuid": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "spec": {},
+        "k8s_status": {
+            "addresses": [],
+            "allocatable": {},
+            "capacity": {},
+            "conditions": [],
+            "daemonEndpoints": {},
+            "images": [],
+            "nodeInfo": {},
+            "volumesAttached": [],
+            "volumesInUse": []
+        },
+        "muid": "mach:FomNj5G1TJc"
+    },
+    "Cluster": {
+        "uid": "clus:xxxxxxxxxxx",
+        "name": "mock_cluster",
+        "org_uid": "spyderbatuid",
+        "cluster_details": {
+            "cluster_uid": "xxxxxxxxxxxxxxxxxxxxxxxx",
+            "cluster_name": "mock_cluster",
+            "agent_uid": "mach:xxxxxxxxxx",
+            "src_uid": "xxxxxxxxxxxxxxxxxxxx",
+            "cluid": "clus:xxxxxxxxxxx",
+            "spyder_tags": {
+                "CLUSTER_NAME": "mock_cluster",
+                "baz": "bat",
+                "foobar": true
+            }
+        },
+        "valid_from": "2022-11-22T15:08:28Z",
+        "valid_to": "0001-01-01T00:00:00Z",
+        "resource_name": "srn:cluster::xxxxxxxxxxxx:clus:xxxxxxxxxxxxxx",
+        "last_data": "2022-11-22T18:11:35Z"
+    },
+    "Deployment": {
+        "schema": "model_k8s_deployment::1.0.0",
+        "id": "deployment:xxxxxxxx:xxxxxxxxx",
+        "status": "active",
+        "version": 1694581060,
+        "time": 1694584863.7841268,
+        "valid_from": 1683042868.1558533,
+        "expire_at": 1694588399.999999,
+        "cluster_uid": "clus:xxxxxxxxxxx",
+        "clusterid": "xxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "cluster_name": "staging-k8s",
+        "kind": "Deployment",
+        "metadata": {
+            "annotations": {
+                "deployment.kubernetes.io/revision": "5",
+                "meta.helm.sh/release-name": "test-svc",
+                "meta.helm.sh/release-namespace": "default"
+            },
+            "creationTimestamp": "2023-04-25T18:19:40Z",
+            "generation": 5,
+            "labels": {
+                "app.kubernetes.io/instance": "test-svc",
+                "app.kubernetes.io/managed-by": "Helm",
+                "app.kubernetes.io/name": "test-svc",
+                "app.kubernetes.io/version": "1.16.0",
+                "helm.sh/chart": "test-svc-0.1.0"
+            },
+            "name": "mock-deployment",
+            "namespace": "default",
+            "resourceVersion": "55651882",
+            "uid": "xxxxxxx-xxx-xxxx-xxxx-xxxxxxxxxx"
+        },
+        "kuid": "xxxxxxx-xxx-xxxx-xxxx-xxxxxxxxxx",
+        "spec": {
+            "progressDeadlineSeconds": 600,
+            "replicas": 1,
+            "revisionHistoryLimit": 10,
+            "selector": {
+                "matchLabels": {
+                    "app.kubernetes.io/instance": "test-svc",
+                    "app.kubernetes.io/name": "test-svc"
+                }
+            },
+            "strategy": {
+                "rollingUpdate": {
+                    "maxSurge": "25%",
+                    "maxUnavailable": "25%"
+                },
+                "type": "RollingUpdate"
+            },
+            "template": {
+                "metadata": {
+                    "annotations": {
+                        "kubectl.kubernetes.io/restartedAt": "2023-07-19T13:36:02Z"
+                    },
+                    "creationTimestamp": "None",
+                    "labels": {
+                        "app.kubernetes.io/instance": "test-svc",
+                        "app.kubernetes.io/name": "test-svc"
+                    }
+                },
+                "spec": {
+                    "containers": [
+                        {
+                            "command": [
+                                "/bin/bash",
+                                "-c",
+                                "test"
+                            ],
+                            "image": "test:latest",
+                            "imagePullPolicy": "Always",
+                            "livenessProbe": {
+                                "exec": {
+                                    "command": [
+                                        true
+                                    ]
+                                },
+                                "failureThreshold": 3,
+                                "periodSeconds": 10,
+                                "successThreshold": 1,
+                                "timeoutSeconds": 1
+                            },
+                            "name": "test",
+                            "readinessProbe": {
+                                "exec": {
+                                    "command": [
+                                        true
+                                    ]
+                                },
+                                "failureThreshold": 3,
+                                "periodSeconds": 10,
+                                "successThreshold": 1,
+                                "timeoutSeconds": 1
+                            },
+                            "resources": {},
+                            "securityContext": {},
+                            "terminationMessagePath": "/dev/termination-log",
+                            "terminationMessagePolicy": "File"
+                        }
+                    ],
+                    "dnsPolicy": "ClusterFirst",
+                    "restartPolicy": "Always",
+                    "schedulerName": "default-scheduler",
+                    "securityContext": {},
+                    "serviceAccount": "test-svc",
+                    "serviceAccountName": "test-svc",
+                    "terminationGracePeriodSeconds": 30,
+                    "tolerations": [
+                        {
+                            "effect": "NoSchedule",
+                            "key": "dedicated",
+                            "operator": "Equal",
+                            "value": "testGroup"
+                        }
+                    ]
+                }
+            }
+        },
+        "k8s_status": {
+            "availableReplicas": 1,
+            "conditions": [
+                {
+                    "lastTransitionTime": "2023-07-24T21:44:12Z",
+                    "lastUpdateTime": "2023-07-24T21:44:12Z",
+                    "message": "Deployment has minimum availability.",
+                    "reason": "MinimumReplicasAvailable",
+                    "status": true,
+                    "type": "Available"
+                },
+                {
+                    "lastTransitionTime": "2023-04-25T18:37:39Z",
+                    "lastUpdateTime": "2023-09-11T15:55:56Z",
+                    "message": "ReplicaSet 'test-svc' has successfully progressed.",
+                    "reason": "NewReplicaSetAvailable",
+                    "status": true,
+                    "type": "Progressing"
+                }
+            ],
+            "observedGeneration": 17,
+            "readyReplicas": 1,
+            "replicas": 1,
+            "updatedReplicas": 1
+        }
+    },
+    "Namespace": {
+        "apiVersion": "v1",
+        "kind": "Namespace",
+        "metadata": {
+            "labels": {
+                "kubernetes.io/metadata.name": "test"
+            },
+            "creationTimestamp": 1689424074.0437524,
+            "name": "mock-namespace",
+            "resourceVersion": "65281414",
+            "uid": "6c2956ff-239e-4068-xxxx-xxxxxxxxx"
+        },
+        "spec": {
+            "N/A": "N/A"
+        },
+        "status": {
+            "phase": "Active"
+        },
+        "cluster_uid": "clus:PMx9HGEG_ZE",
+        "cluster_name": "productiondemo"
+    },
+    "Redflag": {
+        "id": "event_alert:xxxxxxxxxxx:xxxxxx:xxxxx:curl",
+        "schema": "event_redflag:suspicious_command:1.1.0",
+        "description": "SYSTEM as UID 100 ran curl with suspicious command /usr/bin/curl http://mock.mock",
+        "ref": "proc:xxxxxxxxxxx:xxxxxx:xxxxx",
+        "short_name": "command_curl",
+        "class": [
+            "redflag",
+            "proc",
+            "command",
+            "high_severity",
+            "suspicious",
+            "curl"
+        ],
+        "severity": "high",
+        "time": 1689424074.0437524,
+        "routing": "customer",
+        "version": 2,
+        "linkback": "https://mock.com",
+        "muid": "mach:xxxxxxxxxx",
+        "container": "ABCxxxxxxxxxxxxx",
+        "container_uid": "cont:xxxxxxxxxxapi_url, api_key, org_uid, timex:xxxxxxxxxxx:xxxxxxxxxxxx",
+        "cluster_uid": "clus:xxxxxxxxxxx",
+        "pod_uid": "pod:xxxxxxxxxxx:xxxxxxxxxx",
+        "mitre_mapping": [
+            {
+                "technique": "T1105",
+                "technique_name": "Ingress Tool Transfer",
+                "url": "https://attack.mitre.org/techniques/T1105",
+                "created": "2017-05-31T21:31:16.408Z",
+                "modified": "2020-03-20T15:42:48.595Z",
+                "stix": "attack-pattern--e6919abc-99f9-4c6c-95a5-14761e7b2add",
+                "tactic": "TA0011",
+                "tactic_name": "Command and Control",
+                "platform": "Linux"
+            }
+        ],
+        "auid": 4294967295,
+        "name": "curl",
+        "args": [
+            "/usr/bin/curl",
+            "http://mock.mock"
+        ],
+        "auser": "SYSTEM",
+        "euser": "UID 100",
+        "ancestors": [
+            "sh"
+        ],
+        "false_positive": false,
+        "uptime": 5498575.702408075,
+        "traces": [
+            "trace:xxxxxxxxxxx:xxxxxxxxxxx:xxxxx:suspicious_command"
+        ],
+        "traces_suppressed": false
+    },
+    "Opsflag": {
+        "id": "event_alert:xxxxxxxxxxx",
+        "schema": "event_opsflag:memoryleak:1.1.0",
+        "description": "Memory leaking over time",
+        "ref": "mach:xxxxxxxxxx",
+        "short_name": "memory_leak",
+        "class": [
+            "opsflag",
+            "mach",
+            "memory_leak",
+            "medium_severity"
+        ],
+        "severity": "medium",
+        "time": 1689422557.9508052,
+        "routing": "customer",
+        "version": 1,
+        "linkback": "https://mock.mock",
+        "muid": "mach:xxxxxxxxxx"
+    },
+    "Container": {
+        "id": "cont:7kEXXXXXXX",
+        "record_type": "model",
+        "schemaMajorVersion": 1,
+        "schema": "model_container::1.0.0",
+        "schemaType": "model_container",
+        "versionedId": "cont:7kEXXXXXXX:AAYwnkKTmzM:xxxxxxxxx:v1742306142",
+        "version": 1742306142,
+        "time": 1742306140.2331426,
+        "valid_from": 1742306140.199731,
+        "container_id": "b90e8e835253XXXXXXXXXX",
+        "muid": "mach:7kEXXXXXXX",
+        "image_repo_digests": [
+            "registry.k8s.io/pause@sha256:3d3xxxxxxxxx"
+        ],
+        "container_state": "running",
+        "image": "registry.k8s.io/pause:3.6",
+        "container_short_id": "b90e8e835253",
+        "container_name": "registry.k8s.io/pause:3.6",
+        "container_runtime": "containerd",
+        "command": "/pause",
+        "domainname": "",
+        "hostname": "vault-0",
+        "created": 1742306138,
+        "root_puid": "proc:7kE",
+        "image_id": "sha256:3d38xxxxxxxxxxx",
+        "image_short_id": "sha256:3d380ca886",
+        "image_repo_tags": [
+            "registry.k8s.io/pause:3.6"
+        ],
+        "user": "",
+        "cmd": [
+            "/pause"
+        ],
+        "args": [
+            "/pause"
+        ],
+        "path": "",
+        "mounts": [],
+        "platform": "linux",
+        "status": "active",
+        "original_schema": "model_container::1.0.0",
+        "container_name_runtime": "registry.k8s.io/pause:3.6",
+        "container_name_k8s": "",
+        "container_state_runtime": "running",
+        "task_state": "running",
+        "container_state_k8s": {},
+        "image_runtime": "registry.k8s.io/pause:3.6",
+        "image_k8s": "",
+        "image_id_k8s": "",
+        "image_id_runtime": "registry.k8s.io/pause@sha256:3d",
+        "expire_at": 1742306399.999999,
+        "sba_engid": 8
+    },
+    "Daemonset": {
+        "id": "daemonset:uOOOOOOOO:Z5nIkw:i5DhjZvy9J",
+        "record_type": "model",
+        "schemaMajorVersion": 1,
+        "schema": "model_k8s_daemonset::1.0.0",
+        "schemaType": "model_k8s_daemonset",
+        "versionedId": "daemonset:uOOOOOOOO:Z5nIkw:i5DhjZvy9J:v1742299324",
+        "version": 1742299324,
+        "time": 1742302924.2559338,
+        "valid_from": 1738131614.43448,
+        "metadata": {
+            "namespace": "kube-system",
+            "name": "svclb-traefik-e7f3406a",
+            "annotations": {
+                "objectset.rio.cattle.io/id": "",
+                "objectset.rio.cattle.io/owner-name": "traefik",
+                "objectset.rio.cattle.io/owner-namespace": "kube-system"
+            },
+            "creationTimestamp": "2024-12-11T15:39:15Z",
+            "generation": 1,
+            "resourceVersion": "650",
+            "uid": "a5a79d00-3d85-4dfa-9xxx-dxxxxxxxx"
+        },
+        "k8s_status": {
+            "currentNumberScheduled": 1,
+            "desiredNumberScheduled": 1,
+            "numberAvailable": 1,
+            "numberMisscheduled": 0,
+            "numberReady": 1,
+            "observedGeneration": 1,
+            "updatedNumberScheduled": 1
+        },
+        "kind": "DaemonSet",
+        "status": "active",
+        "cluster_uid": "clus:uxxxxxxxxx",
+        "red_flag_count": 1,
+        "red_flags": [
+            "event_alert:XXXXXXX:new_k8s_daemon"
+        ],
+        "spec": {
+            "revisionHistoryLimit": 10,
+            "selector": {
+                "matchLabels": {
+                    "app": "svclb-traefik-XXXXXXX"
+                }
+            },
+            "template": {
+                "metadata": {
+                    "creationTimestamp": null,
+                    "labels": {
+                        "app": "svclb-traefik-XXXXXXX",
+                        "svccontroller.k3s.cattle.io/svcname": "traefik",
+                        "svccontroller.k3s.cattle.io/svcnamespace": "kube-system"
+                    }
+                },
+                "spec": {
+                    "automountServiceAccountToken": false,
+                    "containers": [
+                        {
+                            "env": [
+                                {
+                                    "name": "SRC_PORT",
+                                    "value": "80"
+                                }
+                            ],
+                            "image": "rancher/klipper",
+                            "imagePullPolicy": "IfNotPresent",
+                            "name": "lb-tcp-80",
+                            "ports": [
+                                {
+                                    "containerPort": 80,
+                                    "hostPort": 80,
+                                    "name": "lb-tcp-80",
+                                    "protocol": "TCP"
+                                }
+                            ],
+                            "resources": {},
+                            "securityContext": {
+                                "capabilities": {
+                                    "add": [
+                                        "NET_ADMIN"
+                                    ]
+                                }
+                            },
+                            "terminationMessagePath": "/dev/termination-log",
+                            "terminationMessagePolicy": "File"
+                        },
+                        {
+                            "env": [
+                                {
+                                    "name": "SRC_PORT",
+                                    "value": "443"
+                                }
+                            ],
+                            "image": "rancher/klipper",
+                            "imagePullPolicy": "IfNotPresent",
+                            "name": "lb-tcp-443",
+                            "ports": [
+                                {
+                                    "containerPort": 443,
+                                    "hostPort": 443,
+                                    "name": "lb-tcp-443",
+                                    "protocol": "TCP"
+                                }
+                            ],
+                            "resources": {},
+                            "securityContext": {
+                                "capabilities": {
+                                    "add": [
+                                        "NET_ADMIN"
+                                    ]
+                                }
+                            },
+                            "terminationMessagePath": "/dev/termination-log",
+                            "terminationMessagePolicy": "File"
+                        }
+                    ],
+                    "dnsPolicy": "ClusterFirst",
+                    "priorityClassName": "system-node-critical",
+                    "restartPolicy": "Always",
+                    "schedulerName": "default-scheduler",
+                    "serviceAccount": "svc-test",
+                    "serviceAccountName": "svc-test",
+                    "terminationGracePeriodSeconds": 30,
+                    "tolerations": [
+                        {
+                            "effect": "NoSchedule",
+                            "key": "node-role.kubernetes.io/master",
+                            "operator": "Exists"
+                        }
+                    ]
+                }
+            },
+            "updateStrategy": {
+                "rollingUpdate": {
+                    "maxSurge": 0,
+                    "maxUnavailable": 1
+                },
+                "type": "RollingUpdate"
+            }
+        },
+        "cluster_name": "digital_ocean_eval",
+        "metadata.name": "svclb-traefik-xxxxx",
+        "metadata.namespace": "kube-system",
+        "metadata.uid": "a5XXXXX",
+        "original_schema": "model_k8s_daemonset::1.0.0",
+        "cluid": "clus:uOOOOOOOO",
+        "clusterid": "0c97e9cc-xxxxxx",
+        "kuid": "a5a79d00-xxxxxxxx",
+        "is_causee": false
+    },
+    "Role": {
+        "id": "role:xxxxx-09k:Z9l9UA:TztJr8UpT7",
+        "record_type": "model",
+        "schemaMajorVersion": 1,
+        "schema": "model_k8s_role::1.0.0",
+        "schemaType": "model_k8s_role",
+        "versionedId": "role:xxxxxxxxx:v1742306640",
+        "version": 1742306640,
+        "time": 1742306640.6618454,
+        "valid_from": 1742306640.6618454,
+        "status": "active",
+        "rules": [
+            {
+                "apiGroups": [
+                    ""
+                ],
+                "resources": [
+                    "pods"
+                ],
+                "verbs": [
+                    "get"
+                ]
+            }
+        ],
+        "cluster_uid": "clus:xxxxx-09k",
+        "cluster_name": "do-nyc1-vault-cluster",
+        "kind": "Role",
+        "is_causee": false,
+        "metadata": {
+            "namespace": "vault",
+            "name": "vault-discovery-role",
+            "labels": {
+                "app.kubernetes.io/instance": "vault",
+                "app.kubernetes.io/managed-by": "Helm",
+                "app.kubernetes.io/name": "vault",
+                "helm.sh/chart": "vault-0.29.1"
+            },
+            "annotations": {
+                "meta.helm.sh/release-name": "vault",
+                "meta.helm.sh/release-namespace": "vault"
+            },
+            "creationTimestamp": "2025-03-18T14:04:00Z",
+            "resourceVersion": "227423",
+            "uid": "13e31f10-7feb-xxxxxx",
+            "managedFields": []
+        },
+        "cluid": "clus:xxxxx-09k",
+        "clusterid": "b21c7c8f-xxxxxxx",
+        "red_flag_count": 1,
+        "red_flags": [
+            "event_alert:xxxxxxxx:new_k8s_role"
+        ],
+        "kuid": "13e31f10-7feb-xxxxxx",
+        "metadata.name": "vault-discovery-role",
+        "metadata.namespace": "vault",
+        "metadata.uid": "13e31f10-7feb-xxxxxx",
+        "original_schema": "model_k8s_role::1.0.0"
+    },
+    "RoleBinding": {
+        "id": "rolebinding:idoxxxxxx",
+        "record_type": "model",
+        "schemaMajorVersion": 1,
+        "schema": "model_k8s_rolebinding::1.0.0",
+        "schemaType": "model_k8s_rolebinding",
+        "versionedId": "rolebinding:idoxxxxxx:v1",
+        "version": 1,
+        "time": 1742306640.7252786,
+        "valid_from": 1742306640.7252786,
+        "status": "active",
+        "cluster_uid": "clus:id-09k",
+        "cluster_name": "do-nyc1-vault-cluster",
+        "clusterid": "b21c7c8f-xxxxx",
+        "cluid": "clus:id-09k",
+        "kind": "RoleBinding",
+        "kuid": "2a3d0607-c8f4-xxxxxxxx",
+        "is_causee": false,
+        "metadata": {
+            "namespace": "vault",
+            "annotations": {
+                "meta.helm.sh/release-name": "vault",
+                "meta.helm.sh/release-namespace": "vault"
+            },
+            "labels": {
+                "app.kubernetes.io/name": "vault"
+            },
+            "managedFields": [],
+            "name": "vault-discovery-rolebinding",
+            "resourceVersion": "227424",
+            "uid": "2a3d06-xxxx-xxxx",
+            "creationTimestamp": 1742306640.7252786
+        },
+        "roleRef": {
+            "role_uid": "role:idoz9F6-09k:XXXXXX:TztJr8UpT7",
+            "apiGroup": "rbac.authorization.k8s.io",
+            "kind": "Role",
+            "name": "vault-discovery-role"
+        },
+        "subjects": [
+            {
+                "subject_uid": "serviceaccount:idoz9F6-09k:XXXXXX:ePIqZZ3uQk",
+                "kind": "ServiceAccount",
+                "name": "vault",
+                "namespace": "vault"
+            }
+        ],
+        "metadata.labels": {
+            "app.kubernetes.io/instance": "vault",
+            "app.kubernetes.io/managed-by": "Helm",
+            "app.kubernetes.io/name": "vault",
+            "helm.sh/chart": "vault-0.29.1"
+        },
+        "metadata.name": "vault-discovery-rolebinding",
+        "metadata.namespace": "vault",
+        "metadata.uid": "ubnd-1234",
+        "original_schema": "model_k8s_rolebinding::1.0.0",
+        "subject_uids": [
+            "serviceaccount:idoz9F6-09k:XXXXXX:ePIqZZ3uQk"
+        ],
+        "expire_at": 1742309999.999999
+    },
+    "ClusterRole": {
+        "id": "clusterrole:RXXXXXXXX:Z9nCkA:TtaDfxIQKF",
+        "record_type": "model",
+        "schemaMajorVersion": 1,
+        "schema": "model_k8s_clusterrole::1.0.0",
+        "schemaType": "model_k8s_clusterrole",
+        "versionedId": "clusterrole:RXXXXXXXX:Z9nCkAF:v1742806560",
+        "version": 1742806560,
+        "time": 1742810460.5778866,
+        "valid_from": 1742324368.218687,
+        "red_flag_count": 1,
+        "red_flags": [
+            "event_alert:RXXXXXXXX:AAAAAGfZwpA:new_k8s_cluste"
+        ],
+        "status": "active",
+        "rules": [
+            {
+                "apiGroups": [
+                    "admissionregistration.k8s.io"
+                ],
+                "resources": [
+                    "mutatingwebhookconfigurations"
+                ],
+                "verbs": [
+                    "get",
+                    "list",
+                    "watch",
+                    "patch"
+                ]
+            }
+        ],
+        "cluster_uid": "clus:RAXXX",
+        "cluster_name": "learn-vault",
+        "kind": "ClusterRole",
+        "kuid": "092d761f-xxxxxxx",
+        "is_causee": false,
+        "metadata": {
+            "annotations": {
+                "meta.helm.sh/release-name": "vault",
+                "meta.helm.sh/release-namespace": "default"
+            },
+            "creationTimestamp": "2025-03-18T18:59:28Z",
+            "labels": {
+                "app.kubernetes.io/instance": "vault",
+                "app.kubernetes.io/managed-by": "Helm",
+                "app.kubernetes.io/name": "vault-agent-injector"
+            },
+            "name": "vault-agent-injector-clusterrole",
+            "resourceVersion": "45056",
+            "uid": "092d761f-xxxxxxx"
+        },
+        "cluid": "clus:RAXXX",
+        "clusterid": "1aa8e489-82af-43c9-a953-98f047ec1723",
+        "expire_at": 1742813999.999999
+    },
+    "ClusterRoleBinding": {
+        "id": "clusterrolebinding:R",
+        "record_type": "model",
+        "schemaMajorVersion": 1,
+        "schema": "model_k8s_clusterrolebinding::1.0.0",
+        "schemaType": "model_k8s_clusterrolebinding",
+        "versionedId": "clusterrolebinding:R:v1742810460",
+        "version": 1742810460,
+        "time": 1742810460.5778866,
+        "valid_from": 1742406113.4391618,
+        "red_flag_count": 1,
+        "red_flags": [
+            "event_alert:RXXXXX:AAAAAGfbAeE:BxrrHJCq0N:crb_clusterrole"
+        ],
+        "status": "active",
+        "cluster_uid": "clus:RXXXXX",
+        "cluid": "clus:RXXXXX",
+        "clusterid": "1aa8e489-XXXXXXXX",
+        "cluster_name": "learn-vault",
+        "kind": "ClusterRoleBinding",
+        "kuid": "c35a3ab6-XXXXXXXXX",
+        "is_causee": false,
+        "metadata": {
+            "labels": {
+                "app.kubernetes.io/name": "pomerium"
+            },
+            "name": "po-crb",
+            "uid": "c35a3ab6-XXXXXXXXX",
+            "creationTimestamp": 1742406113.4391618
+        },
+        "roleRef": {
+            "role_uid": "clusterrole:RRRRRRRRRRR:PPPPPPPPP",
+            "apiGroup": "rbac.authorization.k8s.io",
+            "kind": "ClusterRole",
+            "name": "po-role"
+        },
+        "subjects": [
+            {
+                "subject_uid": "serviceaccount:RRRRRRRRRRR:PPPPPPPPP",
+                "kind": "ServiceAccount",
+                "name": "po-subject",
+                "namespace": "po"
+            }
+        ],
+        "expire_at": 1742813999.999999,
+        "subject_uids": [
+            "serviceaccount:RRRRRRRRRRR:PPPPPPPPP"
+        ]
+    },
+    "Process": {
+        "id": "proc:7-PA:26114.1",
+        "record_type": "model",
+        "schemaMajorVersion": 1,
+        "schema": "model_process::1.2.0",
+        "schemaType": "model_process",
+        "versionedId": "proc:7-PA:26114.1:v17400000",
+        "version": 1742306879,
+        "time": 1742306879.4177003,
+        "valid_from": 1742306876.0356934,
+        "valid_to": 1742306876.0383425,
+        "prev_time": 1742306876.0383425,
+        "computedDurationSeconds": 0,
+        "auser": "SYSTEM",
+        "euser": "root",
+        "muid": "mach:7kkkkkkkkk",
+        "name": "ip6tables",
+        "pid": 26114,
+        "ppid": 1177,
+        "status": "closed",
+        "create_time": 1742306876.0356934,
+        "ppuid": "proc:7-PA:26114",
+        "sid": "4294967295",
+        "args": [
+            "/usr/sbin/ip6tables",
+            "-w",
+            "-S",
+            "KUBE-KUBELET-CANARY",
+            "-t",
+            "mangle"
+        ],
+        "cwd": "/",
+        "auid": 4294967295,
+        "euid": 0,
+        "egrp": "GID 0",
+        "egid": 0,
+        "description": "Process 26114 updated fingerprint",
+        "cgroup": "/system.slice/kubelet.service",
+        "thread": false,
+        "exe": "/usr/sbin/ip6tables",
+        "type": "normal",
+        "ancestors": [
+            "kubelet",
+            "kubelet",
+            "systemd"
+        ],
+        "ancestorsString": "kubelet/kubelet/systemd",
+        "commandLine": "/usr/sbin/ip6tables -w 5 -W 100000 -S KUBE-KUBELET-CANARY -t mangle",
+        "exit": 0,
+        "fingerprint_uid": "fprint:XXXXXX:linux-service:kubelet.service:1177",
+        "title": "/usr/sbin/ip6tables -w 5 -W 100000 -S KUBE-KUBELET-CANARY -t mangle",
+        "interactive": false,
+        "ancestor_uids": [
+            "proc:7-PA:26114"
+        ],
+        "child_connection_count": 0,
+        "child_connection_uids": [],
+        "child_process_count": 0,
+        "child_process_uids": [],
+        "duration": 0.002649068832397461,
+        "original_schema": "model_process::1.2.0",
+        "tpuid": "proc:7-PA:26114",
+        "data_is_complete": true,
+        "is_causer": false,
+        "is_causee": false
+    },
+    "Connection": {
+        "id": "conn:x:300000:5128071",
+        "record_type": "model",
+        "schemaMajorVersion": 1,
+        "schema": "model_connection::1.1.0",
+        "schemaType": "model_connection",
+        "versionedId": "conn:x:300000:5128071:v1742306921",
+        "version": 1742306921,
+        "time": 1742306919.1194124,
+        "valid_from": 1742306919.1148183,
+        "valid_to": 1742306919.1186786,
+        "prev_time": 1742306919.1187649,
+        "computedDurationSeconds": 0,
+        "muid": "mach:xOOOOOOOO",
+        "direction": "outbound",
+        "puids": [
+            "proc:xOOOOO:Z9l-Zw:300000.1"
+        ],
+        "family": "IPV4",
+        "local_ip": "127.0.0.1",
+        "local_port": 48430,
+        "remote_ip": "127.0.0.1",
+        "remote_port": 5000,
+        "srcs": [
+            "conn:x:300000:5128071"
+        ],
+        "dsts": [
+            "conn:x:300000:5128072"
+        ],
+        "proto": "TCP",
+        "peer_cuid": "conn:xPc:300000:5128072",
+        "peer_muid": "mach:xOOOOO",
+        "proc_name": "tetra",
+        "peer_proc_name": "tetra",
+        "status": "closed",
+        "duration": 0.0038602352142333984,
+        "original_schema": "model_connection::1.1.0",
+        "puid": "proc:xOOOOO:Z9l-Zw:300000.1",
+        "description": "Connection TCP 127.0.0.1--127.0.0.1  closed",
+        "connector_match": false,
+        "seq_match": true,
+        "seq": 210000
+    },
+    "Agent": {
+        "id": "agent:Sq",
+        "record_type": "model",
+        "schemaMajorVersion": 1,
+        "schema": "model_agent::1.0.0",
+        "schemaType": "model_agent",
+        "versionedId": "agent:Sq:v1742823654",
+        "time": 1742823819.5763354,
+        "valid_from": 1738000263.5911205,
+        "agent_arch": "x86_64",
+        "agent_version": "v1.2.108",
+        "bat_statuses": {
+            "authUID": {
+                "running": true,
+                "status": "Normal",
+                "cpu_status": "Normal",
+                "mem_status": "Normal"
+            },
+            "bashbatUID": {
+                "running": true,
+                "status": "Normal",
+                "cpu_status": "Normal",
+                "mem_status": "Normal"
+            },
+            "grimreaperUID": {
+                "running": true,
+                "status": "Normal",
+                "cpu_status": "Normal",
+                "mem_status": "Normal"
+            },
+            "procmonUID": {
+                "running": true,
+                "status": "Normal",
+                "cpu_status": "Normal",
+                "mem_status": "Normal"
+            },
+            "snapshotUID": {
+                "running": true,
+                "status": "Normal",
+                "cpu_status": "Normal",
+                "mem_status": "Normal"
+            },
+            "scentlessngUID": {
+                "cpu_status": "Normal",
+                "mem_status": "Normal",
+                "running": true,
+                "status": "Normal"
+            }
+        },
+        "cpu_make": "GenuineIntel",
+        "cpu_model": "Intel(R) Xeon(R) Platinum 8259CL CPU @ 2.50GHz",
+        "hostname": "ip-XXXXX.us-west-2.compute.internal",
+        "ips": [
+            "fe80:0000:0000:0000:7ca2:bxxx:fxxx:0xxx"
+        ],
+        "num_cores": 2,
+        "os_pretty_name": "Amazon Linux 2",
+        "total_mem_B": 8100122624,
+        "mem_status": "Normal",
+        "cpu_status": "Warning",
+        "bandwidth_status": "Normal",
+        "cluster_name": "integrationc2reinstall",
+        "boot_time": "Mon, 27 Jan 2025 17:50:21 UTC",
+        "muid": "mach:o-pZ0o_kQ1U",
+        "status": "Warning",
+        "last_seen": 1742823819.5763354,
+        "agent_type": "nano_agent",
+        "ephemeral": true,
+        "expire_at": 1742824799.999999,
+        "status_reported_by_agent": "Agent Running",
+        "thresholds": {
+            "agent_bandwidth_thresh_Bps": 125000,
+            "agent_cpu_thresh_P": 0.04,
+            "agent_mem_thresh_B": 2000000000,
+            "bat_cpu_thresh_P": 0.03,
+            "bat_mem_thresh_B": 1500000000
+        }
+    },
+    "Spydertrace": {
+        "id": "trace:L:suspicious_command",
+        "record_type": "model",
+        "schemaMajorVersion": 1,
+        "schema": "model_spydertrace::1.0.1",
+        "schemaType": "model_spydertrace",
+        "versionedId": "trace:L:suspicious_command:v1742825235",
+        "version": 1742825235,
+        "time": 1742823887.780876,
+        "valid_from": 1742823872.7597106,
+        "valid_to": 1742823887.780876,
+        "computedDurationSeconds": 15,
+        "muid": "mach:L",
+        "root_proc_name": "bash",
+        "score": 60,
+        "status": "closed",
+        "trigger": "event_alert:L:AAAAAGfhYb4:216501.1:id",
+        "mitre_mapping": [
+            "TA0002/T1059.004",
+            "TA0003/T1547.006",
+            "TA0005/T1027.004",
+            "TA0007"
+        ],
+        "connection_count": 0,
+        "depth": 35,
+        "process_count": 1500,
+        "flag_count": 47,
+        "root_node": "proc:L:Z-Fhvg:216479.2",
+        "object_count": 1500,
+        "unique_flag_count": 5,
+        "hostname": "ip-XXXXX.us-west-2.compute.internal",
+        "interactive": false,
+        "interactive_users": [],
+        "non_interactive_users": [
+            "root"
+        ],
+        "overtaken": false,
+        "suppressed": false,
+        "trigger_short_name": "command_id",
+        "cluster_name": "integrationc2reinstall",
+        "trigger_cgroup": "systemd:/",
+        "machine_count": 1,
+        "activity_timestamps": [
+            [
+                1742823872.7597106,
+                1742823887.780876,
+                1547
+            ]
+        ],
+        "duration": 15.021165370941162,
+        "trigger_class": "redflag/proc/command/low_severity/suspicious/id",
+        "summary_uid": "t_sum:L00000000:suspicious_command",
+        "expire_at": 1742824799.999999,
+        "linkback": "https://www.kangaroobat.net/app/org/",
+        "severities": {
+            "high": 45,
+            "low": 2
+        },
+        "trace_summary": "fprint:trace:Oxxxxxx:AAYxFs3Xh54:suspicious_command",
+        "trigger_ancestors": "systemd/containerd-shim/containerd-shim/runc/runc/exe/6/6/6/docker-entrypoi/bash/bash/bash/bash/bash/id",
+        "trigger_ref": "proc:Oxxxxxx-Fhvg:216501.1",
+        "trigger_type": "proc",
+        "trigger_user": "root",
+        "unique_severities": {
+            "critical": 0,
+            "high": 3,
+            "low": 2,
+            "medium": 0
+        }
+    },
+    "Deviation": {
+        "checksum": "045d6xxxxxxxx",
+        "description": "Process \"sh\" using executable \"/usr/bin/dash\" deviated from policy \"spyderbat-demo\".",
+        "short_description": "Process \"sh\" exe \"/usr/bin/dash\".",
+        "deviation": {
+            "apiVersion": "spyderbat/v1",
+            "kind": "GuardianDeviation",
+            "metadata": {
+                "type": "process",
+                "policy_uid": "pol:16xxxxxxxxxxxxx",
+                "uid": "dev:1qgEts:AAAAAAAAAA:0"
+            },
+            "spec": {
+                "processPolicy": [
+                    {
+                        "policyNode": {
+                            "children": [
+                                {
+                                    "euser": [
+                                        "root"
+                                    ],
+                                    "exe": [
+                                        "/usr/bin/dash"
+                                    ],
+                                    "id": "sh_0",
+                                    "name": "sh"
+                                }
+                            ],
+                            "id": "sh_1"
+                        }
+                    }
+                ]
+            }
+        },
+        "id": "dev:KNUXXXXXXXXX:AAYxF0kGlTo:0",
+        "policy_mode": "enforce",
+        "policy_name": "spyderbat-demo",
+        "policy_type": "container",
+        "policy_uid": "pol:16xxxxxxxxxxxxx",
+        "ref": "proc:g3ssxxxxxxxx:Z-FpxA:3069822",
+        "schema": "event_deviation:workload:1.0.0",
+        "time": 1742825939.4409544,
+        "cluster_name": "cluster3",
+        "namespace": "dev",
+        "pod_kuid": "a8f2f824-iuxxxxxxxxx",
+        "cluster_uid": "clus:VyTE0-BPVmo",
+        "version": 1742825939.4409544,
+        "schemaType": "event_deviation",
+        "schemaMajorVersion": 1,
+        "record_type": "event",
+        "versionedId": "dev:KNUXXXXXXXXXXXX:AAYxF0kGlTo:0:",
+        "container_uid": "cont:g3sxxxxxxxx:AAYxxxxxxxx:74210ef01a9a"
+    },
+    "Fingerprint": {
+        "apiVersion": "spyderbat/v1",
+        "kind": "SpyderbatFingerprint",
+        "metadata": {
+            "cgroup": "systemd:/system.slice/systemd-gssproxy.service",
+            "checksum": "e7db68f142d100000000000000",
+            "firstTimestamp": 1746629308.8108716,
+            "id": "fprint:zY600000:aBtyvA:linux-service:gssproxy.service:3878",
+            "latestTimestamp": 1746629308.8108716,
+            "muid": "mach:zY600000",
+            "name": "gssproxy.service",
+            "org_uid": "test-org-000",
+            "root": "proc:zY600000:aBtyfg:3878",
+            "type": "linux-service"
+        },
+        "spec": {
+            "machineSelector": {
+                "hostname": "eks-test"
+            },
+            "networkPolicy": {
+                "egress": [],
+                "ingress": []
+            },
+            "processPolicy": [
+                {
+                    "euser": [
+                        "root"
+                    ],
+                    "exe": [
+                        "/usr/sbin/gssproxy"
+                    ],
+                    "id": "gssproxy_0",
+                    "name": "gssproxy"
+                }
+            ],
+            "serviceSelector": {
+                "cgroup": "systemd:/system.slice/gssproxy.service"
+            }
+        },
+        "machines": [
+            "mach:zY600000"
+        ]
+    },
+    "Top-Data": {
+        "record_type": "event",
+        "schema": "event_top_data::1.0.0",
+        "schemaType": "event_top_data",
+        "schemaMajorVersion": 1,
+        "id": "top:mach:abc",
+        "version": 1742826076.7536356,
+        "time": 1742826076.7536356,
+        "versionedId": "top:mach:abc:",
+        "muid": "mach:abc",
+        "memory": {
+            "Active": 1405968384,
+            "Active(anon)": 2949120,
+            "Active(file)": 1403019264,
+            "AnonHugePages": 0,
+            "AnonPages": 847605760,
+            "Bounce": 0,
+            "Buffers": 1617920,
+            "Cached": 3656581120,
+            "CommitLimit": 4050067456,
+            "Committed_AS": 5850603520,
+            "Dirty": 53248,
+            "FileHugePages": 0,
+            "FilePmdMapped": 0,
+            "HugePages_Free": 0,
+            "HugePages_Rsvd": 0,
+            "HugePages_Surp": 0,
+            "HugePages_Total": 0,
+            "Hugepagesize": 2097152,
+            "Hugetlb": 0,
+            "DirectMap4k": 660512768,
+            "HardwareCorrupted": 0
+        },
+        "network": {
+            "total": {
+                "bytes_rx": 23532728738,
+                "bytes_tx": 22125230101,
+                "reads": 7771141,
+                "writes": 8777394
+            }
+        },
+        "load_avg": [
+            0.03,
+            0.09,
+            0.11
+        ],
+        "clk_tck": 100,
+        "cpu_time": {
+            "cpu": {
+                "guest_nice_time": 0,
+                "guest_time": 607990,
+                "iowait_time_broken": 3487373502,
+                "irq_time": 200293,
+                "nice_time": 3404,
+                "softirq_time": 0,
+                "steal_time": 853120,
+                "system_time": 167394539,
+                "user_space_time": 193456102
+            },
+            "cpu0": {
+                "guest_nice_time": 0,
+                "guest_time": 314477,
+                "iowait_time_broken": 1743495127,
+                "irq_time": 101155,
+                "nice_time": 1707,
+                "softirq_time": 0,
+                "steal_time": 386229,
+                "system_time": 84014507,
+                "user_space_time": 96690025
+            }
+        },
+        "disk": {
+            "nvme0n1": {
+                "io_time_ms": 10808980,
+                "ios_in_progress": 0,
+                "read_completed": 16013,
+                "read_time_ms": 19194,
+                "reads_merged": 3,
+                "sectors_read": 1058290,
+                "sectors_written": 396157584,
+                "weighted_io_time_ms": 16126640,
+                "write_time_ms": 16107446,
+                "writes_completed": 16596759,
+                "writes_merged": 1552902
+            },
+            "nvme0n1p1": {
+                "io_time_ms": 10808928,
+                "ios_in_progress": 0,
+                "read_completed": 15875,
+                "read_time_ms": 19135,
+                "reads_merged": 3,
+                "sectors_read": 1053386,
+                "sectors_written": 396157504,
+                "weighted_io_time_ms": 16126581,
+                "write_time_ms": 16107445,
+                "writes_completed": 16596757,
+                "writes_merged": 1552894
+            }
+        },
+        "tasks": {
+            "blocked": 0,
+            "context_switches": 6618748668,
+            "kernel_threads": 62,
+            "running": 0,
+            "total_tasks": 10597261,
+            "total_threads": 608
+        },
+        "processes": {
+            "1": {
+                "cstime": 109707,
+                "cutime": 280432,
+                "rss": 1528,
+                "shared": 987,
+                "start_time": 6,
+                "stime": 701724,
+                "utime": 1152957,
+                "vsize": 127094784
+            },
+            "2": {
+                "start_time": 6,
+                "stime": 223,
+                "utime": 3
+            }
+        }
+    },
+    "Bash-cmd": {
+        "cmd": "ssh root@240b:cxxx:4101:5409:c22:2:0:0",
+        "id": "bash:GGXXXXXXXXX:Z-AUiw:572041.1:0",
+        "muid": "mach:GXXXXXXXXX",
+        "puid": "proc:GGXXXXXXXXX:Z-AUiw:572041.1",
+        "schema": "event_bash_cmd::1.0.0",
+        "time": 1742738576.8245866,
+        "version": 1742738576.8245866,
+        "schemaType": "event_bash_cmd",
+        "record_type": "event",
+        "schemaMajorVersion": 1,
+        "versionedId": "bash:Gv4d:Z-AUiw:572041.1:0:",
+        "cwd": "/home/",
+        "euser": "root",
+        "original_schema": "event_bash_cmd::1.0.0",
+        "__partial": true,
+        "ui_sequenceNumber": 0,
+        "sourceRecord": {
+            "uid": "mach:Gv4d",
+            "org_uid": "FLegXXXXXXXXXX",
+            "resource_name": "srn:source::FLegXXXXXXXXXX:mach:GXXXXXXXXXX",
+            "last_data": "2025-03-24T14:36:03Z",
+            "apiRetrievalTime": 1742826968986,
+            "name": "",
+            "runtime_description": "uhn5bljhmgmt-p 192.168.00.0",
+            "runtime_details": {
+                "agent_registration_uid": "",
+                "src_uid": "mach:Gv4d",
+                "ip_addresses": [
+                    "192.168.00.0"
+                ],
+                "mac_addresses": [
+                    "50:00:00:c0:xx:xx"
+                ],
+                "os_name": "linux",
+                "os_pretty_name": "Rocky Linux 9.1",
+                "boot_time": 1728485821.066904,
+                "cpu_make": "GenuineIntel",
+                "cpu_model": "Intel Xeon Processor",
+                "cpu_cores": 12,
+                "memory_total_gb": 15.360279083251953,
+                "memory_total_bytes": 16492974080,
+                "agent_status": "Agent Running",
+                "agent_type": 0,
+                "live_test_result": 0,
+                "live_test_ran": 1
+            },
+            "archived": false,
+            "active": 1,
+            "agent_uid": "HdWxXXXXXXXXXXXXXX"
+        }
+    },
+    "CBUN": {
+        "id": "cbun:Qxx:Z-FtlA:ca",
+        "record_type": "model",
+        "schemaMajorVersion": 1,
+        "schema": "model_bundled_connection::1.0.0",
+        "schemaType": "model_bundled_connection",
+        "versionedId": "cbun:Qxx:v1",
+        "version": 1,
+        "time": 1742826959.9999,
+        "valid_from": 1742826900,
+        "valid_to": 1742826959.9999,
+        "num_connections": 1,
+        "proto": "TCP",
+        "client_cgroup": "/system.slice/k3s.service",
+        "client_ip": "134.122.20.0",
+        "client_muid": "mach:Qxx",
+        "client_proc_name": "k3s-server",
+        "client_puid": "proc:Qxx",
+        "client_type": "vm",
+        "server_cgroup": "/system.slice/k3s.service",
+        "server_ip": "134.122.20.0",
+        "server_muid": "mach:QxxOjFVlTO4",
+        "server_port": 6443,
+        "server_proc_name": "k3s-server",
+        "server_puid": "proc:Qxx",
+        "server_type": "vm",
+        "expire_at": 1742826959.9999
+    },
+    "Machine": {
+        "id": "mach:abc",
+        "record_type": "model",
+        "schemaMajorVersion": 1,
+        "schema": "model_machine::1.1.0",
+        "schemaType": "model_machine",
+        "versionedId": "mach:aXXXX:v1742900400.0987287",
+        "version": 1742900400.0987287,
+        "time": 1742900400.0987287,
+        "__partial": true,
+        "valid_from": 1742864058.5587971,
+        "computedDurationSeconds": -1742864059,
+        "boot_time": 1735297449.1273863,
+        "kernel_mods": [
+            "sd_mod",
+            "sg",
+            "fuse"
+        ],
+        "machine_processor": "x86_64",
+        "os_system": "linux",
+        "os_name": "CentOSLinux",
+        "os_version": 22.04,
+        "hostname": "uh.test.lab",
+        "cluster_name": "uhn7XX0",
+        "ipAddrs": "",
+        "osDistroCodename": "",
+        "private_ip": [
+            "172.0.0.0"
+        ],
+        "cpu_model": "Intel(R) Xeon(R) Platinum 8358P CPU @ 2.60GHz",
+        "original_schema": "model_machine::1.1.0"
+    },
+    "Source": {
+        "uid": "mach:o-pZ0o_xxxxx",
+        "name": "clustermonitor-deployment",
+        "org_uid": "test-org-ab548",
+        "runtime_description": "clustermonitor-deployment",
+        "runtime_details": {
+            "agent_registration_uid": "",
+            "cloud_instance_id": "i-0206c0000000000",
+            "cloud_image_id": "ami-0c26e44000000000",
+            "cloud_region": "us-west-2",
+            "cloud_type": "aws",
+            "cloud_account_id": "2000000000",
+            "src_uid": "mach:o-pZ0o_xxxx",
+            "ip_addresses": [
+                "10.3.x.x"
+            ],
+            "request_ip": "52.0.0.0",
+            "hostname": "clustermonitor-deployment",
+            "agent_arch": "x86_64",
+            "agent_version": "v1.2.114",
+            "uname": "amzn2.x86_64",
+            "os_name": "linux",
+            "os_pretty_name": "Ubuntu 24.04.2 LTS",
+            "boot_time": 1746398212.5604405,
+            "cpu_make": "GenuineIntel",
+            "cpu_model": "Intel(R) Xeon(R) Platinum 8375C CPU @ 2.90GHz",
+            "cpu_cores": 4,
+            "memory_total_gb": 15.351951599121094,
+            "memory_total_bytes": 16484032512,
+            "agent_status": "Agent Running",
+            "agent_type": 1,
+            "live_test_result": 1,
+            "live_test_ran": 1
+        },
+        "valid_from": "2024-06-19T01:14:13Z",
+        "valid_to": "0001-01-01T00:00:00Z",
+        "resource_name": "srn:agent::vxxxxxxxx:Gxxxxxxxx",
+        "archived": false,
+        "active": 1,
+        "agent_type": 1,
+        "agent_work_id": 94,
+        "user_work_id": -1,
+        "live_test_ran": 0,
+        "live_test_result": 0
+    },
+    "Custom-Flag": {
+        "apiVersion": "spyderbat/v1",
+        "kind": "SpyderbatCustomFlag",
+        "metadata": {
+            "name": "mock_flag",
+            "creationTimestamp": 1724088382,
+            "uid": "flag:rXX",
+            "createdBy": "test@spyderbat.com",
+            "lastUpdatedTimestamp": 1724088382,
+            "lastUpdatedBy": "test@spyderbat.com",
+            "version": 1,
+            "savedQueryUID": "query:RXX",
+            "schema": "model_k8s_cronjob"
+        },
+        "spec": {
+            "enabled": true,
+            "query": "metadata.name ~= '*'",
+            "flagSettings": {
+                "type": "redflag",
+                "description": "cronjob found with critical severity",
+                "severity": "critical"
+            },
+            "notification_settings": {
+                "uid": "",
+                "aggregate": false,
+                "aggregate_seconds": 0,
+                "is_enabled": false,
+                "cooldown": 0
+            }
+        }
+    },
+    "Saved-Query": {
+        "apiVersion": "spyderbat/v1",
+        "kind": "SpyderbatSavedQuery",
+        "metadata": {
+            "name": "mock-query",
+            "creationTimestamp": 1724327395,
+            "createdBy": "test@spyderbat.com",
+            "uid": "query:uXXXXXXXXXXXXX",
+            "lastUsedTimestamp": 1724327395
+        },
+        "spec": {
+            "schema": "model_k8s_replicaset",
+            "query": "spec.replicas > 5",
+            "description": "Saved query for SpyderbatCustomFlag replica-flag created by spyctl command on 2024-08-22T11:49:54 UTC",
+            "notification_settings": {
+                "uid": "nset:CXXXXXXXXXXXXX",
+                "aggregate": false,
+                "aggregate_seconds": 0,
+                "is_enabled": false,
+                "cooldown": 0,
+                "target_map": {}
+            }
+        }
+    }
+}

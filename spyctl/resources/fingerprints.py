@@ -529,14 +529,14 @@ def __svc_fprint_summary(
         key = tuple([filt.get_field_value(f, fprint) for f in grp_by_fields])
         if key not in service_data:
             service_data[key] = ServiceSumData(
-                fprint[lib.CGROUP_FIELD],
-                fprint["time"],
+                fprint["metadata"][lib.CGROUP_FIELD],
+                fprint["metadata"]["firstTimestamp"],
                 1 if fprint.get("covered_by_policy") else 0,
                 1,
                 {field: filt.get_field_value(field, fprint) for field in group_by},
             )
         else:
-            service_data[key].update_latest_timestamp(fprint["time"])
+            service_data[key].update_latest_timestamp(fprint["latestTimestamp"])
             service_data[key].count += 1
             if fprint.get("covered_by_policy"):
                 service_data[key].covered_count += 1
