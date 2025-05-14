@@ -13,6 +13,7 @@ from typing import Optional
 
 import click
 
+import spyctl.api.primitives as api_primitives
 import spyctl.commands as cmds
 import spyctl.config.configs as cfgs
 import spyctl.spyctl_lib as lib
@@ -36,12 +37,15 @@ MAIN_EPILOG = (
 @click.help_option("-h", "--help", hidden=True)
 @click.version_option(None, "-v", "--version", prog_name="Spyctl", hidden=True)
 @click.option("--debug", is_flag=True, hidden=True)
-def main(debug: bool = False) -> None:
+@click.option("--log-request-times", is_flag=True, hidden=True)
+def main(debug: bool = False, log_request_times: bool = False) -> None:
     """spyctl displays and controls resources within your Spyderbat
     environment
     """
     if debug:
         lib.set_debug()
+    if log_request_times:
+        api_primitives.LOG_REQUEST_TIMES = True
     cfgs.load_config()
     version_check()
 

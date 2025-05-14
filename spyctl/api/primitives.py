@@ -1,6 +1,7 @@
 """Contains the API primitives for making requests to the Spyderbat API."""
 
 import json
+import time
 
 import requests
 
@@ -12,6 +13,7 @@ TIMEOUT = (30, 300)
 MAX_TIME_RANGE_SECS = 43200  # 12 hours
 NAMESPACES_MAX_RANGE_SECS = 2000
 TIMEOUT_MSG = "A timeout occurred during the API request. "
+LOG_REQUEST_TIMES = False
 
 
 class NotFoundException(ValueError):
@@ -44,6 +46,9 @@ def get(url, key, params=None, raise_notfound=False):
         NotFoundException: If raise_notfound is True and the response status
             code is 404.
     """
+    start_time = None
+    if LOG_REQUEST_TIMES:
+        start_time = time.time()
     if key:
         headers = {
             "Authorization": f"Bearer {key}",
@@ -59,6 +64,11 @@ def get(url, key, params=None, raise_notfound=False):
     except requests.exceptions.Timeout as e:
         cli.err_exit(TIMEOUT_MSG + str(*e.args))
     context_uid = r.headers.get("x-context-uid", "No context uid found.")
+    if LOG_REQUEST_TIMES:
+        end_time = time.time()
+        cli.try_log(
+            f"GET {url}: {end_time - start_time} seconds | {context_uid}"
+        )
     if lib.DEBUG:
         print(
             f"Request to {url}\n\tcontext_uid: {context_uid}\n\tstatus: {r.status_code}"
@@ -90,6 +100,9 @@ def post(url, data, key, raise_notfound=False, params=None):
         NotFoundException: If raise_notfound is True and the response status
             code is 404.
     """
+    start_time = None
+    if LOG_REQUEST_TIMES:
+        start_time = time.time()
     headers = {"Authorization": f"Bearer {key}"}
     try:
         r = requests.post(
@@ -103,6 +116,11 @@ def post(url, data, key, raise_notfound=False, params=None):
     except requests.exceptions.Timeout as e:
         cli.err_exit(TIMEOUT_MSG + str(e.args))
     context_uid = r.headers.get("x-context-uid", "No context uid found.")
+    if LOG_REQUEST_TIMES:
+        end_time = time.time()
+        cli.try_log(
+            f"POST {url}: {end_time - start_time} seconds | {context_uid}"
+        )
     if lib.DEBUG:
         print(
             f"Request to {url}\n\tcontext_uid: {context_uid}\n\tstatus: {r.status_code}"
@@ -130,6 +148,9 @@ def put(url, data, key, params=None):
         requests.exceptions.Timeout: If the request times out.
 
     """
+    start_time = None
+    if LOG_REQUEST_TIMES:
+        start_time = time.time()
     headers = {"Authorization": f"Bearer {key}"}
     try:
         r = requests.put(
@@ -143,6 +164,11 @@ def put(url, data, key, params=None):
     except requests.exceptions.Timeout as e:
         cli.err_exit(TIMEOUT_MSG + str(e.args))
     context_uid = r.headers.get("x-context-uid", "No context uid found.")
+    if LOG_REQUEST_TIMES:
+        end_time = time.time()
+        cli.try_log(
+            f"PUT {url}: {end_time - start_time} seconds | {context_uid}"
+        )
     if lib.DEBUG:
         print(
             f"Request to {url}\n\tcontext_uid: {context_uid}\n\tstatus: {r.status_code}"
@@ -169,12 +195,20 @@ def delete(url, key):
         cli.CLIError: If the response status code is not 200.
 
     """
+    start_time = None
+    if LOG_REQUEST_TIMES:
+        start_time = time.time()
     headers = {"Authorization": f"Bearer {key}"}
     try:
         r = requests.delete(url, headers=headers, timeout=TIMEOUT)
     except requests.exceptions.Timeout as e:
         cli.err_exit(TIMEOUT_MSG + str(e.args))
     context_uid = r.headers.get("x-context-uid", "No context uid found.")
+    if LOG_REQUEST_TIMES:
+        end_time = time.time()
+        cli.try_log(
+            f"DELETE {url}: {end_time - start_time} seconds | {context_uid}"
+        )
     if lib.DEBUG:
         print(
             f"Request to {url}\n\tcontext_uid: {context_uid}\n\tstatus: {r.status_code}"
