@@ -16,9 +16,7 @@ from spyctl.api.notifications import post_test_notification
 # ----------------------------------------------------------------- #
 
 
-@click.command(
-    "test-notification", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG
-)
+@click.command("test-notification", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)
 @click.help_option("-h", "--help", hidden=True)
 @click.option(
     "-T",
@@ -47,9 +45,7 @@ from spyctl.api.notifications import post_test_notification
     type=click.File(),
     help="File containing a JSON record used to build the notification.",
 )
-def test_notification(
-    target, template, record_file, notification_settings_uid
-):
+def test_notification(target, template, record_file, notification_settings_uid):
     """Send test notifications to Targets or Notification Routes.
 
     Targets are named destinations like email, slack hooks, webhooks, or sns
@@ -58,9 +54,7 @@ def test_notification(
     Testing a notification route will send a test notification to one or many
     targets it is configured with.
     """
-    handle_test_notification(
-        target, template, record_file, notification_settings_uid
-    )
+    handle_test_notification(target, template, record_file, notification_settings_uid)
 
 
 # ----------------------------------------------------------------- #
@@ -101,9 +95,7 @@ def handle_test_notification(
         tgt_params = {
             "name_or_uid_contains": target_name_or_uid,
         }
-        targets, _ = get_notification_targets(
-            *ctx.get_api_data(), **tgt_params
-        )
+        targets, _ = get_notification_targets(*ctx.get_api_data(), **tgt_params)
         if not targets:
             lib.err_exit(f"No targets found for {target_name_or_uid}")
         if len(targets) > 1:
@@ -119,9 +111,7 @@ def handle_test_notification(
             if not templates:
                 lib.err_exit(f"No templates found for {template_name_or_uid}")
             if len(templates) > 1:
-                lib.err_exit(
-                    f"Ambiguous templates found for {template_name_or_uid}"
-                )
+                lib.err_exit(f"Ambiguous templates found for {template_name_or_uid}")
             template = templates[0]
 
     post_test_notification(

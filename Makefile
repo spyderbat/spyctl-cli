@@ -27,15 +27,27 @@ rebuild:
 	$(MAKE) clean
 	$(MAKE) build
 
-test_coverage:
-	coverage run --omit="test_*.py" -m pytest
-
 view_coverage_wsl:
 	coverage html
 	explorer.exe "htmlcov\index.html" ||:
 
-format:
-	./black.sh
+test-coverage:
+	coverage run --omit="test_*.py" -m pytest
 
-isort:
-	isort --profile black --filter-files --skip-gitignore .
+test-coverage-report: test-coverage
+	coverage report -m
+
+test-coverage-html: test-coverage
+	coverage html
+
+test-coverage-xml:
+	pytest --cov=src --cov-report=xml
+
+format:
+	./ruff-format.sh
+
+pre-commit-init:
+	pre-commit install
+
+pre-commit-update:
+	pre-commit autoupdate

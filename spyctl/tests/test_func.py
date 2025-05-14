@@ -3,7 +3,6 @@ import time
 from contextlib import redirect_stderr
 
 import spyctl.spyctl_lib as lib
-from spyctl.tests.backups import backup_secrets, restore_secrets
 
 
 def test_label_only_key_inp():

@@ -111,7 +111,7 @@ def _loose_abbrev_ips(ip1, ip2):
     if ip1 == ip2:
         return ip1
     ret = ""
-    for char1, char2 in zip(ip1, ip2):
+    for char1, char2 in zip(ip1, ip2, strict=False):
         if char1 == char2:
             ret += char1
         else:
@@ -130,7 +130,7 @@ def _shorten_v6(ip):
     last = 0
     num = 0
     while i < len(ip):
-        if ip[i : i + 4] == "zero":  # noqa
+        if ip[i : i + 4] == "zero":
             if num == 0:
                 last = i
             num += 1
@@ -144,7 +144,7 @@ def _shorten_v6(ip):
     if ip.endswith("*"):
         len_diff += 1
     if pos != -1:
-        ip = ip[:pos] + ":" + ip[pos + most * 5 :]  # noqa
+        ip = ip[:pos] + ":" + ip[pos + most * 5 :]
         if pos == 0:
             ip = ":" + ip
     ip = ip.replace("0", "")

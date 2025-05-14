@@ -69,7 +69,7 @@ class ContainerRules(RulesObject):
         if not namespace:
             if "pause" not in image:
                 lib.try_log(
-                    f"Container {container['container_name']} with from {image} has no namespace.. skipping",  # noqa: E501
+                    f"Container {container['container_name']} with from {image} has no namespace.. skipping",
                     is_warning=True,
                 )
             return

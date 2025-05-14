@@ -72,7 +72,7 @@ def handle_update_response_actions(backup_dir: Optional[str]):
             try:
                 uid = pol_data[lib.METADATA_FIELD][lib.METADATA_UID_FIELD]
                 outfile = Path.joinpath(backup_path, uid)
-                print(f"Backing up {uid} tp {str(outfile)}")
+                print(f"Backing up {uid} tp {outfile!s}")
                 outfile.write_text(
                     yaml.dump(pol_data, sort_keys=False), encoding="utf-8"
                 )
@@ -99,7 +99,7 @@ def handle_update_policy_modes(backup_dir: Optional[str]):
             try:
                 uid = pol_data[lib.METADATA_FIELD][lib.METADATA_UID_FIELD]
                 outfile = Path.joinpath(backup_path, uid)
-                print(f"Backing up {uid} tp {str(outfile)}")
+                print(f"Backing up {uid} tp {outfile!s}")
                 outfile.write_text(
                     yaml.dump(pol_data, sort_keys=False), encoding="utf-8"
                 )
@@ -130,7 +130,7 @@ def handle_update_policy_modes(backup_dir: Optional[str]):
             try:
                 uid = policy[lib.METADATA_FIELD][lib.METADATA_UID_FIELD]
                 outfile = Path.joinpath(backup_path, uid)
-                print(f"Backing up {uid} tp {str(outfile)}")
+                print(f"Backing up {uid} tp {outfile!s}")
                 outfile.write_text(yaml.dump(policy, sort_keys=False), encoding="utf-8")
             except Exception:
                 import traceback

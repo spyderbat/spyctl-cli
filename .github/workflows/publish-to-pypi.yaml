@@ -9,44 +9,16 @@ jobs:
     if: startsWith(github.event.release.tag_name, 'v') && !contains(github.event.release.tag_name, 'beta') && github.event.release.target_commitish == 'main'
     name: Build Spyctl distribution
     runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.12"
-    - name: Install pypa/build
-      run: >-
-        python3 -m
-        pip install
-        build
-        --user
-    - name: Build a binary wheel and a source tarball
-      run: python3 -m build
-    - name: Store the distribution packages
-      uses: actions/upload-artifact@v4
-      with:
-        name: python-package-distributions
-        path: dist/
-
-  publish-to-pypi:
-    name: Publish Spyctl distribution to PyPI
-    needs:
-    - build
-    runs-on: ubuntu-latest
     environment:
       name: pypi
       url: https://pypi.org/p/spyctl
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
     steps:
-    - name: Download all the dists
-      uses: actions/download-artifact@v4.1.7
-      with:
-        name: python-package-distributions
-        path: dist/
-    - name: Publish distribution to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
+    - uses: actions/checkout@v4
+    - uses: astral-sh/setup-uv@v3
+    - run: uv build
+    - run: uv publish --trusted-publishing always
     - name: Notify Slack
       run: |
         curl -request POST \

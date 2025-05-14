@@ -84,7 +84,7 @@ def validate_json(json_data: Union[str, Any]) -> bool:
     if isinstance(obj, dict):
         return validate_object(obj)
     cli.err_exit(
-        "Invalid Object to Validate, expect dictionary or list of" " dictionaries."
+        "Invalid Object to Validate, expect dictionary or list of dictionaries."
     )
 
 

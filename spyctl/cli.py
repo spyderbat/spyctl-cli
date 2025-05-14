@@ -75,7 +75,7 @@ def query_yes_no(question, default="yes", ignore_yes_option=False):
         elif choice in valid:
             return valid[choice]
         else:
-            sys.stderr.write("Please respond with 'yes' or 'no' " "(or 'y' or 'n').\n")
+            sys.stderr.write("Please respond with 'yes' or 'no' (or 'y' or 'n').\n")
 
 
 def notice(notice_msg):

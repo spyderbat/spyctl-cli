@@ -29,7 +29,7 @@ def handle_delete_ruleset(name_or_id):
         name = rs[lib.METADATA_FIELD][lib.METADATA_NAME_FIELD]
         uid = rs[lib.METADATA_FIELD][lib.METADATA_UID_FIELD]
         perform_delete = cli.query_yes_no(
-            f"Are you sure you want to delete ruleset '{name} - {uid}' from Spyderbat?"  # noqa
+            f"Are you sure you want to delete ruleset '{name} - {uid}' from Spyderbat?"
         )
         if perform_delete:
             delete_ruleset(

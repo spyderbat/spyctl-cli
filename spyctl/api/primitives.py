@@ -66,13 +66,10 @@ def get(url, key, params=None, raise_notfound=False):
     context_uid = r.headers.get("x-context-uid", "No context uid found.")
     if LOG_REQUEST_TIMES:
         end_time = time.time()
-        cli.try_log(
-            f"GET {url}: {end_time - start_time} seconds | {context_uid}"
-        )
+        cli.try_log(f"GET {url}: {end_time - start_time} seconds | {context_uid}")
     if lib.DEBUG:
         print(
-            f"Request to {url}\n\tcontext_uid: {context_uid}"
-            f"\n\tstatus: {r.status_code}"
+            f"Request to {url}\n\tcontext_uid: {context_uid}\n\tstatus: {r.status_code}"
         )
     if r.status_code == 404 and raise_notfound:
         raise NotFoundException()
@@ -119,13 +116,10 @@ def post(url, data, key, raise_notfound=False, params=None):
     context_uid = r.headers.get("x-context-uid", "No context uid found.")
     if LOG_REQUEST_TIMES:
         end_time = time.time()
-        cli.try_log(
-            f"POST {url}: {end_time - start_time} seconds | {context_uid}"
-        )
+        cli.try_log(f"POST {url}: {end_time - start_time} seconds | {context_uid}")
     if lib.DEBUG:
         print(
-            f"Request to {url}\n\tcontext_uid: {context_uid}"
-            f"\n\tstatus: {r.status_code}"
+            f"Request to {url}\n\tcontext_uid: {context_uid}\n\tstatus: {r.status_code}"
         )
     if r.status_code == 404 and raise_notfound:
         raise NotFoundException()
@@ -168,13 +162,10 @@ def put(url, data, key, params=None):
     context_uid = r.headers.get("x-context-uid", "No context uid found.")
     if LOG_REQUEST_TIMES:
         end_time = time.time()
-        cli.try_log(
-            f"PUT {url}: {end_time - start_time} seconds | {context_uid}"
-        )
+        cli.try_log(f"PUT {url}: {end_time - start_time} seconds | {context_uid}")
     if lib.DEBUG:
         print(
-            f"Request to {url}\n\tcontext_uid: {context_uid}"
-            f"\n\tstatus: {r.status_code}"
+            f"Request to {url}\n\tcontext_uid: {context_uid}\n\tstatus: {r.status_code}"
         )
     if r.status_code != 200:
         cli.err_exit(response_err_msg(r))
@@ -209,13 +200,10 @@ def delete(url, key):
     context_uid = r.headers.get("x-context-uid", "No context uid found.")
     if LOG_REQUEST_TIMES:
         end_time = time.time()
-        cli.try_log(
-            f"DELETE {url}: {end_time - start_time} seconds | {context_uid}"
-        )
+        cli.try_log(f"DELETE {url}: {end_time - start_time} seconds | {context_uid}")
     if lib.DEBUG:
         print(
-            f"Request to {url}\n\tcontext_uid: {context_uid}"
-            f"\n\tstatus: {r.status_code}"
+            f"Request to {url}\n\tcontext_uid: {context_uid}\n\tstatus: {r.status_code}"
         )
     if r.status_code != 200:
         cli.err_exit(response_err_msg(r))

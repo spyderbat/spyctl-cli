@@ -141,7 +141,7 @@ def handle_apply_policy(policy: Dict):
         if resp and resp.text:
             uid = json.loads(resp.text).get("uid", "")
             cli.try_log(
-                f"Successfully applied new {pol_type} {sub_type} policy with uid: {uid}"  # noqa
+                f"Successfully applied new {pol_type} {sub_type} policy with uid: {uid}"
             )
 
 

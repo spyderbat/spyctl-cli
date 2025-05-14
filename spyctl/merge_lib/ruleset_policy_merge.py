@@ -336,7 +336,7 @@ def __merge_deviation_rules(
     built_rules = getattr(mo, "built_rules", None)
     if built_rules is None:
         built_rules = _r.build_rules(base_value)
-        setattr(mo, "built_rules", built_rules)
+        mo.built_rules = built_rules
     rv = []
     new_built_rules = []
     # Loop through each rule in the deviation and compare
@@ -353,7 +353,7 @@ def __merge_deviation_rules(
     for rule in new_value:
         allow_found = False
         value = next(iter(rule[lib.RULE_VALUES_FIELD]))
-        for orig_rule, built_rule in zip(base_value, built_rules):
+        for orig_rule, built_rule in zip(base_value, built_rules, strict=False):
             if rule[lib.RULE_TARGET_FIELD] != built_rule.target:
                 continue
             if not built_rule.in_scope(built_scopes):
@@ -402,5 +402,5 @@ def __merge_deviation_rules(
             # No matching rules found, add the deviation rule
             rv.append(rule)
             new_built_rules.append(_r.build_rule(rule))
-    setattr(mo, "built_rules", new_built_rules)
+    mo.built_rules = new_built_rules
     return rv

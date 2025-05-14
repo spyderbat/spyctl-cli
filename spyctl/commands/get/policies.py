@@ -31,7 +31,7 @@ from spyctl.commands.get import get_lib
 )
 @click.option(
     "--get-deviations",
-    help="In the summary output, show deviations count for the" " provided time window",
+    help="In the summary output, show deviations count for the provided time window",
     is_flag=True,
 )
 @click.option(

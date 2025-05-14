@@ -33,18 +33,18 @@ def data_to_yaml(data: Dict) -> Dict:
     v = data.get("revision") or data.get("version")
     if v:
         metadata.version = v
-    if "tags" in data and data["tags"]:
+    if data.get("tags"):
         metadata.tags = data["tags"]
-    if "action_taken" in data and data["action_taken"]:
+    if data.get("action_taken"):
         metadata.action_taken = data["action_taken"]
     flag_settings = schemas.FlagSettingsField(
         type=data["type"],
         severity=data["severity"],
         description=data["description"],
     )
-    if "impact" in data and data["impact"]:
+    if data.get("impact"):
         flag_settings.impact = data["impact"]
-    if "content" in data and data["content"]:
+    if data.get("content"):
         flag_settings.content = data["content"]
     spec = schemas.CustomFlagSpecModel(
         flagSettings=flag_settings,

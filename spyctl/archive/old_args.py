@@ -4,7 +4,6 @@ import time
 from argparse import *
 from argparse import _SubParsersAction
 from datetime import datetime
-from typing import Dict
 
 import dateutil.parser as dateparser
 
@@ -266,7 +265,7 @@ def make_configure_add(configure_subs: _SubParsersAction[ArgumentParser]):
 
 
 def make_configure_update(configure_subs: _SubParsersAction[ArgumentParser]):
-    desc = "update a specific Spyderbat API deployment in spyctl user" " configuration"
+    desc = "update a specific Spyderbat API deployment in spyctl user configuration"
     configure_update = configure_subs.add_parser(
         "update", description=desc, formatter_class=fmt
     )
@@ -426,9 +425,7 @@ def make_manage_policy_add_response(
 def make_manage_policy_enable(
     man_pol_subs: _SubParsersAction[ArgumentParser],
 ):
-    desc = (
-        "Enable a Spyderbat policy object\n  note: policies are enabled by" " default"
-    )
+    desc = "Enable a Spyderbat policy object\n  note: policies are enabled by default"
     man_pol_enable = man_pol_subs.add_parser(
         "enable", description=desc, formatter_class=fmt
     )
