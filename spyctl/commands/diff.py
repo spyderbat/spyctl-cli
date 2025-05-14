@@ -214,7 +214,7 @@ def diff(
 
     Note: Long time ranges or "get" commands in a context consisting of
     multiple machines can take a long time.
-    """  # noqa E501
+    """
     if yes:
         cli.set_yes_option()
     if not colorize:
@@ -361,8 +361,7 @@ def handle_diff(
                 )
                 if len(policies) == 0:
                     cli.try_log(
-                        "Unable to locate policy with name or UID"
-                        f" {pol_name_or_uid}",
+                        f"Unable to locate policy with name or UID {pol_name_or_uid}",
                         is_warning=True,
                     )
                     continue
@@ -458,7 +457,7 @@ def get_with_obj(
         uid = target[lib.METADATA_FIELD].get(lib.METADATA_UID_FIELD)
         if not uid:
             cli.err_exit(
-                f"Target {target_name} has not been applied, no deviations to diff with"  # noqa
+                f"Target {target_name} has not been applied, no deviations to diff with"
             )
         with_obj = merge_cmd.get_with_deviations(uid, st, et)
     return with_obj

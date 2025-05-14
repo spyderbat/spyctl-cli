@@ -28,8 +28,7 @@ def handle_delete_policy(name_or_uid):
         name = policy[lib.METADATA_FIELD][lib.METADATA_NAME_FIELD]
         uid = policy[lib.METADATA_FIELD][lib.METADATA_UID_FIELD]
         perform_delete = cli.query_yes_no(
-            f"Are you sure you want to delete policy '{name} - {uid}' from"
-            " Spyderbat?"
+            f"Are you sure you want to delete policy '{name} - {uid}' from Spyderbat?"
         )
         if perform_delete:
             delete_policy(

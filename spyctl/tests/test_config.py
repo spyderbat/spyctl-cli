@@ -149,7 +149,7 @@ def test_secrets():
     assert TEST_SECRET not in result.output
 
 
-def test_contexts():
+def test_contexts() -> None:
     runner = CliRunner()
     create_secret()
     # Create a new context

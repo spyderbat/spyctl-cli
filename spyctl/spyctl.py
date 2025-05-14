@@ -9,9 +9,11 @@ import os
 import time
 from importlib import metadata
 from pathlib import Path
+from typing import Optional
 
 import click
 
+import spyctl.api.primitives as api_primitives
 import spyctl.commands as cmds
 import spyctl.config.configs as cfgs
 import spyctl.spyctl_lib as lib
@@ -35,12 +37,15 @@ MAIN_EPILOG = (
 @click.help_option("-h", "--help", hidden=True)
 @click.version_option(None, "-v", "--version", prog_name="Spyctl", hidden=True)
 @click.option("--debug", is_flag=True, hidden=True)
-def main(debug=False):
+@click.option("--log-request-times", is_flag=True, hidden=True)
+def main(debug: bool = False, log_request_times: bool = False) -> None:
     """spyctl displays and controls resources within your Spyderbat
     environment
     """
     if debug:
         lib.set_debug()
+    if log_request_times:
+        api_primitives.LOG_REQUEST_TIMES = True
     cfgs.load_config()
     version_check()
 
@@ -78,7 +83,7 @@ V_CHECK_CACHE = Path.joinpath(cfgs.GLOBAL_CONFIG_DIR, ".v_check_cache")
 V_CHECK_TIMEOUT = 14400  # 4 hours
 
 
-def version_check():
+def version_check() -> None:
     """
     Check the version of spyctl and compare it with the latest version
     available on PyPI. If a newer version is available, log a message with
@@ -127,7 +132,7 @@ def version_check():
         f.write(f"{now}")
 
 
-def get_local_version():
+def get_local_version() -> Optional[str]:
     """
     Get the local version of the package.
 

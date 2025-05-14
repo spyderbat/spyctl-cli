@@ -258,7 +258,7 @@ def load_config(silent=False):
         seen = set()
         for config_path, config_data in configs_data:
             if not schemas.valid_object(config_data):
-                cli.err_exit(f"Config at {str(config_path)} is invalid.")
+                cli.err_exit(f"Config at {config_path!s} is invalid.")
             try:
                 cfg = Config(config_data, config_path, config_path.parent)
                 cfg_cpy = Config(deepcopy(config_data), config_path, config_path.parent)
@@ -275,20 +275,18 @@ def load_config(silent=False):
             except InvalidConfigDataError as e:
                 if str(config_path) not in seen and not silent:
                     cli.try_log(
-                        f"Config at {str(config_path)} is invalid."
-                        f" {' '.join(e.args)}"
+                        f"Config at {config_path!s} is invalid. {' '.join(e.args)}"
                     )
             except InvalidContextDataError as e:
                 if str(config_path) not in seen and not silent:
                     cli.try_log(
-                        f"Config at {str(config_path)} has an invalid context."
+                        f"Config at {config_path!s} has an invalid context."
                         f" {' '.join(e.args)}"
                     )
             seen.add(str(config_path))
         if len(configs) == 0 and not silent:
             cli.try_log(
-                "No valid configurations."
-                " Clear or fix any invalid configuration files."
+                "No valid configurations. Clear or fix any invalid configuration files."
             )
         else:
             base_config = configs.pop()
@@ -326,11 +324,11 @@ def get_current_context() -> Context:
         )
     if len(config.contexts) == 0:
         cli.err_exit(
-            "No valid contexts. Try using 'spyctl config set-context' to" " create one."
+            "No valid contexts. Try using 'spyctl config set-context' to create one."
         )
     if config.current_context == CURR_CONTEXT_NONE or not config.current_context:
         cli.err_exit(
-            "Current context is not set. Try using" " 'spyctl config use-context'"
+            "Current context is not set. Try using 'spyctl config use-context'"
         )
     if config.current_context not in config.contexts:
         cli.err_exit(
@@ -350,7 +348,7 @@ def init():
     if local_workspace_path.exists() and local_workspace_path == GLOBAL_CONFIG_PATH:
         if cli.query_yes_no(
             "Are you sure you want to reset the global spyctl configuration"
-            f" file '{str(local_workspace_path)}'",
+            f" file '{local_workspace_path!s}'",
             "no",
         ):
             perform_init = True
@@ -358,7 +356,7 @@ def init():
     elif local_workspace_path.exists():
         if cli.query_yes_no(
             "A spyctl configuration file already exists at"
-            f" '{str(local_workspace_path)}'. Are you sure"
+            f" '{local_workspace_path!s}'. Are you sure"
             " you want to reset it?",
             "no",
         ):
@@ -383,7 +381,7 @@ def init():
             yaml.dump(config_template, f, width=float("inf"))
         cli.try_log(
             f"{'Reset' if reset else 'Created'} configuration file at"
-            f" {str(local_workspace_path)}."
+            f" {local_workspace_path!s}."
         )
 
 
@@ -485,7 +483,7 @@ def delete_context(name, force_global):
         cli.err_exit("Unable to load target configuration")
     if name not in target_config.contexts:
         cli.err_exit(
-            f"Unable to delete context '{name}' from {str(context_path)}."
+            f"Unable to delete context '{name}' from {context_path!s}."
             " Context does not exist in target config."
         )
     del target_config.contexts[name]
@@ -505,7 +503,7 @@ def delete_context(name, force_global):
         with context_path.open("w") as f:
             yaml.dump(target_config.as_dict(), f, sort_keys=False, width=float("inf"))
             cli.try_log(
-                f"Deleted context '{name}' in" f" configuration file '{context_path}'."
+                f"Deleted context '{name}' in configuration file '{context_path}'."
             )
             if updated_curr_context:
                 cli.try_log(
@@ -541,7 +539,7 @@ def current_context(force_global):
     if config.current_context == CURR_CONTEXT_NONE or not config.current_context:
         if len(config.contexts) > 0:
             cli.try_log(
-                "No current context. Use 'spyctl config use-context' to set" " one."
+                "No current context. Use 'spyctl config use-context' to set one."
             )
         elif len(config.contexts) > 0:
             cli.try_log(
@@ -567,7 +565,7 @@ def use_context(name, force_global):
     found = name in config.contexts
     if not found:
         cli.try_log(
-            f"Unable to set current context '{name}' for {str(context_path)}."
+            f"Unable to set current context '{name}' for {context_path!s}."
             " Context does not exist in target config."
         )
         return
@@ -684,7 +682,7 @@ def view_config(force_global, force_workspace, output):
 def validate_org(org, api_url, api_key) -> Optional[str]:
     orgs = get_orgs(api_url, api_key)
     if orgs is not None:
-        for uid, name in zip(*orgs):
+        for uid, name in zip(*orgs, strict=False):
             if org == name or org == uid:
                 if name == "Defend The Flag":
                     cli.err_exit("invalid organization")

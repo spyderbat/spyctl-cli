@@ -72,8 +72,8 @@ def edit(resource, name_or_id, filename, yes=False):
 # ----------------------------------------------------------------- #
 
 EDIT_PROMPT = (
-    "# Please edit the object below. Lines beginning with a '#' will be ignored,\n"  # noqa
-    "# and an empty file will abort the edit. If an error occurs while saving this file will be\n"  # noqa
+    "# Please edit the object below. Lines beginning with a '#' will be ignored,\n"
+    "# and an empty file will abort the edit. If an error occurs while saving this file will be\n"
     "# reopened with the relevant failures.\n"
     "#\n"
 )

@@ -123,7 +123,7 @@ def create_notif_route(name, target, template, output):
 )
 @click.option(
     "--include-imageid",
-    help="Include the image id in the container selector when creating the" " policy.",
+    help="Include the image id in the container selector when creating the policy.",
     metavar="",
     is_flag=True,
 )

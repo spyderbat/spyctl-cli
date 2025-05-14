@@ -6,7 +6,10 @@ from spyctl.api.primitives import get, post, put
 
 
 def post_test_notification(
-    api_url, api_key, org_uid, target_uid, template_uid, record: Dict
+    api_url,
+    api_key,
+    org_uid,
+    **kwargs,
 ):
     """
     Sends a test notification to a target.
@@ -17,15 +20,22 @@ def post_test_notification(
         org_uid (str): The unique identifier of the organization.
         target_name (str): The name of the target to send the notification to.
 
+    Keyword Args:
+        target_uid (str): The UID of the target to send the notification to.
+        template_uid (str): The UID of the template to send the notification to.
+        record (Dict): The record to send the notification to.
+        notification_settings_uid (str): The UID of the notification settings to use for the notification.
+
     Returns:
         dict: The response from the API.
 
     """
     url = f"{api_url}/api/v1/org/{org_uid}/test_notification"
     data = {
-        "target_uid": target_uid,
-        "template_uid": template_uid,
-        "record": record,
+        "target_uid": kwargs.get("target_uid"),
+        "template_uid": kwargs.get("template_uid"),
+        "record": kwargs.get("record"),
+        "notification_settings_uid": kwargs.get("notification_settings_uid"),
     }
     resp = post(url, data=data, key=api_key)
     return resp

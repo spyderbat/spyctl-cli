@@ -200,5 +200,5 @@ def make_wildcard(strs: List[str]):
     elif not (match.b + match.size == len(name) and original_str.endswith(sub_str)):
         ret = sub_str + "*"
     else:
-        cli.err_exit(f"Bug detected in wildcard logic. Input:" f" '{strs}'.")
+        cli.err_exit(f"Bug detected in wildcard logic. Input: '{strs}'.")
     return ret

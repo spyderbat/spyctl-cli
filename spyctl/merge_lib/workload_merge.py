@@ -329,8 +329,7 @@ class ProcessNodeList:
             children = node_data["policyNode"].get(lib.CHILDREN_FIELD)
             if node_id not in self.base_node_list.ids:
                 raise m_lib.InvalidMergeError(
-                    f"Deviation process node ID ({node_id}) is missing in base"
-                    " policy"
+                    f"Deviation process node ID ({node_id}) is missing in base policy"
                 )
             node = self.base_node_list.get_node(node_id)
             node_data = node.node.copy()
@@ -963,14 +962,14 @@ def merge_proc_policies(
     base_node_list = getattr(mo, "base_node_list", None)
     if mo.disable_procs:
         base_node_list = ProcessNodeList([])
-        setattr(mo, "base_node_list", base_node_list)
-        setattr(mo, "merging_node_list", ProcessNodeList([], base_node_list))
+        mo.base_node_list = base_node_list
+        mo.merging_node_list = ProcessNodeList([], base_node_list)
         return []
     if base_node_list is None:
         base_node_list = ProcessNodeList(proc_data)
-        setattr(mo, "base_node_list", base_node_list)
+        mo.base_node_list = base_node_list
     merging_node_list = ProcessNodeList(other_proc_data, base_node_list)
-    setattr(mo, "merging_node_list", merging_node_list)
+    mo.merging_node_list = merging_node_list
     result = []
     if symmetric:
         base_node_list.symmetrical_merge(merging_node_list)

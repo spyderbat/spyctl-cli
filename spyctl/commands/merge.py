@@ -257,7 +257,7 @@ def merge(
 
     Note: Long time ranges or "get" commands in a context consisting of
     multiple machines can take a long time.
-    """  # noqa E501
+    """
     if yes or yes_except:
         cli.set_yes_option()
     if not colorize:
@@ -425,8 +425,7 @@ def handle_merge(
                 )
                 if len(policies) == 0:
                     cli.try_log(
-                        "Unable to locate policy with name or UID"
-                        f" {pol_name_or_uid}",
+                        f"Unable to locate policy with name or UID {pol_name_or_uid}",
                         is_warning=True,
                     )
                     continue
@@ -504,8 +503,7 @@ def get_with_obj(
     if with_file:
         with_obj = load_with_file(with_file)
         if not cli.query_yes_no(
-            f"Merge {target_name} with local file '{with_file.name}'?"
-            f"{apply_disclaimer}"
+            f"Merge {target_name} with local file '{with_file.name}'?{apply_disclaimer}"
         ):
             return False
     elif with_policy == MATCHING:
@@ -680,7 +678,7 @@ def merge_ruleset_policy(
     rulesets = get_rulesets(*ctx.get_api_data(), params={"in_policy": pol_uid})
     if not rulesets:
         cli.try_log(
-            f"No rulesets found for policy '{target_name}' with uid" f" '{pol_uid}'"
+            f"No rulesets found for policy '{target_name}' with uid '{pol_uid}'"
         )
         return
     merge_with_objects = []
@@ -691,7 +689,7 @@ def merge_ruleset_policy(
             merge_with_objects.extend(r_lib.handle_input_data(data=obj, ctx=ctx))
     for rs in rulesets:
         cli.try_log(
-            f"{src_cmd.title()} ruleset '{rs[lib.METADATA_FIELD][lib.NAME_FIELD]}'"  # noqa
+            f"{src_cmd.title()} ruleset '{rs[lib.METADATA_FIELD][lib.NAME_FIELD]}'"
         )
         merge_obj = m_obj_h.get_merge_object(lib.RULESET_KIND, rs, True, src_cmd)
         for w_obj in merge_with_objects:

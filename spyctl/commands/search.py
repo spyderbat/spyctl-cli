@@ -135,7 +135,7 @@ def handle_search(schema, query, output, st, et, **kwargs):
         query = rsq.query
     if not query:
         lib.err_exit(
-            "Use --describe to view available search fields, or provide a query."  # noqa
+            "Use --describe to view available search fields, or provide a query."
         )
     if not skip_results:
         results = search_full_json(

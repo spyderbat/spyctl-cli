@@ -134,8 +134,7 @@ def load_secrets(silent=False):
                 if not schemas.valid_object(secret_data):
                     if not isinstance(secret_data, dict):
                         cli.try_log(
-                            f"{secrets_path!r} has a secret that is not a"
-                            " dictionary."
+                            f"{secrets_path!r} has a secret that is not a dictionary."
                         )
                         continue
                     secret_name = secret_data.get(lib.METADATA_FIELD, {}).get(
@@ -201,8 +200,7 @@ def set_secret(name: str, apiurl: str = None, apikey: str = None):
             new_secret = Secret(new_secret)
         except InvalidSecretError as e:
             cli.err_exit(
-                f"Bug detected, unable to initialize Secret object."
-                f" {' '.join(e.args)}"
+                f"Bug detected, unable to initialize Secret object. {' '.join(e.args)}"
             )
         SECRETS[name] = new_secret
     output_data = []
@@ -214,13 +212,11 @@ def set_secret(name: str, apiurl: str = None, apikey: str = None):
                 yaml.dump(output_data, f, sort_keys=False, width=float("inf"))
                 if updated:
                     cli.try_log(
-                        "Updated apisecret"
-                        f" '{name}' in {str(cfgs.GLOBAL_SECRETS_PATH)}"
+                        f"Updated apisecret '{name}' in {cfgs.GLOBAL_SECRETS_PATH!s}"
                     )
                 else:
                     cli.try_log(
-                        "Set new apisecret"
-                        f" '{name}' in {str(cfgs.GLOBAL_SECRETS_PATH)}"
+                        f"Set new apisecret '{name}' in {cfgs.GLOBAL_SECRETS_PATH!s}"
                     )
             except yaml.YAMLError:
                 cli.err_exit("Unable to write secrets to file, yaml error.")
@@ -247,8 +243,7 @@ def delete_secret(secret_name: Dict):
             try:
                 yaml.dump(output_data, f, sort_keys=False, width=float("inf"))
                 cli.try_log(
-                    f"Deleted secret"
-                    f" '{secret_name}' from {str(cfgs.GLOBAL_SECRETS_PATH)}"
+                    f"Deleted secret '{secret_name}' from {cfgs.GLOBAL_SECRETS_PATH!s}"
                 )
             except yaml.YAMLError:
                 cli.err_exit("Unable to write to secrets file, yaml error.")
