@@ -5,34 +5,9 @@ on:
     types: [published]
 
 jobs:
-  build:
+  test-pypi:
     if: startsWith(github.event.release.tag_name, 'v') && contains(github.event.release.tag_name, 'beta') && github.event.release.target_commitish == 'develop'
     name: Build Spyctl distribution
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.12"
-    - name: Install pypa/build
-      run: >-
-        python3 -m
-        pip install
-        build
-        --user
-    - name: Build a binary wheel and a source tarball
-      run: python3 -m build
-    - name: Store the distribution packages
-      uses: actions/upload-artifact@v4
-      with:
-        name: python-package-distributions
-        path: dist/
-
-  publish-to-testpypi:
-    name: Publish Spyctl distribution to TestPyPI
-    needs:
-    - build
     runs-on: ubuntu-latest
     environment:
       name: testpypi
@@ -40,15 +15,10 @@ jobs:
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
     steps:
-    - name: Download all the dists
-      uses: actions/download-artifact@v4
-      with:
-        name: python-package-distributions
-        path: dist/
-    - name: Publish distribution to TestPyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        repository-url: https://test.pypi.org/legacy/
+    - uses: actions/checkout@v4
+    - uses: astral-sh/setup-uv@v3
+    - run: uv build
+    - run: uv publish --trusted-publishing always --publish-url https://test.pypi.org/legacy/
     - name: Notify Slack
       run: |
         curl -request POST \
