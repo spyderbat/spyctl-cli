@@ -48,8 +48,7 @@ def get_objects(
         ThreadPoolExecutor(max_workers=10) as executor,
     ):
         id_groups = [
-            ids[i : i + OBJECTS_LIMIT]
-            for i in range(0, len(ids), OBJECTS_LIMIT)
+            ids[i : i + OBJECTS_LIMIT] for i in range(0, len(ids), OBJECTS_LIMIT)
         ]
         threads = []
         for group in id_groups:

@@ -7,7 +7,7 @@ def test_get_sources(mocker):
     # mock response for the source endpoint
     mock_sources_response = [
         {
-            "uid": "mach:4ZOEHXXXXXX",
+            "uid": "mach:xxxxxxxxxx",
             "last_data": str(zulu.now().isoformat()),
             "last_stored_chunk_end_time": str(zulu.now().isoformat()),
             "name": "integration-Node",
@@ -20,7 +20,7 @@ def test_get_sources(mocker):
         {
             "uid": "agent:123",
             "description": "Test Machine",
-            "runtime_details": {"src_uid": "mach:4ZOEHXXXXXX"},
+            "runtime_details": {"src_uid": "mach:xxxxxxxxxx"},
         }
     ]
 
@@ -43,5 +43,5 @@ def test_get_sources(mocker):
     # Assert
     assert isinstance(result, list)
     assert len(result) == 1
-    assert result[0]["uid"] == "mach:4ZOEHXXXXXX"
+    assert result[0]["uid"] == "mach:xxxxxxxxxx"
     assert result[0]["name"] == "Test Machine"

@@ -13,6 +13,6 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version-file: 'worker/.python-version'
+          python-version-file: '.python-version'
       - name: Run ruff format check
         run: ./ruff-format.sh --check

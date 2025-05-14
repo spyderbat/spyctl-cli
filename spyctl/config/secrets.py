@@ -243,8 +243,7 @@ def delete_secret(secret_name: Dict):
             try:
                 yaml.dump(output_data, f, sort_keys=False, width=float("inf"))
                 cli.try_log(
-                    f"Deleted secret"
-                    f" '{secret_name}' from {cfgs.GLOBAL_SECRETS_PATH!s}"
+                    f"Deleted secret '{secret_name}' from {cfgs.GLOBAL_SECRETS_PATH!s}"
                 )
             except yaml.YAMLError:
                 cli.err_exit("Unable to write to secrets file, yaml error.")

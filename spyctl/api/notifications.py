@@ -61,9 +61,7 @@ def get_notification_settings(api_url, api_key, org_uid, ns_uid) -> Dict:
     return settings
 
 
-def get_notification_settings_list(
-    api_url, api_key, org_uid, params: Dict
-) -> Dict:
+def get_notification_settings_list(api_url, api_key, org_uid, params: Dict) -> Dict:
     """
     List notification settings.
 
@@ -124,9 +122,7 @@ def put_set_notification_settings(
     return resp.json()
 
 
-def put_enable_notification_settings(
-    api_url, api_key, org_uid, ref_uid
-) -> Dict:
+def put_enable_notification_settings(api_url, api_key, org_uid, ref_uid) -> Dict:
     """
     Enable notification settings for an object.
 
@@ -143,9 +139,7 @@ def put_enable_notification_settings(
     return put(url, data={}, key=api_key)
 
 
-def put_disable_notification_settings(
-    api_url, api_key, org_uid, ref_uid
-) -> Dict:
+def put_disable_notification_settings(api_url, api_key, org_uid, ref_uid) -> Dict:
     """
     Disable notification settings for an object.
 

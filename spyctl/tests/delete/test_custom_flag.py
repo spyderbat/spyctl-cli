@@ -1,5 +1,3 @@
-
-
 import spyctl.commands.delete.custom_flag as custom_flag
 
 

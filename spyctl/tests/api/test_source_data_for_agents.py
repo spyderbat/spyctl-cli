@@ -9,16 +9,16 @@ def test_get_sources_data_for_agents(mocker):
 
     mock_agents_response = [
         {
-            "muid": "mach:4ZOEHeyUTXX",
+            "muid": "mach:xxxxx",
             "uid": "agent:123",
             "description": "Test Machine",
-            "runtime_details": {"src_uid": "mach:4ZOEHeyUTXX"},
+            "runtime_details": {"src_uid": "mach:xxxxx"},
         }
     ]
 
     mock_response = [
         {
-            "uid": "mach:4ZOEHeyUTXX",
+            "uid": "mach:xxxxx",
             "runtime_description": "integration-Node",
             "last_data": "2025-04-15T11:03:10Z",
             "runtime_details": {
@@ -39,4 +39,4 @@ def test_get_sources_data_for_agents(mocker):
 
     assert len(agents_result) == 1
     assert agents_result[0]["uid"] == "agent:123"
-    assert sources_map["mach:4ZOEHeyUTXX"]["cloud_region"] == "us-east-1"
+    assert sources_map["mach:xxxxx"]["cloud_region"] == "us-east-1"

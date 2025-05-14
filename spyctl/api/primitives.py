@@ -66,9 +66,7 @@ def get(url, key, params=None, raise_notfound=False):
     context_uid = r.headers.get("x-context-uid", "No context uid found.")
     if LOG_REQUEST_TIMES:
         end_time = time.time()
-        cli.try_log(
-            f"GET {url}: {end_time - start_time} seconds | {context_uid}"
-        )
+        cli.try_log(f"GET {url}: {end_time - start_time} seconds | {context_uid}")
     if lib.DEBUG:
         print(
             f"Request to {url}\n\tcontext_uid: {context_uid}\n\tstatus: {r.status_code}"
@@ -118,9 +116,7 @@ def post(url, data, key, raise_notfound=False, params=None):
     context_uid = r.headers.get("x-context-uid", "No context uid found.")
     if LOG_REQUEST_TIMES:
         end_time = time.time()
-        cli.try_log(
-            f"POST {url}: {end_time - start_time} seconds | {context_uid}"
-        )
+        cli.try_log(f"POST {url}: {end_time - start_time} seconds | {context_uid}")
     if lib.DEBUG:
         print(
             f"Request to {url}\n\tcontext_uid: {context_uid}\n\tstatus: {r.status_code}"
@@ -166,9 +162,7 @@ def put(url, data, key, params=None):
     context_uid = r.headers.get("x-context-uid", "No context uid found.")
     if LOG_REQUEST_TIMES:
         end_time = time.time()
-        cli.try_log(
-            f"PUT {url}: {end_time - start_time} seconds | {context_uid}"
-        )
+        cli.try_log(f"PUT {url}: {end_time - start_time} seconds | {context_uid}")
     if lib.DEBUG:
         print(
             f"Request to {url}\n\tcontext_uid: {context_uid}\n\tstatus: {r.status_code}"
@@ -206,9 +200,7 @@ def delete(url, key):
     context_uid = r.headers.get("x-context-uid", "No context uid found.")
     if LOG_REQUEST_TIMES:
         end_time = time.time()
-        cli.try_log(
-            f"DELETE {url}: {end_time - start_time} seconds | {context_uid}"
-        )
+        cli.try_log(f"DELETE {url}: {end_time - start_time} seconds | {context_uid}")
     if lib.DEBUG:
         print(
             f"Request to {url}\n\tcontext_uid: {context_uid}\n\tstatus: {r.status_code}"

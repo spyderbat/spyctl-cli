@@ -44,7 +44,10 @@ test-coverage-xml:
 	pytest --cov=src --cov-report=xml
 
 format:
-	./black.sh
+	./ruff-format.sh
 
-isort:
-	isort --profile black --filter-files --skip-gitignore .
+pre-commit-init:
+	pre-commit install
+
+pre-commit-update:
+	pre-commit autoupdate

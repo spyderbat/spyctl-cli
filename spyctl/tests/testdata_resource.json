@@ -105,7 +105,7 @@
             "volumesAttached": [],
             "volumesInUse": []
         },
-        "muid": "mach:FomNj5G1TJc"
+        "muid": "mach:xxxxxxxxxx"
     },
     "Cluster": {
         "uid": "clus:xxxxxxxxxxx",
@@ -968,7 +968,7 @@
         "bandwidth_status": "Normal",
         "cluster_name": "integrationc2reinstall",
         "boot_time": "Mon, 27 Jan 2025 17:50:21 UTC",
-        "muid": "mach:o-pZ0o_kQ1U",
+        "muid": "mach:xxxxxxxxxx",
         "status": "Warning",
         "last_seen": 1742823819.5763354,
         "agent_type": "nano_agent",
@@ -1277,7 +1277,7 @@
     "Bash-cmd": {
         "cmd": "ssh root@240b:cxxx:4101:5409:c22:2:0:0",
         "id": "bash:GGXXXXXXXXX:Z-AUiw:572041.1:0",
-        "muid": "mach:GXXXXXXXXX",
+        "muid": "mach:xxxxxxxxxx",
         "puid": "proc:GGXXXXXXXXX:Z-AUiw:572041.1",
         "schema": "event_bash_cmd::1.0.0",
         "time": 1742738576.8245866,
@@ -1294,7 +1294,7 @@
         "sourceRecord": {
             "uid": "mach:Gv4d",
             "org_uid": "FLegXXXXXXXXXX",
-            "resource_name": "srn:source::FLegXXXXXXXXXX:mach:GXXXXXXXXXX",
+            "resource_name": "srn:source::FLegXXXXXXXXXX:mach:xxxxx",
             "last_data": "2025-03-24T14:36:03Z",
             "apiRetrievalTime": 1742826968986,
             "name": "",
@@ -1347,7 +1347,7 @@
         "client_type": "vm",
         "server_cgroup": "/system.slice/k3s.service",
         "server_ip": "134.122.20.0",
-        "server_muid": "mach:QxxOjFVlTO4",
+        "server_muid": "mach:xxxxx",
         "server_port": 6443,
         "server_proc_name": "k3s-server",
         "server_puid": "proc:Qxx",
@@ -1387,7 +1387,7 @@
         "original_schema": "model_machine::1.1.0"
     },
     "Source": {
-        "uid": "mach:o-pZ0o_xxxxx",
+        "uid": "mach:xxxxx",
         "name": "clustermonitor-deployment",
         "org_uid": "test-org-ab548",
         "runtime_description": "clustermonitor-deployment",
@@ -1398,7 +1398,7 @@
             "cloud_region": "us-west-2",
             "cloud_type": "aws",
             "cloud_account_id": "2000000000",
-            "src_uid": "mach:o-pZ0o_xxxx",
+            "src_uid": "mach:xxxxxxxxxx",
             "ip_addresses": [
                 "10.3.x.x"
             ],

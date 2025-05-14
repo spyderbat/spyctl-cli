@@ -1737,9 +1737,7 @@ class ArgumentParametersCommand(CustomCommand):
                 index = 0
                 for options, num in specific_index.items():
                     with formatter.section(f"Options for {options}"):
-                        formatter.write_dl(
-                            specif_opts[index : index + num]
-                        )
+                        formatter.write_dl(specif_opts[index : index + num])
                     index = index + num
             else:
                 with formatter.section(f"Options for {self.argument_value}"):
