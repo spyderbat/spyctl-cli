@@ -97,6 +97,7 @@ TEMPLATE_KIND = "NotificationTemplate"
 UID_LIST_KIND = "UidList"
 RULESET_KIND = "SpyderbatRuleset"
 SAVED_QUERY_KIND = "SpyderbatSavedQuery"
+SEARCH_SET_KIND = "SpyderbatSearchSet"
 CUSTOM_FLAG_KIND = "SpyderbatCustomFlag"
 
 # Resource Aliases
@@ -352,6 +353,11 @@ SAVED_QUERY_RESOURCE = Aliases(
     "saved-query",
     "saved-queries",
     kind=SAVED_QUERY_KIND,
+)
+SEARCH_SET_RESOURCE = Aliases(
+    ["search-set", "search-sets", "ss"],
+    "search-set",
+    "search-sets",
 )
 CUSTOM_FLAG_RESOURCE = Aliases(
     ["custom-flag", "custom-flags", "cf"],
