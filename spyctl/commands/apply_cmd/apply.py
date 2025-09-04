@@ -32,6 +32,11 @@ from spyctl.api.saved_queries import (
     post_new_saved_query,
     put_saved_query_update,
 )
+from spyctl.api.search_sets import (
+    get_search_sets,
+    post_new_search_set,
+    put_search_set_update,
+)
 from spyctl.commands.apply_cmd.agent_health import (
     handle_apply_agent_health_notification,
 )
@@ -106,6 +111,8 @@ def handle_apply_data(resrc_data: Dict):
         handle_apply_ruleset(resrc_data)
     elif kind == lib.SAVED_QUERY_KIND:
         handle_apply_saved_query(resrc_data)
+    elif kind == lib.SEARCH_SET_KIND:
+        handle_apply_search_set(resrc_data)
     elif kind == lib.CUSTOM_FLAG_KIND:
         handle_apply_custom_flag(resrc_data)
     elif kind == lib.AGENT_HEALTH_NOTIFICATION_KIND:
@@ -300,6 +307,36 @@ def put_saved_query_from_yaml(uid: str, saved_query: Dict) -> str:
             cli.try_log("Operation cancelled.")
             sys.exit(0)
     put_saved_query_update(*ctx.get_api_data(), uid, **req_body)
+    return uid
+
+
+def handle_apply_search_set(search_set: Dict):
+    """
+    Apply a search set to the current context.
+
+    Args:
+        search_set (Dict): The search set to be applied.
+
+    Returns:
+        None
+    """
+    ctx = cfg.get_current_context()
+    metadata = search_set[lib.METADATA_FIELD]
+    name = metadata.get(lib.METADATA_NAME_FIELD)
+    uid = metadata.get(lib.METADATA_UID_FIELD)
+    req_body = _r.search_sets.yaml_to_data(search_set)
+    if not uid:
+        # Check if a search set with the name already exists
+        matching_sets = get_search_sets(*ctx.get_api_data(), **{"name_equals": name})
+        if matching_sets:
+            cli.err_exit(
+                f'A search set with the name "{name}" already exists in your organization.'
+            )
+        uid = post_new_search_set(*ctx.get_api_data(), **req_body)
+        cli.try_log(f"Successfully applied new search set with uid: {uid}")
+    else:
+        put_search_set_update(*ctx.get_api_data(), uid, **req_body)
+        cli.try_log(f"Successfully updated search set with uid: {uid}")
     return uid
 
 

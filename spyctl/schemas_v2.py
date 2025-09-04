@@ -1456,6 +1456,27 @@ class SavedQueryModel(BaseModel):
 
 
 # -----------------------------------------------------------------------------
+# Saved Query Models ----------------------------------------------------------
+# -----------------------------------------------------------------------------
+
+
+class SearchSetMetadataModel(BaseModel):
+    name: str = Field(alias=lib.METADATA_NAME_FIELD)
+    uid: Optional[str] = Field(alias=lib.METADATA_UID_FIELD)
+    create_time: Optional[Union[float, int]] = Field(alias=lib.METADATA_CREATE_TIME)
+    created_by: Optional[str] = Field(alias=lib.METADATA_CREATED_BY)
+    last_updated_time: Optional[Union[float, int]] = Field(alias=lib.METADATA_LAST_UPDATE_TIME)
+    last_updated_by: Optional[str] = Field(alias=lib.METADATA_LAST_UPDATED_BY)
+
+
+class SearchSetModel(BaseModel):
+    api_version: str = Field(alias=lib.API_FIELD)
+    kind: str = Field(alias=lib.KIND_FIELD)
+    metadata: SearchSetMetadataModel = Field(alias=lib.METADATA_FIELD)
+    spec: List[str] = Field(alias=lib.SPEC_FIELD)
+
+
+# -----------------------------------------------------------------------------
 # Custom Flag Models ----------------------------------------------------------
 # -----------------------------------------------------------------------------
 
