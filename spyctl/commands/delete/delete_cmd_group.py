@@ -11,6 +11,7 @@ from spyctl.commands.delete import (
     policy,
     ruleset,
     saved_query,
+    search_set,
 )
 
 
@@ -24,6 +25,7 @@ delete.add_command(notification_target.delete_notif_tgt_cmd)
 delete.add_command(policy.delete_policy_cmd)
 delete.add_command(ruleset.delete_ruleset_cmd)
 delete.add_command(saved_query.delete_saved_query_cmd)
+delete.add_command(search_set.delete_search_set_cmd)
 delete.add_command(custom_flag.delete_custom_flag_cmd)
 delete.add_command(notification_template.delete_notif_tmpl_cmd)
 delete.add_command(agent_health.delete_agent_health_notification_settings_cmd)

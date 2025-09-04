@@ -22,6 +22,7 @@ from spyctl.commands.create import (
     notification_target,
     notification_template,
     saved_query,
+    search_set,
     trace_suppression_policy,
 )
 
@@ -41,6 +42,7 @@ create.add_command(container_policy.create_container_policy)
 create.add_command(container_ruleset.create_container_ruleset)
 create.add_command(linux_svc_policy.create_service_policy)
 create.add_command(saved_query.create_saved_query)
+create.add_command(search_set.create_search_set)
 create.add_command(trace_suppression_policy.create_trace_suppression_policy)
 create.add_command(custom_flag.create_custom_flag)
 create.add_command(notification_target.notification_target)

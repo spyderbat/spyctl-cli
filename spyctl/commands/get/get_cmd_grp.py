@@ -34,6 +34,7 @@ from spyctl.commands.get import (
     roles,
     rulesets,
     saved_queries,
+    search_sets,
     sources,
     spydertraces,
     top_data,
@@ -76,6 +77,7 @@ get.add_command(rolebindings.get_rolebindings_cmd, aliases=["rolebinding"])
 get.add_command(roles.get_roles_cmd, aliases=["role"])
 get.add_command(rulesets.get_rulesets_cmd, aliases=["ruleset"])
 get.add_command(saved_queries.get_saved_queries, aliases=["saved-query"])
+get.add_command(search_sets.get_search_sets, aliases=["search-set"])
 get.add_command(sources.get_sources, aliases=["source"])
 get.add_command(spydertraces.get_spydertraces_cmd, aliases=["spydertrace"])
 get.add_command(top_data.get_top_data_cmd, aliases=["td"])
