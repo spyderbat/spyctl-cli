@@ -1,6 +1,6 @@
 [project]
 name = "spyctl"
-version = "0.24.0"
+version = "0.24.1"
 description = "A command line tool for viewing and managing Spyderbat Resources"
 readme = "README.md"
 requires-python = ">=3.10"
