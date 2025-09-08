@@ -335,7 +335,7 @@ def handle_apply_search_set(search_set: Dict):
         uid = post_new_search_set(*ctx.get_api_data(), **req_body)
         cli.try_log(f"Successfully applied new search set with uid: {uid}")
     else:
-        put_search_set_update(*ctx.get_api_data(), uid, **req_body)
+        put_search_set_update(*ctx.get_api_data(), **req_body)
         cli.try_log(f"Successfully updated search set with uid: {uid}")
     return uid
 
