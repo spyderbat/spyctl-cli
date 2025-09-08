@@ -1654,6 +1654,7 @@ KIND_TO_SCHEMA: Dict[str, BaseModel] = {
     lib.TEMPLATE_KIND: NotificationTemplateModel,
     lib.CLUSTER_RULESET_RESOURCE.kind: RulesetModel,
     lib.SAVED_QUERY_RESOURCE.kind: SavedQueryModel,
+    lib.SEARCH_SET_RESOURCE.kind: SearchSetModel,
     lib.CUSTOM_FLAG_RESOURCE.kind: CustomFlagModel,
     lib.AGENT_HEALTH_NOTIFICATION_RESOURCE.kind: AgentHealthNotificationModel,
 }

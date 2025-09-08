@@ -358,6 +358,7 @@ SEARCH_SET_RESOURCE = Aliases(
     ["search-set", "search-sets", "ss"],
     "search-set",
     "search-sets",
+    kind=SEARCH_SET_KIND,
 )
 CUSTOM_FLAG_RESOURCE = Aliases(
     ["custom-flag", "custom-flags", "cf"],
