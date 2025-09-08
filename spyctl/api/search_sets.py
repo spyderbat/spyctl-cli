@@ -73,9 +73,7 @@ def post_new_search_set(api_url, api_key, org_uid, **req_body) -> str:
     return uid
 
 
-def put_search_set_update(
-    api_url, api_key, org_uid, **req_body
-) -> Dict:
+def put_search_set_update(api_url, api_key, org_uid, **req_body) -> Dict:
     """
     Sends a PUT request to update an existing search set.
 

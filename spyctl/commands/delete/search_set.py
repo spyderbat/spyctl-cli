@@ -8,11 +8,11 @@ import spyctl.commands.delete.shared_options as _so
 import spyctl.config.configs as cfg
 import spyctl.spyctl_lib as lib
 from spyctl import cli
-from spyctl.resources import search_sets as ss
 from spyctl.api.search_sets import (
     delete_search_set,
     get_search_sets,
 )
+from spyctl.resources import search_sets as ss
 
 
 @click.command("search-set", cls=lib.CustomCommand, epilog=lib.SUB_EPILOG)

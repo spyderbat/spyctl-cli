@@ -1465,7 +1465,9 @@ class SearchSetMetadataModel(BaseModel):
     uid: Optional[str] = Field(alias=lib.METADATA_UID_FIELD)
     create_time: Optional[Union[float, int]] = Field(alias=lib.METADATA_CREATE_TIME)
     created_by: Optional[str] = Field(alias=lib.METADATA_CREATED_BY)
-    last_updated_time: Optional[Union[float, int]] = Field(alias=lib.METADATA_LAST_UPDATE_TIME)
+    last_updated_time: Optional[Union[float, int]] = Field(
+        alias=lib.METADATA_LAST_UPDATE_TIME
+    )
     last_updated_by: Optional[str] = Field(alias=lib.METADATA_LAST_UPDATED_BY)
 
 

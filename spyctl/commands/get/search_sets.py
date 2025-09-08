@@ -37,5 +37,5 @@ def handle_get_search_sets(name_or_id, output, **kwargs):
         output,
         lambda data: _r.search_sets.summary_output(data),
         lambda data: _r.search_sets.wide_output(data),
-        data_parser=_r.search_sets.data_to_yaml
+        data_parser=_r.search_sets.data_to_yaml,
     )
