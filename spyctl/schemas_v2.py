@@ -1465,7 +1465,9 @@ class SearchSetMetadataModel(BaseModel):
     uid: Optional[str] = Field(alias=lib.METADATA_UID_FIELD)
     create_time: Optional[Union[float, int]] = Field(alias=lib.METADATA_CREATE_TIME)
     created_by: Optional[str] = Field(alias=lib.METADATA_CREATED_BY)
-    last_updated_time: Optional[Union[float, int]] = Field(alias=lib.METADATA_LAST_UPDATE_TIME)
+    last_updated_time: Optional[Union[float, int]] = Field(
+        alias=lib.METADATA_LAST_UPDATE_TIME
+    )
     last_updated_by: Optional[str] = Field(alias=lib.METADATA_LAST_UPDATED_BY)
 
 
@@ -1654,6 +1656,7 @@ KIND_TO_SCHEMA: Dict[str, BaseModel] = {
     lib.TEMPLATE_KIND: NotificationTemplateModel,
     lib.CLUSTER_RULESET_RESOURCE.kind: RulesetModel,
     lib.SAVED_QUERY_RESOURCE.kind: SavedQueryModel,
+    lib.SEARCH_SET_RESOURCE.kind: SearchSetModel,
     lib.CUSTOM_FLAG_RESOURCE.kind: CustomFlagModel,
     lib.AGENT_HEALTH_NOTIFICATION_RESOURCE.kind: AgentHealthNotificationModel,
 }

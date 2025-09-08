@@ -73,9 +73,7 @@ def post_new_search_set(api_url, api_key, org_uid, **req_body) -> str:
     return uid
 
 
-def put_search_set_update(
-    api_url, api_key, org_uid, search_set_uid, **req_body
-) -> Dict:
+def put_search_set_update(api_url, api_key, org_uid, **req_body) -> Dict:
     """
     Sends a PUT request to update an existing search set.
 
@@ -83,13 +81,11 @@ def put_search_set_update(
         api_url (str): The URL of the API.
         api_key (str): The API key for authentication.
         org_uid (str): The unique identifier of the organization.
-        search_set_uid (str): The unique identifier of the search set to be
-            updated.
 
     Returns:
         Dict: The updated search set.
     """
-    url = f"{api_url}/api/v1/org/{org_uid}/searchset/{search_set_uid}"
+    url = f"{api_url}/api/v1/org/{org_uid}/searchset/"
     resp = put(url, req_body, api_key)
     jo = resp.json()
     return jo

@@ -2,9 +2,9 @@
 
 import csv
 import json
-import click
 from typing import IO, List
 
+import click
 import yaml
 
 import spyctl.config.configs as cfg
