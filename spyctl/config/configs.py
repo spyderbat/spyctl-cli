@@ -1,3 +1,7 @@
+import hashlib
+import json
+import os
+import time
 from copy import deepcopy
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -23,6 +27,7 @@ CONFIG_FILENAME = "config"
 SECRETS_FILENAME = "secrets"
 GLOBAL_CONFIG_PATH = Path.joinpath(GLOBAL_CONFIG_DIR, CONFIG_FILENAME)
 GLOBAL_SECRETS_PATH = Path.joinpath(GLOBAL_SECRETS_DIR, SECRETS_FILENAME)
+ORG_UID_CACHE_PATH = Path.joinpath(GLOBAL_CONFIG_DIR, "org_uid_cache.json")
 LOCAL_CONFIG_PATH = Path(f"./{APP_DIR}/{CONFIG_FILENAME}")
 LOCAL_SECRETS_PATH = Path(f"./{APP_DIR}/{SECRETS_DIR}/{SECRETS_FILENAME}")
 CURRENT_CONTEXT = None
@@ -130,7 +135,7 @@ class Context:
         api_url = secret_creds[lib.API_URL_FIELD]
         api_key = secret_creds[lib.API_KEY_FIELD]
         if self.org_uid is None:
-            self.org_uid = validate_org(self.org, api_url, api_key)
+            self.org_uid = resolve_org_uid(self.org, api_url, api_key)
         if self.org_uid is None:
             cli.err_exit(
                 "Unable to validate organization name or ID."
@@ -688,6 +693,66 @@ def validate_org(org, api_url, api_key) -> Optional[str]:
                     cli.err_exit("invalid organization")
                 return uid
     return None
+
+
+def _org_cache_key(api_url: str, api_key: str, org: str) -> str:
+    """Stable hash of (api_url, api_key, org).
+
+    The api_key is included so rotating it naturally invalidates the cache,
+    and hashing avoids storing the key in plaintext on disk.
+    """
+    h = hashlib.sha256()
+    h.update(api_url.encode("utf-8"))
+    h.update(b"\x00")
+    h.update(api_key.encode("utf-8"))
+    h.update(b"\x00")
+    h.update(org.encode("utf-8"))
+    return h.hexdigest()
+
+
+def _load_org_uid_cache() -> Dict[str, Dict]:
+    try:
+        with ORG_UID_CACHE_PATH.open("r") as f:
+            data = json.load(f)
+        if isinstance(data, dict):
+            return data
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        pass
+    return {}
+
+
+def _save_org_uid_cache(cache: Dict[str, Dict]) -> None:
+    """Best-effort atomic write. Never raises."""
+    try:
+        GLOBAL_CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+        tmp_path = ORG_UID_CACHE_PATH.with_suffix(".json.tmp")
+        with tmp_path.open("w") as f:
+            json.dump(cache, f)
+        os.replace(tmp_path, ORG_UID_CACHE_PATH)
+    except OSError as e:
+        cli.try_log(f"Could not write org uid cache: {e}")
+
+
+def resolve_org_uid(org: str, api_url: str, api_key: str) -> Optional[str]:
+    """Cached wrapper around validate_org().
+
+    The /api/v1/org/ endpoint can be very slow when an API key sees many
+    orgs, and the org-name -> org-uid mapping effectively never changes,
+    so we cache successful resolutions on disk keyed by
+    sha256(api_url, api_key, org). To force a re-resolution, delete
+    ORG_UID_CACHE_PATH.
+    """
+    key = _org_cache_key(api_url, api_key, org)
+    cache = _load_org_uid_cache()
+    entry = cache.get(key)
+    if entry and isinstance(entry, dict) and entry.get("uid"):
+        return entry["uid"]
+
+    uid = validate_org(org, api_url, api_key)
+    if uid:
+        cache[key] = {"uid": uid, "ts": int(time.time())}
+        _save_org_uid_cache(cache)
+    return uid
 
 
 def set_testing(workspace_path=None):
