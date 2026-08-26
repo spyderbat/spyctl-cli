@@ -42,7 +42,6 @@ def mock_get_sources(api_url, api_key, org_uid):
         "resource_name": "srn:agent::xxxxxxxxx:xxxxxxxxxxxxxxxx",
         "last_data": "2023-07-15T12:17:44Z",
         "last_ingest_chunk_end_time": "2023-07-15T12:17:39Z",
-        "last_stored_chunk_end_time": "2023-07-15T12:17:39Z",
         "agent_registration_uid": "xxxxxxxxxxxxxxxxxxxxx",
         "agent_type": 0,
     }

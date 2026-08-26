@@ -61,9 +61,8 @@ def get_sources(api_url, api_key, org_uid, **kwargs) -> List[Dict]:
         for machine in machines.values():
             if (
                 zulu.Zulu.parse(machine["last_data"]) >= AUTO_HIDE_TIME
-                or zulu.Zulu.parse(machine["last_stored_chunk_end_time"])
-                >= AUTO_HIDE_TIME
-            ) and "runtime_details" in machine:
+                and "runtime_details" in machine
+            ):
                 rv.append(machine)
     else:
         rv = list(machines.values())
