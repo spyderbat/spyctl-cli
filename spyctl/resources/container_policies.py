@@ -302,6 +302,8 @@ def build_conn_models(cont_map: ContainerMappings, conns: List[Dict]):
         cont_uid = conn.get("container_uid")
         if not cont_uid:
             continue
+        if cont_uid not in cont_map.cont_id_to_image_pat:
+            continue
         image_pat = cont_map.cont_id_to_image_pat[cont_uid]
         pol_inp = cont_map.image_pat_to_pol_inputs[image_pat]
         puid = sorted(conn["puids"])[-1]
@@ -486,6 +488,8 @@ def build_proc_models(cont_map: ContainerMappings, procs: List[Dict]):
         proc_recs.update(find_missing_parents_in_container(list(missing_ppuids)))
     # Third pass to build the process models
     for proc in proc_recs.values():
+        if proc["container_uid"] not in cont_map.cont_id_to_image_pat:
+            continue
         image_pat = cont_map.cont_id_to_image_pat[proc["container_uid"]]
         pol_inp = cont_map.image_pat_to_pol_inputs[image_pat]
         key = _proc_key(proc, proc_recs)
