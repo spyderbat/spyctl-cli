@@ -50,6 +50,7 @@ def main(debug: bool = False, log_request_times: bool = False) -> None:
     version_check()
 
 
+main.add_command(cmds.agent_archives.agent_archives)
 main.add_command(cmds.apply_cmd.apply.apply)
 main.add_command(cmds.config.config)
 main.add_command(cmds.create.create_cmd_group.create)

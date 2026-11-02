@@ -1,6 +1,7 @@
 """All the command-related modules"""
 
 from . import (
+    agent_archives,
     apply_cmd,
     config,
     create,
@@ -28,6 +29,7 @@ from . import (
 )
 
 __all__ = [
+    "agent_archives",
     "apply_cmd",
     "config",
     "create",

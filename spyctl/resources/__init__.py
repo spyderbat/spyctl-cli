@@ -1,6 +1,7 @@
 """All the resource-related modules"""
 
 from . import (
+    agent_archives,
     agent_health,
     agents,
     bash_cmds,
@@ -46,6 +47,7 @@ from . import (
 )
 
 __all__ = [
+    "agent_archives",
     "agent_health",
     "agents",
     "bash_cmds",
