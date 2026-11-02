@@ -6,6 +6,8 @@ paginated list API client, and the `agent-archives list`/`download` command
 wiring — all without touching the network.
 """
 
+import random
+import string
 from collections.abc import Iterator
 from contextlib import AbstractContextManager
 from pathlib import Path
@@ -118,6 +120,61 @@ def test_resolve_source_ambiguous_errors(ctx: SimpleNamespace) -> None:
     with mock.patch.object(archive_lib.src_api, "get_sources", return_value=sources):
         with pytest.raises(SystemExit):
             archive_lib.resolve_single_source(ctx, "db", False)
+
+
+# --------------------------------------------------------------------------- #
+#                          Local filenames                                    #
+# --------------------------------------------------------------------------- #
+
+# Characters Windows forbids in a file name, per Microsoft's "Naming Files,
+# Paths, and Namespaces": the nine printable ones and code points 0-31.
+WINDOWS_FORBIDDEN = '<>:"/\\|?*' + "".join(chr(c) for c in range(32))
+ALLOWED = string.ascii_letters + string.digits + " .-_+=,;'()[]{}~!@#$%^&é日\x7f😀"
+
+
+def _assert_sanitized(name: str, result: str) -> None:
+    assert not set(result) & set(WINDOWS_FORBIDDEN), repr(result)
+    assert len(result) == len(name)
+    for orig, got in zip(name, result, strict=True):
+        assert got == ("_" if orig in WINDOWS_FORBIDDEN else orig), (name, result)
+
+
+@pytest.mark.parametrize("bad", list(WINDOWS_FORBIDDEN))
+def test_local_filename_replaces_each_forbidden_char(bad: str) -> None:
+    for name in (bad, f"{bad}a.zip", f"a{bad}b.zip", f"a.zip{bad}", bad * 3):
+        _assert_sanitized(name, archive_lib.local_filename(name))
+
+
+def test_local_filename_random_mixed_names() -> None:
+    rng = random.Random(2114)
+    alphabet = WINDOWS_FORBIDDEN + ALLOWED
+    for _ in range(2000):
+        name = "".join(rng.choice(alphabet) for _ in range(rng.randint(1, 40)))
+        if name in (".", ".."):
+            continue
+        _assert_sanitized(name, archive_lib.local_filename(name))
+
+
+def test_local_filename_passes_safe_names_through_unchanged() -> None:
+    rng = random.Random(2116)
+    for _ in range(2000):
+        name = "".join(rng.choice(ALLOWED) for _ in range(rng.randint(1, 40)))
+        if name in (".", ".."):
+            continue
+        assert archive_lib.local_filename(name) == name
+
+
+def test_local_filename_real_archive_name() -> None:
+    assert (
+        archive_lib.local_filename("mach:abc-9-13433640-1793649072-1793649387.zip")
+        == "mach_abc-9-13433640-1793649072-1793649387.zip"
+    )
+
+
+@pytest.mark.parametrize("name", ["", ".", ".."])
+def test_local_filename_rejects_names_that_are_not_a_file(name: str) -> None:
+    with pytest.raises(ValueError, match="no usable local filename"):
+        archive_lib.local_filename(name)
 
 
 # --------------------------------------------------------------------------- #
@@ -272,6 +329,27 @@ def test_download_by_name_to_dir(wired: SimpleNamespace, tmp_path: Path) -> None
     assert res.exit_code == 0, res.output
     assert saved == ["arch.zip"]
     assert (tmp_path / "arch.zip").read_bytes() == b"zip"
+
+
+def test_download_colon_name_requests_it_unchanged_and_saves_safe_name(
+    wired: SimpleNamespace, tmp_path: Path
+) -> None:
+    saved = []
+    with _fake_dl(saved):
+        res = CliRunner().invoke(
+            main,
+            [
+                "agent-archives",
+                "download",
+                "db-01",
+                "mach:abc-9-1-2.zip",
+                "-D",
+                str(tmp_path),
+            ],
+        )
+    assert res.exit_code == 0, res.output
+    assert saved == ["mach:abc-9-1-2.zip"]
+    assert [p.name for p in tmp_path.iterdir()] == ["mach_abc-9-1-2.zip"]
 
 
 def test_download_by_name_defaults_to_cwd(

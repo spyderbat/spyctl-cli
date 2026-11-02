@@ -8,6 +8,24 @@ from spyctl.config.configs import Context
 
 MAX_WINDOW_SECS = 86400  # the archive API caps a listing window at 24 hours
 
+# Windows rejects these in a file name. Archive names look like
+# "mach:<id>-....zip", and NTFS reads "a:b" as file "a" with a data stream "b".
+_UNSAFE_FILENAME_CHARS = str.maketrans(
+    dict.fromkeys('<>:"/\\|?*' + "".join(chr(c) for c in range(32)), "_")
+)
+
+
+def local_filename(name: str) -> str:
+    """The local file name for archive ``name``, safe on every OS.
+
+    Each character Windows forbids becomes ``_``, which also strips path
+    separators so the name cannot leave the output directory.
+    """
+    safe = name.translate(_UNSAFE_FILENAME_CHARS)
+    if safe in ("", ".", ".."):
+        raise ValueError(f"archive name {name!r} has no usable local filename")
+    return safe
+
 
 def resolve_window(st: float, et: float | None) -> tuple[int, int]:
     """Normalize a ``-t``/``-e`` selection into a ``[start, end]`` query window.

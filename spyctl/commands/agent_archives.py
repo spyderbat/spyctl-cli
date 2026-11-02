@@ -207,15 +207,13 @@ def handle_download(
 def _download_one(
     ctx: cfg.Context, source_uid: str, name: str, output_dir: str
 ) -> None:
-    """Stream one archive zip to ``output_dir/<name>``.
+    """Stream one archive zip to ``output_dir/<local_filename(name)>``.
 
     Streams to a ``.part`` temp file and atomically renames on success, so a
     failure mid-stream (e.g. the API layer exiting on a non-200) never leaves a
-    partial or zero-byte file behind. The archive name is API-supplied and
-    separator-free by contract; ``basename`` is a belt-and-suspenders guard so
-    it can never steer the write outside ``output_dir``.
+    partial or zero-byte file behind. The request uses ``name`` unchanged.
     """
-    safe = os.path.basename(name)
+    safe = archive_lib.local_filename(name)
     dest_path = os.path.join(output_dir, safe)
     tmp_path = dest_path + ".part"
     try:
