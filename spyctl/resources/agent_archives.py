@@ -1,14 +1,13 @@
 """Output formatting for raw agent archive zips."""
 
 from datetime import datetime, timezone
-from typing import Dict, List
 
 from tabulate import tabulate
 
 ARCHIVE_HEADERS = ["SOURCE_UID", "NAME", "START", "END", "SIZE"]
 
 
-def archive_summary_output(archives: List[Dict]) -> str:
+def archive_summary_output(archives: list[dict]) -> str:
     """Render a plain table of archive zips, oldest first."""
     data = [archive_summary_data(a) for a in archives]
     data.sort(key=lambda line: (line[2], line[0]))
@@ -19,7 +18,7 @@ def archive_summary_output(archives: List[Dict]) -> str:
     return tabulate(rows, ARCHIVE_HEADERS, tablefmt="plain")
 
 
-def archive_summary_data(archive: Dict) -> List:
+def archive_summary_data(archive: dict) -> list:
     """Extract the sortable summary row for a single archive."""
     return [
         archive.get("source_uid", ""),

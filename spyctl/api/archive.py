@@ -9,7 +9,7 @@ The archiver keys these zips by *source UID* (a machine UID is only one kind of
 source), so this module uses ``source_uid`` throughout to match the server.
 """
 
-from typing import IO, Dict, List
+from typing import IO
 from urllib.parse import quote
 
 from spyctl.api.primitives import get
@@ -24,11 +24,11 @@ def list_agent_archives(
     api_url: str,
     api_key: str,
     org_uid: str,
-    source_uids: List[str],
+    source_uids: list[str],
     start_time: int,
     end_time: int,
     limit: int = 1000,
-) -> List[Dict]:
+) -> list[dict]:
     """List every archive zip for ``source_uids`` overlapping the time window.
 
     The server filters by overlap (an archive is returned when its own
@@ -52,7 +52,7 @@ def list_agent_archives(
         The archive objects matching the query, across all pages.
     """
     url = f"{api_url}/api/v1/org/{org_uid}/archive/"
-    results: List[Dict] = []
+    results: list[dict] = []
     continuation_token = ""
     while True:
         params = {

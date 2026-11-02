@@ -1,7 +1,5 @@
 """Shared helpers for the agent-archives list and download commands."""
 
-from typing import Optional, Tuple
-
 import spyctl.api.sources as src_api
 import spyctl.filter_resource as filt
 from spyctl import cli
@@ -11,7 +9,7 @@ from spyctl.config.configs import Context
 MAX_WINDOW_SECS = 86400  # the archive API caps a listing window at 24 hours
 
 
-def resolve_window(st: float, et: Optional[float]) -> Tuple[int, int]:
+def resolve_window(st: float, et: float | None) -> tuple[int, int]:
     """Normalize a ``-t``/``-e`` selection into a ``[start, end]`` query window.
 
     ``st`` (required) is epoch seconds; ``et`` is epoch seconds or ``None``.

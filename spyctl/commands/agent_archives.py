@@ -6,7 +6,6 @@ download). `list` and `download` share the same SOURCE + time selectors.
 """
 
 import os
-from typing import Optional
 
 import click
 
@@ -76,7 +75,7 @@ def agent_archives() -> None:
 def list_archives(
     source: str,
     st: float,
-    et: Optional[float],
+    et: float | None,
     exact: bool,
     output: str,
 ) -> None:
@@ -92,7 +91,7 @@ def list_archives(
 def handle_list(
     source: str,
     st: float,
-    et: Optional[float],
+    et: float | None,
     exact: bool,
     output: str,
 ) -> None:
@@ -134,9 +133,9 @@ def handle_list(
 )
 def download_archive(
     source: str,
-    name: Optional[str],
-    st: Optional[float],
-    et: Optional[float],
+    name: str | None,
+    st: float | None,
+    et: float | None,
     exact: bool,
     output_dir: str,
 ) -> None:
@@ -157,9 +156,9 @@ def download_archive(
 
 def handle_download(
     source: str,
-    name: Optional[str],
-    st: Optional[float],
-    et: Optional[float],
+    name: str | None,
+    st: float | None,
+    et: float | None,
     exact: bool,
     output_dir: str,
 ) -> None:
