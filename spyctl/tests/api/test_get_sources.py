@@ -9,7 +9,6 @@ def test_get_sources(mocker):
         {
             "uid": "mach:xxxxxxxxxx",
             "last_data": str(zulu.now().isoformat()),
-            "last_stored_chunk_end_time": str(zulu.now().isoformat()),
             "name": "integration-Node",
             "description": "xyz",
         }
